@@ -24,7 +24,7 @@ email account, IRC server, XMPP server, etc. using your DID, which can improve b
 
 ## Resources
 
-## Resources
+The following repositories contain various outcomes of this project.
 
 ### SASL client demonstration components
 
@@ -50,19 +50,17 @@ See https://github.com/peacekeeper/java-sasl-xmpp-server for a description.
 
 See https://github.com/peacekeeper/java-sasl-xmpp-client for a description.
 
-## Deliverables
+## Additional Resources
 
-* SASL documentation overview
+The following additional resources have been used during research and preparation of this project, and are useful
+for understanding SASL and its applications:
 
-* "Hello World" SASL demonstration
-
-* Requirements document and threat model
-
-* Specification(s) of DID-based SASL mechanism(s)
-
-* Implementation of server-side and client-side components
-
-* Open-source code and documentation
+- SASL for HTTP - Explanation: http://internetwide.org/blog/2018/11/15/somethings-cooking-4.html
+- SASL for HTTP - Specification: https://datatracker.ietf.org/doc/html/draft-vanrein-httpauth-sasl
+- Java SASL - Documentation: https://docs.oracle.com/javase/8/docs/technotes/guides/security/sasl/sasl-refguide.html
+- Java SASL - Tutorial: https://www.baeldung.com/java-sasl
+- Existing SASL mechanisms: https://www.iana.org/assignments/sasl-mechanisms/sasl-mechanisms.xhtml
+- Cyrus SASL plugin: https://gitlab.com/arpa2/kip/-/tree/master/contrib/cyrus-sasl2
 
 ## About
 
