@@ -24,17 +24,45 @@ email account, IRC server, XMPP server, etc. using your DID, which can improve b
 
 ## Resources
 
-### SASL documentation overview
+## Resources
 
-### "Hello World" SASL demonstration
+### SASL client demonstration components
 
-### Requirements document and threat model
+See https://github.com/peacekeeper/java-sasl-client-demo for a description.
 
-### Specification(s) of DID-based SASL mechanism(s)
+### SASL server demonstration components
 
-### Implementation of server-side and client-side components
+See https://github.com/peacekeeper/java-sasl-server-demo for a description.
 
-### Open-source code and documentation
+### SASL local "Hello World" demonstration
+
+See https://github.com/peacekeeper/java-sasl-local-demo for a description.
+
+### Implementation of a DID-based SASL authentication mechanism
+
+See https://github.com/peacekeeper/java-sasl-did-mechanism for a description.
+
+### XMPP server using the DID-based SASL authentication mechanism
+
+See https://github.com/peacekeeper/java-sasl-xmpp-server for a description.
+
+### XMPP client using the DID-based SASL authentication mechanism
+
+See https://github.com/peacekeeper/java-sasl-xmpp-client for a description.
+
+## Deliverables
+
+* SASL documentation overview
+
+* "Hello World" SASL demonstration
+
+* Requirements document and threat model
+
+* Specification(s) of DID-based SASL mechanism(s)
+
+* Implementation of server-side and client-side components
+
+* Open-source code and documentation
 
 ## About
 
