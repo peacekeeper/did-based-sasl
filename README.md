@@ -55,6 +55,7 @@ See https://github.com/peacekeeper/java-sasl-xmpp-client for a description.
 The following additional resources have been used during research and preparation of this project, and are useful
 for understanding SASL and its applications:
 
+- SASL on Wikipedia: https://de.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer
 - SASL for HTTP - Explanation: http://internetwide.org/blog/2018/11/15/somethings-cooking-4.html
 - SASL for HTTP - Specification: https://datatracker.ietf.org/doc/html/draft-vanrein-httpauth-sasl
 - Java SASL - Documentation: https://docs.oracle.com/javase/8/docs/technotes/guides/security/sasl/sasl-refguide.html
