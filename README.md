@@ -22,9 +22,22 @@ This project is about integrating DIDs into existing Internet protocols that req
 authentication, by leveraging the SASL framework. The idea is that for example you could log in to your SSH host,
 email account, IRC server, XMPP server, etc. using your DID, which can improve both usability and security.
 
+## Specification
+
+How to build the specification:
+
+```shell
+sudo apt install ruby-kramdown-2629 xml2rfc
+```
+
+```shell
+kramdown-rfc2629 ./spec/did-based-sasl.mkd >./spec/did-based-sasl.xml
+xml2rfc ./spec/did-based-sasl.xml
+```
+
 ## Resources
 
-The following repositories contain various outcomes of this project.
+The following repositories contain various other outcomes of this project.
 
 ### SASL client demonstration components
 
