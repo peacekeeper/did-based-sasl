@@ -59,8 +59,6 @@
 
 <section anchor="introduction"><name>Introduction</name>
 
-<t>This MAY <xref target="RFC2119"/> be useful.</t>
-
 <t>Many Internet protocols require authentication, e.g. when we check our email account with a username
 and password, when we authenticate to SSH hosts with public keys, or when we log in to websites
 using OpenID Connect.</t>
@@ -77,10 +75,120 @@ or domain names, DIDs do not require a central authority for creating and using 
 framework for authentication in Internet protocols. It makes it possible to "plug in" authentication mechanisms into
 existing protocols, by decoupling the authentication mechanisms from the application protocols.</t>
 
-<t>This project is about integrating DIDs into existing Internet protocols that require
-authentication, by leveraging the SASL framework. The idea is that for example you could log in to your SSH host,
-email account, IRC server, XMPP server, etc. using your DID, which can improve both usability and security.</t>
+<t>This specification introduces a DID-based SASL mechanism. For example, this can make it possible to
+log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security.</t>
 
+<t>Unlike most other SASL mechanisms, this one is based private/public key pairs and cryptographic signatures, rather than
+digests or plain password exchange.</t>
+
+</section>
+<section anchor="sasl-mechanism-name"><name>SASL mechanism name</name>
+
+<t>The name of the DID-based SASL mechanism is "DID-CHALLENGE".</t>
+
+</section>
+<section anchor="authentication"><name>Authentication</name>
+
+<t>This section describes the interaction between a SASL client and SASL server that use
+the "DID-CHALLENGE" mechanism.</t>
+
+<t><spanx style="verb">mermaid
+sequenceDiagram
+title The "DID-CHALLENGE" SASL mechanism
+participant ProtocolClient as Protocol Client
+participant SASLClient as SASL Client
+participant SASLServer as SASL Server
+participant ProtocolServer as Protocol Server
+participant DIDResolver as DID Resolver
+ProtocolClient--&gt;ProtocolServer: Network Connection
+ProtocolClient-&gt;&gt;SASLClient: Start login
+SASLClient-&gt;&gt;ProtocolClient: NameCallback for DID
+ProtocolClient-&gt;&gt;SASLClient: DID
+note left of SASLClient: did:key:&lt;..did..&gt;
+SASLClient-&gt;&gt;ProtocolClient: JWKCallback for DID private key
+ProtocolClient-&gt;&gt;SASLClient: DID private key
+note left of SASLClient: { "kid": "..", "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
+SASLClient-&gt;&gt;SASLServer: Start SASL authentication
+SASLServer-&gt;&gt;SASLClient: List of authn mechanisms
+SASLClient-&gt;&gt;SASLServer: Selected authn mechanism "DID-CHALLENGE"
+SASLServer-&gt;&gt;SASLClient: Challenge (nonce, timestamp, hostname)
+note right of SASLClient: &lt;1809528678543235072.1724868615672@hostname&gt;
+SASLClient-&gt;&gt;SASLClient: Create signature
+SASLClient-&gt;&gt;SASLServer: Response (DID, signature)
+note left of SASLServer: did:key:&lt;..did..&gt; 2mJ4tBo6H&lt;..signature..&gt;
+SASLServer-&gt;&gt;DIDResolver: Resolve DID
+DIDResolver-&gt;&gt;SASLServer: DID document with DID public key
+SASLServer-&gt;&gt;SASLServer: Verify signature
+SASLServer-&gt;&gt;ProtocolServer: NameCallback with DID
+ProtocolServer-&gt;&gt;SASLServer: (empty)
+SASLServer-&gt;&gt;ProtocolServer: AuthorizeCallback
+ProtocolServer-&gt;&gt;SASLServer: authorized=true with DID
+SASLServer-&gt;&gt;SASLClient: Completed SASL authentication
+</spanx></t>
+
+<section anchor="step-1"><name>Step 1</name>
+
+<t><spanx style="verb">
+-- CLIENT CALLBACK: NameCallback
+&gt;C DID:  --- defaultName: null, name: null
+((( getName() -&gt; did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D )))
+C&gt; DID:  --- defaultName: null, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+</spanx></t>
+
+</section>
+<section anchor="step-2"><name>Step 2</name>
+
+<t><spanx style="verb">
+-- CLIENT CALLBACK: JWKCallback
+&gt;C Private key:  --- defaultText: (JWK), text: null
+((( getTextInputJWK() -&gt; ... )))
+C&gt; Private key:  --- defaultText: (JWK), text: {
+  "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+  "kty": "OKP",
+  "crv": "Ed25519",
+  "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+  "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+</spanx></t>
+
+</section>
+<section anchor="step-3"><name>Step 3</name>
+
+<t><spanx style="verb">
+-- SERVER -&gt; CLIENT: Challenge
+&lt;4513455346757278126.1757192932938@localhost&gt;
+</spanx></t>
+
+</section>
+<section anchor="step-4"><name>Step 4</name>
+
+<t><spanx style="verb">
+-- CLIENT -&gt; SERVER: Response
+did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 22jAzXqSmpUSSZgesLpH9WcPWh4Zmt84cMVA4UvMsJjsELnFcgGujUvMBH1qX8B8u2CRg8j8fequ4nSQLsb6yF4H
+</spanx></t>
+
+</section>
+<section anchor="step-5"><name>Step 5</name>
+
+<t><spanx style="verb">
+-- SERVER CALLBACK: NameCallback
+&gt;S DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
+((( checkName(did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --&gt; did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D )))
+S&gt; DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+Verified signature 22jAzXqSmpUSSZgesLpH9WcPWh4Zmt84cMVA4UvMsJjsELnFcgGujUvMBH1qX8B8u2CRg8j8fequ4nSQLsb6yF4H for challenge &lt;4513455346757278126.1757192932938@localhost&gt;: true
+</spanx></t>
+
+</section>
+<section anchor="step-6"><name>Step 6</name>
+
+<t><spanx style="verb">
+-- SERVER CALLBACK: AuthorizeCallback
+&gt;S --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
+S&gt; --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
+authorizationId: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+</spanx></t>
+
+</section>
 </section>
 
 
@@ -90,59 +198,63 @@ email account, IRC server, XMPP server, etc. using your DID, which can improve b
 
 
 
-    <references title='Informative References' anchor="sec-informative-references">
-
-
-
-<reference anchor="RFC2119">
-  <front>
-    <title>Key words for use in RFCs to Indicate Requirement Levels</title>
-    <author fullname="S. Bradner" initials="S." surname="Bradner"/>
-    <date month="March" year="1997"/>
-    <abstract>
-      <t>In many standards track documents several words are used to signify the requirements in the specification. These words are often capitalized. This document defines these words as they should be interpreted in IETF documents. This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.</t>
-    </abstract>
-  </front>
-  <seriesInfo name="BCP" value="14"/>
-  <seriesInfo name="RFC" value="2119"/>
-  <seriesInfo name="DOI" value="10.17487/RFC2119"/>
-</reference>
-
-
-
-    </references>
 
 
 
   </back>
 
 <!-- ##markdown-source:
-H4sIAAAAAAAAA31VwXLbNhC94yt23IszFSnJcRKXl9Zjt7Fm7CQTuWk7nkwH
-BFcSahBgAdCKmsm39GP6Y30AJcV20h40IpbY3fd23y6LohDKNdouK+rjojgR
-IupouKLrFdP57Lw4uzi9vPzx1csfaX46v6QrVitpdWiFrGvPdxU1uilgM4bt
-kosggxGNU1a2CNJ4uYjFlzeKyUQoGXnp/KYibRdONDhWdDQ5elZMTorpVOjO
-V2SdZSGkZ1nRnFXvddyINcCeubZ1lk77uGIbNYJpHK+Bzjrjlht6xR8ivWTL
-Pr8SIkRpm9+lQcSKNhxEpyu6iU6NKDgfPS8Cnjbt8KAQH4HDe2RHDucrQVTg
-R4AbKroqaS5r2bAxLlsHwlfS3/bh0SvnAfhc2r7mjJBetvVFfhOQlmN2W4Jk
-ZAuL/OdvpheT8XT8Il9S4FzRL5rtcHQNEp0W08mzydbQ25jqeNrDW8ts7FaZ
-57fHT4vnz4+Lp9NnxyfHJ/kVt1KbitoM9Ycm44qAVYKzEEVRkKwTDBWFAFf2
-cW+gFXse7rS6aQyev6EZsrumV0OZr1c60NXpb/Tx4/dvfzo7mk6/+/SJwLwP
-vOhNKYS4knaTvNhbjtR5hyY4E8jzn732TPJBU0fE5bKkNUy0ZlIrVrfkej/w
-IKkyf1rruCKZsvjUCoFmUydDWDvfjPbe90IzRUfz+QWtXIhh8O/62mhFt7yB
-BJzfu0FRaHtyWHMddIR6+oChodcd29k51GgtqwhyN+eskMBLo//ihmZNyrbQ
-7AMdYpzCk/eHqxi7UI3H6/W6XD8toY7x9dtxHhLnefyEoATS9xzjSqLy8g6k
-QnBKAzu4eX2XSCSsmaySdlvmhhbA/rCKoOY7FziUaarDkAPW1FWtmFoUwWw+
-e/OHNOdLcBQ379gDiawN05nnDEyiXYfvzv6bzp0qMNGyaKFWUxyVE/CCzNaM
-gs5C6MFrRBfONPkh4R+y4FiK1xadbFEMWuYBNmT4jg06tca/Hw0UEmHgcHvW
-ErQgos5IxWl4M5GdIMJ4p4aQOottAN4PGi7QUVRi4/oc+uC+Vg6o3iSl3qWm
-K5cUb8gt0mWf0JT0szX6lsnBxz/oXugx8YC2ByKQvnEQr81LI2zpNA7bLn4e
-AtrqiIb9gyWQ+SjswphQpJoNIkTKtkyTx3Qz122HPj3ai+nubn3SpdwA4mFa
-54/a5xeq4EZH53MbcUy/4+Ojo3IVW/OEMNqoDDYrFpWGHsTCgwGKevs1yYHg
-l1Ne0ixi99xyIA2zCzlQGq2DzvRpzA4ex2l33xy42OgEf9Ahl2AfdJTa0zA2
-QWe2FfmfIAvv2uFKh+u7+dgD3O4wGP7ATGfOtetjys1LPxQ/dyyBoT2Yryy0
-PLjbhorHWw2Ik6q9XO4Q5w/svqJl/gRDSTJByKGGwZS5w1mmrjfNveWU1bhb
-aSPxYEGOaPb2jKDBPEC/Xr15sz9wVOVWSjs9p42pods0CFAUhM9UQ9u4Jmtt
-koySpsJWU6X4F6eX2mpJCAAA
+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
+n0TxcXB9ETU/9ScuEfNZ6/6qGZy2Gn1crVZR7/A/MfxaE+VgOLuDsdYudSwu
+V82v7No13E2BBiBehSo3i/Wg6NeDOEkVCGTBsW07x/kjSv+Ez+S8tb4W/C8/
+eqBSM1bXerheb3ZxvWf6+PH4tm3NbqM+6zf7H65vpnLijO7u4o8dVVdqfj4b
+qd9aZ4ve+9k8O2XQPJ7cnQ6+PH95GjWv3Ihbt/XBH6OOczP83H8gzuDi4f5I
+pY8PZzcX3Qr6q5zAZpHA0fHV7fGVDnCWyrUmjN64rUbTbbWabrvT6jidbsNp
+QzdtdRoHzkET/nXfhtwnoW6ph2UD7iZDwEBmatU00av57jh3R8+fH0ZRcjMa
+fYHb6jA5PfjkX36auV8i1XX989sj9+bxXJ7dyeNh/N6fnqR3sH532nj43H3X
+TZ3e1bR7153A5c6NR78N5bi9eO+eljG0NoO0q+RHuyrvtQC32oT5LcU0iteq
+hBr62Q4z2tlhfhbnq7vS8qeIYDWp/mfcyL7piwvKD9WGh/VAKrOrvZtd23MP
+KGZ+yysNKJ2L10c+n5b/RVU00HqyccNkgSLw8ISEUO9AoP8bFK/XU0ZuEl/2
+MvjJMfw3bxb+megXAAA=
 
 -->
 

@@ -34,9 +34,6 @@ insert abstract here
 
 # Introduction
 
-This MAY {{?RFC2119}} be useful.
-
-
 Many Internet protocols require authentication, e.g. when we check our email account with a username
 and password, when we authenticate to SSH hosts with public keys, or when we log in to websites
 using OpenID Connect.
@@ -53,6 +50,108 @@ The [Simple Authentication and Security Layer (SASL)](https://www.rfc-editor.org
 framework for authentication in Internet protocols. It makes it possible to "plug in" authentication mechanisms into
 existing protocols, by decoupling the authentication mechanisms from the application protocols.
 
-This project is about integrating DIDs into existing Internet protocols that require
-authentication, by leveraging the SASL framework. The idea is that for example you could log in to your SSH host,
-email account, IRC server, XMPP server, etc. using your DID, which can improve both usability and security.
+This specification introduces a DID-based SASL mechanism. For example, this can make it possible to
+log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security.
+
+Unlike most other SASL mechanisms, this one is based private/public key pairs and cryptographic signatures, rather than
+digests or plain password exchange.
+
+# SASL mechanism name
+
+The name of the DID-based SASL mechanism is "DID-CHALLENGE".
+
+# Authentication
+
+This section describes the interaction between a SASL client and SASL server that use
+the "DID-CHALLENGE" mechanism.
+
+```mermaid
+sequenceDiagram
+title The "DID-CHALLENGE" SASL mechanism
+participant ProtocolClient as Protocol Client
+participant SASLClient as SASL Client
+participant SASLServer as SASL Server
+participant ProtocolServer as Protocol Server
+participant DIDResolver as DID Resolver
+ProtocolClient-->ProtocolServer: Network Connection
+ProtocolClient->>SASLClient: Start login
+SASLClient->>ProtocolClient: NameCallback for DID
+ProtocolClient->>SASLClient: DID
+note left of SASLClient: did:key:<..did..>
+SASLClient->>ProtocolClient: JWKCallback for DID private key
+ProtocolClient->>SASLClient: DID private key
+note left of SASLClient: { "kid": "..", "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
+SASLClient->>SASLServer: Start SASL authentication
+SASLServer->>SASLClient: List of authn mechanisms
+SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
+SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
+note right of SASLClient: <1809528678543235072.1724868615672@hostname>
+SASLClient->>SASLClient: Create signature
+SASLClient->>SASLServer: Response (DID, signature)
+note left of SASLServer: did:key:<..did..> 2mJ4tBo6H<..signature..>
+SASLServer->>DIDResolver: Resolve DID
+DIDResolver->>SASLServer: DID document with DID public key
+SASLServer->>SASLServer: Verify signature
+SASLServer->>ProtocolServer: NameCallback with DID
+ProtocolServer->>SASLServer: (empty)
+SASLServer->>ProtocolServer: AuthorizeCallback
+ProtocolServer->>SASLServer: authorized=true with DID
+SASLServer->>SASLClient: Completed SASL authentication
+```
+
+## Step 1
+
+```
+-- CLIENT CALLBACK: NameCallback
+>C DID:  --- defaultName: null, name: null
+((( getName() -> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D )))
+C> DID:  --- defaultName: null, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+```
+
+## Step 2
+
+```
+-- CLIENT CALLBACK: JWKCallback
+>C Private key:  --- defaultText: (JWK), text: null
+((( getTextInputJWK() -> ... )))
+C> Private key:  --- defaultText: (JWK), text: {
+  "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+  "kty": "OKP",
+  "crv": "Ed25519",
+  "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+  "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+```
+
+## Step 3
+
+```
+-- SERVER -> CLIENT: Challenge
+<4513455346757278126.1757192932938@localhost>
+```
+
+## Step 4
+
+```
+-- CLIENT -> SERVER: Response
+did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 22jAzXqSmpUSSZgesLpH9WcPWh4Zmt84cMVA4UvMsJjsELnFcgGujUvMBH1qX8B8u2CRg8j8fequ4nSQLsb6yF4H
+```
+
+## Step 5
+
+```
+-- SERVER CALLBACK: NameCallback
+>S DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
+((( checkName(did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D )))
+S> DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+Verified signature 22jAzXqSmpUSSZgesLpH9WcPWh4Zmt84cMVA4UvMsJjsELnFcgGujUvMBH1qX8B8u2CRg8j8fequ4nSQLsb6yF4H for challenge <4513455346757278126.1757192932938@localhost>: true
+```
+
+## Step 6
+
+```
+-- SERVER CALLBACK: AuthorizeCallback
+>S --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
+S> --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
+authorizationId: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+```
