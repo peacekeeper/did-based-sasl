@@ -27,7 +27,9 @@ email account, IRC server, XMPP server, etc. using your DID, which can improve b
 How to build the specification:
 
 ```shell
-sudo apt install ruby-kramdown-2629 xml2rfc
+sudo apt install ruby-kramdown-2629 xml2rfc plantuml pipx
+pipx install svgcheck
+pipx ensurepath
 ```
 
 ```shell

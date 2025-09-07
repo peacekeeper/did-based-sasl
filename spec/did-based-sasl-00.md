@@ -28,7 +28,13 @@ author:
 
 --- abstract
 
-insert abstract here
+This specification introduces a SASL mechanism based on Decentralized Identifiers (DIDs).
+Unlike most other SASL mechanisms, this one is based on private/public key pairs and cryptographic signatures, rather than
+digests or plain password exchange. DIDs are designed to be decentralized, persistent, cryptographically verifiable, and
+resolvable identifiers.
+
+For example, this can make it possible to
+log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security.
 
 --- middle
 
@@ -65,41 +71,45 @@ The name of the DID-based SASL mechanism is "DID-CHALLENGE".
 This section describes the interaction between a SASL client and SASL server that use
 the "DID-CHALLENGE" mechanism.
 
-```mermaid
-    sequenceDiagram
-    title The "DID-CHALLENGE" SASL mechanism
-    participant ProtocolClient as Protocol Client
-    participant SASLClient as SASL Client
-    participant SASLServer as SASL Server
-    participant ProtocolServer as Protocol Server
-    participant DIDResolver as DID Resolver
-    ProtocolClient-->ProtocolServer: Network Connection
-    ProtocolClient->>SASLClient: Start login
-    SASLClient->>ProtocolClient: NameCallback for DID
-    ProtocolClient->>SASLClient: DID
-    note left of SASLClient: did:key:<..did..>
-    SASLClient->>ProtocolClient: JWKCallback for DID private key
-    ProtocolClient->>SASLClient: DID private key
-    note left of SASLClient: { "kid": "..", "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
-    SASLClient->>SASLServer: Start SASL authentication
-    SASLServer->>SASLClient: List of authn mechanisms
-    SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
-    SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
-    note right of SASLClient: <1809528678543235072.1724868615672@hostname>
-    SASLClient->>SASLClient: Create signature
-    SASLClient->>SASLServer: Response (DID, signature)
-    note left of SASLServer: did:key:<..did..> 2mJ4tBo6H<..signature..>
-    SASLServer->>DIDResolver: Resolve DID
-    DIDResolver->>SASLServer: DID document with DID public key
-    SASLServer->>SASLServer: Verify signature
-    SASLServer->>ProtocolServer: NameCallback with DID
-    ProtocolServer->>SASLServer: (empty)
-    SASLServer->>ProtocolServer: AuthorizeCallback
-    ProtocolServer->>SASLServer: authorized=true with DID
-    SASLServer->>SASLClient: Completed SASL authentication
-```
+~~~ plantuml-utxt
+title "The DID-CHALLENGE SASL mechanism"
+participant ProtocolClient as "Protocol Client"
+participant SASLClient as "SASL Client"
+participant SASLServer as "SASL Server"
+participant ProtocolServer as "Protocol Server"
+participant DIDResolver as "DID Resolver"
+ProtocolClient-->ProtocolServer: Network Connection
+ProtocolClient->>SASLClient: Start login
+SASLClient->>ProtocolClient: NameCallback for DID
+ProtocolClient->>SASLClient: DID
+note left of SASLClient: did:key:<..did..>
+SASLClient->>ProtocolClient: JWKCallback for DID private key
+ProtocolClient->>SASLClient: DID private key
+note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
+SASLClient->>SASLServer: Start SASL authentication
+SASLServer->>SASLClient: List of authn mechanisms
+SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
+SASLServer->>SASLServer: Generate challenge
+note left of SASLServer: <1809528678543235072.1724868615672@hostname>
+SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
+SASLClient->>SASLClient: Create signature
+note right of SASLClient: <..signature..>
+SASLClient->>SASLServer: Response (DID, signature)
+note left of SASLServer: did:key:<..did..> 2mJ4tBo6H<..signature..>
+SASLServer->>DIDResolver: Resolve DID
+DIDResolver->>SASLServer: DID document with DID public key
+SASLServer->>SASLServer: Verify signature
+note right of SASLServer: true
+SASLServer->>ProtocolServer: NameCallback with DID
+ProtocolServer->>SASLServer: (empty)
+SASLServer->>ProtocolServer: AuthorizeCallback
+ProtocolServer->>SASLServer: authorized=true with DID
+SASLServer->>SASLClient: Completed SASL authentication
+~~~
 
 ## Step 1: Client NameCallback for DID
+
+When the client is initialized, it obtains a DID to be used for authentication.
 
     -- CLIENT CALLBACK: NameCallback
         
@@ -108,6 +118,9 @@ the "DID-CHALLENGE" mechanism.
     C> DID:  --- defaultName: null, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 ## Step 2: Client JWKCallback for Private Key
+
+When the client is initialized, it obtains a private key that will be used for
+signing challenges.
 
     -- CLIENT CALLBACK: JWKCallback
     
@@ -129,20 +142,29 @@ the "DID-CHALLENGE" mechanism.
 
 ## Step 3: Server -> Client Challenge
 
+The server initiates the authentication flow by generating and sending a challenge. The challenge
+contains a none, timestamp, and realm.
+
     -- SERVER -> CLIENT: Challenge
     <4513455346757278126.1757192932938@localhost>
 
 ## Step 4: Client Signature
+
+The client signs the challenge using the DID's private key.
 
     -- CLIENT
     Created signature for challenge <4513455346757278126.1757192932938@localhost>: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
 
 ## Step 5: Client -> Server Response
 
+The client response to the server with the DID and the signed challenge.
+
     -- CLIENT -> SERVER: Response
     did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
 
 ## Step 6: Server NameCallback with DID
+
+The server obtains the DID from the client's response.
 
     -- SERVER CALLBACK: NameCallback
     
@@ -152,10 +174,15 @@ the "DID-CHALLENGE" mechanism.
 
 ## Step 7: Server Verification
 
+The server verifies the signature in the client's response by resolving the client's DID to a DID document, which
+contains public keys need for the verification.
+
     -- SERVER
     Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge <4513455346757278126.1757192932938@localhost>: true
 
 ## Step 8: Server AuthorizeCallback with authorization ID
+
+The server determines the DID as the "authorized ID", concluding the authentication flow.
 
     -- SERVER CALLBACK: AuthorizeCallback
     
@@ -163,3 +190,14 @@ the "DID-CHALLENGE" mechanism.
     S> --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
     
     authorizationId: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+
+# Implementations
+
+The following repositories contain various parts of an example implementation:
+
+* SASL client demonstration components: [https://github.com/peacekeeper/java-sasl-client-demo](https://github.com/peacekeeper/java-sasl-client-demo)
+* SASL server demonstration components: [https://github.com/peacekeeper/java-sasl-server-demo](https://github.com/peacekeeper/java-sasl-server-demo)
+* SASL local "Hello World" demonstration: [https://github.com/peacekeeper/java-sasl-local-demo](https://github.com/peacekeeper/java-sasl-local-demo)
+* Implementation of a DID-based SASL authentication mechanism: [https://github.com/peacekeeper/java-sasl-did-mechanism](https://github.com/peacekeeper/java-sasl-did-mechanism)
+* XMPP server using the DID-based SASL authentication mechanism: [https://github.com/peacekeeper/java-sasl-xmpp-server](https://github.com/peacekeeper/java-sasl-xmpp-server)
+* XMPP client using the DID-based SASL authentication mechanism: [https://github.com/peacekeeper/java-sasl-xmpp-client](https://github.com/peacekeeper/java-sasl-xmpp-client)
