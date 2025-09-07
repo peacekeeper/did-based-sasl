@@ -35,6 +35,10 @@ kramdown-rfc2629 ./spec/did-based-sasl.mkd >./spec/did-based-sasl.xml
 xml2rfc ./spec/did-based-sasl.xml
 ```
 
+```shell
+kdrfc -ht ./spec/did-based-sasl-00.md
+```
+
 ## Resources
 
 The following repositories contain various other outcomes of this project.
