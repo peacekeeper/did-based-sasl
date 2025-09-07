@@ -19,12 +19,14 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   1
    2.  SASL mechanism name . . . . . . . . . . . . . . . . . . . . .   2
    3.  Authentication  . . . . . . . . . . . . . . . . . . . . . . .   2
-     3.1.  Step 1  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.2.  Step 2  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.3.  Step 3  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.4.  Step 4  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.5.  Step 5  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.6.  Step 6  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.1.  Step 1: Client NameCallback for DID . . . . . . . . . . .   3
+     3.2.  Step 2: Client JWKCallback for Private Key  . . . . . . .   3
+     3.3.  Step 3: Server -> Client Challenge  . . . . . . . . . . .   3
+     3.4.  Step 4: Client Signature  . . . . . . . . . . . . . . . .   3
+     3.5.  Step 5: Client -> Server Response . . . . . . . . . . . .   3
+     3.6.  Step 6: Server NameCallback with DID  . . . . . . . . . .   3
+     3.7.  Step 7: Server Verification . . . . . . . . . . . . . . .   4
+     3.8.  Step 8: Server AuthorizeCallback with authorization ID  .   4
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   4
 
 1.  Introduction
@@ -45,11 +47,9 @@ Table of Contents
    identifiers such as usernames or domain names, DIDs do not require a
    central authority for creating and using them.
 
-   The Simple Authentication and Security Layer (SASL) (https://www.rfc-
-   editor.org/rfc/rfc4422.html) is an extensible framework for
-   authentication in Internet protocols.  It makes it possible to "plug
-   in" authentication mechanisms into existing protocols, by decoupling
-   the authentication mechanisms from the application protocols.
+
+
+
 
 
 
@@ -58,14 +58,20 @@ Sabadello                     Informational                     [Page 1]
                            did-challenge-sasl                August 2025
 
 
+   The Simple Authentication and Security Layer (SASL) (https://www.rfc-
+   editor.org/rfc/rfc4422.html) is an extensible framework for
+   authentication in Internet protocols.  It makes it possible to "plug
+   in" authentication mechanisms into existing protocols, by decoupling
+   the authentication mechanisms from the application protocols.
+
    This specification introduces a DID-based SASL mechanism.  For
    example, this can make it possible to log in to your email account,
    IRC server, XMPP server, etc. using a DID, which can improve both
    usability and security.
 
-   Unlike most other SASL mechanisms, this one is based private/public
-   key pairs and cryptographic signatures, rather than digests or plain
-   password exchange.
+   Unlike most other SASL mechanisms, this one is based on private/
+   public key pairs and cryptographic signatures, rather than digests or
+   plain password exchange.
 
 2.  SASL mechanism name
 
@@ -103,61 +109,55 @@ Sabadello                     Informational                     [Page 1]
 
 
 
-
-
-
-
-
-
 Sabadello                     Informational                     [Page 2]
 
                            did-challenge-sasl                August 2025
 
 
-3.1.  Step 1
+3.1.  Step 1: Client NameCallback for DID
 
-   -- CLIENT CALLBACK: NameCallback >C DID: --- defaultName: null, name:
-   null ((( getName() ->
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D ))) C> DID:
-   --- defaultName: null, name:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+-- CLIENT CALLBACK: NameCallback
 
-3.2.  Step 2
+>C Client DID:  --- defaultName: null, name: null
+getName() -> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+C> DID:  --- defaultName: null, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
-   -- CLIENT CALLBACK: JWKCallback >C Private key: --- defaultText:
-   (JWK), text: null ((( getTextInputJWK() -> ... ))) C> Private key:
-   --- defaultText: (JWK), text: { "kid": "did:key:z6MkfePUhxLV6cM54cgZ4
-   bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5k
-   R3dH51D", "kty": "OKP", "crv": "Ed25519", "x":
-   "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw", "d": "vGjHIZzZxS3R4mo-
-   V0I_S72ULXDqa2INqkAtuvqJUN8" }
+3.2.  Step 2: Client JWKCallback for Private Key
 
-3.3.  Step 3
+-- CLIENT CALLBACK: JWKCallback
+
+>C Client private key:  --- defaultText: (JWK), text: null
+getTextInputJWK() -> {
+    "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+    "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+C> Private key:  --- defaultText: (JWK), text: {
+  "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+  "kty": "OKP",
+  "crv": "Ed25519",
+  "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+  "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+
+3.3.  Step 3: Server -> Client Challenge
 
    -- SERVER -> CLIENT: Challenge
    <4513455346757278126.1757192932938@localhost>
 
-3.4.  Step 4
+3.4.  Step 4: Client Signature
 
-   -- CLIENT -> SERVER: Response
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 22jAzXqSmpUS
-   SZgesLpH9WcPWh4Zmt84cMVA4UvMsJjsELnFcgGujUvMBH1qX8B8u2CRg8j8fequ4nSQL
-   sb6yF4H
+-- CLIENT
+Created signature for challenge <4513455346757278126.1757192932938@localhost>: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
 
-3.5.  Step 5
+3.5.  Step 5: Client -> Server Response
 
-   -- SERVER CALLBACK: NameCallback >S DID: --- defaultName:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
-   (((
-   checkName(did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D)
-   --> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D ))) S>
-   DID: --- defaultName:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D Verified
-   signature 22jAzXqSmpUSSZgesLpH9WcPWh4Zmt84cMVA4UvMsJjsELnFcgGujUvMBH1
-   qX8B8u2CRg8j8fequ4nSQLsb6yF4H for challenge
-   <4513455346757278126.1757192932938@localhost>: true
+-- CLIENT -> SERVER: Response
+did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
 
+3.6.  Step 6: Server NameCallback with DID
 
 
 
@@ -170,20 +170,25 @@ Sabadello                     Informational                     [Page 3]
                            did-challenge-sasl                August 2025
 
 
-3.6.  Step 6
+-- SERVER CALLBACK: NameCallback
 
-   -- SERVER CALLBACK: AuthorizeCallback >S --- authenticationID:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D,
-   authorizationID:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D,
-   authorizedID: null, isAuthorized: false S> --- authenticationID:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D,
-   authorizationID:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D,
-   authorizedID:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D,
-   isAuthorized: true authorizationId:
-   did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+>S DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
+checkName(did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+S> DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+
+3.7.  Step 7: Server Verification
+
+-- SERVER
+Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge <4513455346757278126.1757192932938@localhost>: true
+
+3.8.  Step 8: Server AuthorizeCallback with authorization ID
+
+-- SERVER CALLBACK: AuthorizeCallback
+
+>S --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
+S> --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
+
+authorizationId: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 Author's Address
 
@@ -194,11 +199,6 @@ Author's Address
    Austria
    Phone: +43-664-3154848
    Email: markus@danubetech.com
-
-
-
-
-
 
 
 

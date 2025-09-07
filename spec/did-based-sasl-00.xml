@@ -78,7 +78,7 @@ existing protocols, by decoupling the authentication mechanisms from the applica
 <t>This specification introduces a DID-based SASL mechanism. For example, this can make it possible to
 log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security.</t>
 
-<t>Unlike most other SASL mechanisms, this one is based private/public key pairs and cryptographic signatures, rather than
+<t>Unlike most other SASL mechanisms, this one is based on private/public key pairs and cryptographic signatures, rather than
 digests or plain password exchange.</t>
 
 </section>
@@ -93,100 +93,126 @@ digests or plain password exchange.</t>
 the "DID-CHALLENGE" mechanism.</t>
 
 <t><spanx style="verb">mermaid
-sequenceDiagram
-title The "DID-CHALLENGE" SASL mechanism
-participant ProtocolClient as Protocol Client
-participant SASLClient as SASL Client
-participant SASLServer as SASL Server
-participant ProtocolServer as Protocol Server
-participant DIDResolver as DID Resolver
-ProtocolClient--&gt;ProtocolServer: Network Connection
-ProtocolClient-&gt;&gt;SASLClient: Start login
-SASLClient-&gt;&gt;ProtocolClient: NameCallback for DID
-ProtocolClient-&gt;&gt;SASLClient: DID
-note left of SASLClient: did:key:&lt;..did..&gt;
-SASLClient-&gt;&gt;ProtocolClient: JWKCallback for DID private key
-ProtocolClient-&gt;&gt;SASLClient: DID private key
-note left of SASLClient: { "kid": "..", "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
-SASLClient-&gt;&gt;SASLServer: Start SASL authentication
-SASLServer-&gt;&gt;SASLClient: List of authn mechanisms
-SASLClient-&gt;&gt;SASLServer: Selected authn mechanism "DID-CHALLENGE"
-SASLServer-&gt;&gt;SASLClient: Challenge (nonce, timestamp, hostname)
-note right of SASLClient: &lt;1809528678543235072.1724868615672@hostname&gt;
-SASLClient-&gt;&gt;SASLClient: Create signature
-SASLClient-&gt;&gt;SASLServer: Response (DID, signature)
-note left of SASLServer: did:key:&lt;..did..&gt; 2mJ4tBo6H&lt;..signature..&gt;
-SASLServer-&gt;&gt;DIDResolver: Resolve DID
-DIDResolver-&gt;&gt;SASLServer: DID document with DID public key
-SASLServer-&gt;&gt;SASLServer: Verify signature
-SASLServer-&gt;&gt;ProtocolServer: NameCallback with DID
-ProtocolServer-&gt;&gt;SASLServer: (empty)
-SASLServer-&gt;&gt;ProtocolServer: AuthorizeCallback
-ProtocolServer-&gt;&gt;SASLServer: authorized=true with DID
-SASLServer-&gt;&gt;SASLClient: Completed SASL authentication
+    sequenceDiagram
+    title The "DID-CHALLENGE" SASL mechanism
+    participant ProtocolClient as Protocol Client
+    participant SASLClient as SASL Client
+    participant SASLServer as SASL Server
+    participant ProtocolServer as Protocol Server
+    participant DIDResolver as DID Resolver
+    ProtocolClient--&gt;ProtocolServer: Network Connection
+    ProtocolClient-&gt;&gt;SASLClient: Start login
+    SASLClient-&gt;&gt;ProtocolClient: NameCallback for DID
+    ProtocolClient-&gt;&gt;SASLClient: DID
+    note left of SASLClient: did:key:&lt;..did..&gt;
+    SASLClient-&gt;&gt;ProtocolClient: JWKCallback for DID private key
+    ProtocolClient-&gt;&gt;SASLClient: DID private key
+    note left of SASLClient: { "kid": "..", "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
+    SASLClient-&gt;&gt;SASLServer: Start SASL authentication
+    SASLServer-&gt;&gt;SASLClient: List of authn mechanisms
+    SASLClient-&gt;&gt;SASLServer: Selected authn mechanism "DID-CHALLENGE"
+    SASLServer-&gt;&gt;SASLClient: Challenge (nonce, timestamp, hostname)
+    note right of SASLClient: &lt;1809528678543235072.1724868615672@hostname&gt;
+    SASLClient-&gt;&gt;SASLClient: Create signature
+    SASLClient-&gt;&gt;SASLServer: Response (DID, signature)
+    note left of SASLServer: did:key:&lt;..did..&gt; 2mJ4tBo6H&lt;..signature..&gt;
+    SASLServer-&gt;&gt;DIDResolver: Resolve DID
+    DIDResolver-&gt;&gt;SASLServer: DID document with DID public key
+    SASLServer-&gt;&gt;SASLServer: Verify signature
+    SASLServer-&gt;&gt;ProtocolServer: NameCallback with DID
+    ProtocolServer-&gt;&gt;SASLServer: (empty)
+    SASLServer-&gt;&gt;ProtocolServer: AuthorizeCallback
+    ProtocolServer-&gt;&gt;SASLServer: authorized=true with DID
+    SASLServer-&gt;&gt;SASLClient: Completed SASL authentication
 </spanx></t>
 
-<section anchor="step-1"><name>Step 1</name>
+<section anchor="step-1-client-namecallback-for-did"><name>Step 1: Client NameCallback for DID</name>
 
-<t><spanx style="verb">
+<figure><artwork><![CDATA[
 -- CLIENT CALLBACK: NameCallback
-&gt;C DID:  --- defaultName: null, name: null
-((( getName() -&gt; did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D )))
-C&gt; DID:  --- defaultName: null, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-</spanx></t>
+    
+>C Client DID:  --- defaultName: null, name: null
+getName() -> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+C> DID:  --- defaultName: null, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+]]></artwork></figure>
 
 </section>
-<section anchor="step-2"><name>Step 2</name>
+<section anchor="step-2-client-jwkcallback-for-private-key"><name>Step 2: Client JWKCallback for Private Key</name>
 
-<t><spanx style="verb">
+<figure><artwork><![CDATA[
 -- CLIENT CALLBACK: JWKCallback
-&gt;C Private key:  --- defaultText: (JWK), text: null
-((( getTextInputJWK() -&gt; ... )))
-C&gt; Private key:  --- defaultText: (JWK), text: {
+
+>C Client private key:  --- defaultText: (JWK), text: null
+getTextInputJWK() -> {
+    "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+    "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+C> Private key:  --- defaultText: (JWK), text: {
   "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
   "kty": "OKP",
   "crv": "Ed25519",
   "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
   "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
 }
-</spanx></t>
+]]></artwork></figure>
 
 </section>
-<section anchor="step-3"><name>Step 3</name>
+<section anchor="step-3-server-client-challenge"><name>Step 3: Server -&gt; Client Challenge</name>
 
-<t><spanx style="verb">
--- SERVER -&gt; CLIENT: Challenge
-&lt;4513455346757278126.1757192932938@localhost&gt;
-</spanx></t>
-
-</section>
-<section anchor="step-4"><name>Step 4</name>
-
-<t><spanx style="verb">
--- CLIENT -&gt; SERVER: Response
-did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 22jAzXqSmpUSSZgesLpH9WcPWh4Zmt84cMVA4UvMsJjsELnFcgGujUvMBH1qX8B8u2CRg8j8fequ4nSQLsb6yF4H
-</spanx></t>
+<figure><artwork><![CDATA[
+-- SERVER -> CLIENT: Challenge
+<4513455346757278126.1757192932938@localhost>
+]]></artwork></figure>
 
 </section>
-<section anchor="step-5"><name>Step 5</name>
+<section anchor="step-4-client-signature"><name>Step 4: Client Signature</name>
 
-<t><spanx style="verb">
+<figure><artwork><![CDATA[
+-- CLIENT
+Created signature for challenge <4513455346757278126.1757192932938@localhost>: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+]]></artwork></figure>
+
+</section>
+<section anchor="step-5-client-server-response"><name>Step 5: Client -&gt; Server Response</name>
+
+<figure><artwork><![CDATA[
+-- CLIENT -> SERVER: Response
+did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+]]></artwork></figure>
+
+</section>
+<section anchor="step-6-server-namecallback-with-did"><name>Step 6: Server NameCallback with DID</name>
+
+<figure><artwork><![CDATA[
 -- SERVER CALLBACK: NameCallback
-&gt;S DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
-((( checkName(did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --&gt; did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D )))
-S&gt; DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-Verified signature 22jAzXqSmpUSSZgesLpH9WcPWh4Zmt84cMVA4UvMsJjsELnFcgGujUvMBH1qX8B8u2CRg8j8fequ4nSQLsb6yF4H for challenge &lt;4513455346757278126.1757192932938@localhost&gt;: true
-</spanx></t>
+
+>S DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
+checkName(did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+S> DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+]]></artwork></figure>
 
 </section>
-<section anchor="step-6"><name>Step 6</name>
+<section anchor="step-7-server-verification"><name>Step 7: Server Verification</name>
 
-<t><spanx style="verb">
+<figure><artwork><![CDATA[
+-- SERVER
+Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge <4513455346757278126.1757192932938@localhost>: true
+]]></artwork></figure>
+
+</section>
+<section anchor="step-8-server-authorizecallback-with-authorization-id"><name>Step 8: Server AuthorizeCallback with authorization ID</name>
+
+<figure><artwork><![CDATA[
 -- SERVER CALLBACK: AuthorizeCallback
-&gt;S --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
-S&gt; --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
+
+>S --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
+S> --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
+
 authorizationId: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-</spanx></t>
+]]></artwork></figure>
 
 </section>
 </section>
@@ -204,57 +230,59 @@ authorizationId: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
   </back>
 
 <!-- ##markdown-source:
-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
-n0TxcXB9ETU/9ScuEfNZ6/6qGZy2Gn1crVZR7/A/MfxaE+VgOLuDsdYudSwu
-V82v7No13E2BBiBehSo3i/Wg6NeDOEkVCGTBsW07x/kjSv+Ez+S8tb4W/C8/
-eqBSM1bXerheb3ZxvWf6+PH4tm3NbqM+6zf7H65vpnLijO7u4o8dVVdqfj4b
-qd9aZ4ve+9k8O2XQPJ7cnQ6+PH95GjWv3Ihbt/XBH6OOczP83H8gzuDi4f5I
-pY8PZzcX3Qr6q5zAZpHA0fHV7fGVDnCWyrUmjN64rUbTbbWabrvT6jidbsNp
-QzdtdRoHzkET/nXfhtwnoW6ph2UD7iZDwEBmatU00av57jh3R8+fH0ZRcjMa
-fYHb6jA5PfjkX36auV8i1XX989sj9+bxXJ7dyeNh/N6fnqR3sH532nj43H3X
-TZ3e1bR7153A5c6NR78N5bi9eO+eljG0NoO0q+RHuyrvtQC32oT5LcU0iteq
-hBr62Q4z2tlhfhbnq7vS8qeIYDWp/mfcyL7piwvKD9WGh/VAKrOrvZtd23MP
-KGZ+yysNKJ2L10c+n5b/RVU00HqyccNkgSLw8ISEUO9AoP8bFK/XU0ZuEl/2
-MvjJMfw3bxb+megXAAA=
+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
 
 -->
 
