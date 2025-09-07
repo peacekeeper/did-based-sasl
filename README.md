@@ -24,6 +24,10 @@ email account, IRC server, XMPP server, etc. using your DID, which can improve b
 
 ## Specification
 
+Rendered specification:
+
+https://peacekeeper.github.io/did-based-sasl/
+
 How to build the specification:
 
 ```shell
