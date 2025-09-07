@@ -1,0 +1,37 @@
+@startuml
+
+title The DID-CHALLENGE SASL mechanism
+participant ProtocolClient as "Protocol Client"
+participant SASLClient as "SASL Client"
+participant SASLServer as "SASL Server"
+participant ProtocolServer as "Protocol Server"
+participant DIDResolver as "DID Resolver"
+ProtocolClient-->ProtocolServer: Network Connection
+ProtocolClient->>SASLClient: Start login
+SASLClient->>ProtocolClient: NameCallback for DID
+ProtocolClient->>SASLClient: DID
+note left of SASLClient: did:key:<..did..>
+SASLClient->>ProtocolClient: JWKCallback for DID private key
+ProtocolClient->>SASLClient: DID private key
+note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
+SASLClient->>SASLServer: Start SASL authentication
+SASLServer->>SASLClient: List of authn mechanisms
+SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
+SASLServer->>SASLServer: Generate challenge
+note left of SASLServer: <1809528678543235072.1724868615672@hostname>
+SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
+SASLClient->>SASLClient: Create signature
+note right of SASLClient: <..signature..>
+SASLClient->>SASLServer: Response (DID, signature)
+note left of SASLServer: did:key:<..did..> 2mJ4tBo6H<..signature..>
+SASLServer->>DIDResolver: Resolve DID
+DIDResolver->>SASLServer: DID document with DID public key
+SASLServer->>SASLServer: Verify signature
+note right of SASLServer: true
+SASLServer->>ProtocolServer: NameCallback with DID
+ProtocolServer->>SASLServer: (empty)
+SASLServer->>ProtocolServer: AuthorizeCallback
+ProtocolServer->>SASLServer: authorized=true with DID
+SASLServer->>SASLClient: Completed SASL authentication
+
+@enduml
