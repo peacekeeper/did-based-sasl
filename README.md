@@ -49,21 +49,21 @@ kdrfc -ht ./spec/did-based-sasl-00.md
 
 The following repositories contain various other outcomes of this project.
 
-### SASL client demonstration components
-
-See https://github.com/peacekeeper/java-sasl-client-demo for a description.
-
-### SASL server demonstration components
-
-See https://github.com/peacekeeper/java-sasl-server-demo for a description.
-
-### SASL local "Hello World" demonstration
-
-See https://github.com/peacekeeper/java-sasl-local-demo for a description.
-
 ### Implementation of a DID-based SASL authentication mechanism
 
 See https://github.com/peacekeeper/java-sasl-did-mechanism for a description.
+
+### SASL "Hello World" demonstration
+
+See https://github.com/peacekeeper/java-sasl-local-demo for a description.
+
+### SASL "Hello World" demonstration (client components)
+
+See https://github.com/peacekeeper/java-sasl-client-demo for a description.
+
+### SASL "Hello World" demonstration (server components)
+
+See https://github.com/peacekeeper/java-sasl-server-demo for a description.
 
 ### XMPP server using the DID-based SASL authentication mechanism
 
