@@ -77,6 +77,10 @@ See https://github.com/peacekeeper/java-sasl-xmpp-client-tigase for a descriptio
 
 See https://github.com/peacekeeper/java-sasl-xmpp-client-smack for a description.
 
+### XMPP client using the DID-based SASL authentication mechanism (based on Spark)
+
+See https://github.com/peacekeeper/java-sasl-xmpp-client-spark for a description.
+
 ## Additional Resources
 
 The following additional resources have been used during research and preparation of this project, and are useful
