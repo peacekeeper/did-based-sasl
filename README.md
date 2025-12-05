@@ -69,17 +69,21 @@ See https://github.com/peacekeeper/java-sasl-server-demo for a description.
 
 See https://github.com/peacekeeper/java-sasl-xmpp-server for a description.
 
-### XMPP client using the DID-based SASL authentication mechanism (based on Tigase)
+### XMPP client demo using the DID-based SASL authentication mechanism (based on Tigase)
 
 See https://github.com/peacekeeper/java-sasl-xmpp-client-tigase for a description.
 
-### XMPP client using the DID-based SASL authentication mechanism (based on Smack)
+### XMPP client demo using the DID-based SASL authentication mechanism (based on Smack)
 
 See https://github.com/peacekeeper/java-sasl-xmpp-client-smack for a description.
 
-### XMPP client using the DID-based SASL authentication mechanism (based on Spark)
+### XMPP client plugin using the DID-based SASL authentication mechanism (based on Spark)
 
 See https://github.com/peacekeeper/java-sasl-xmpp-client-spark for a description.
+
+### XMPP client UI using the DID-based SASL authentication mechanism (based on Spark)
+
+See https://github.com/peacekeeper/Spark/tree/did-challenge for a description.
 
 ## Additional Resources
 
