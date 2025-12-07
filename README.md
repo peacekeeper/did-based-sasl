@@ -31,19 +31,23 @@ https://peacekeeper.github.io/did-based-sasl/
 How to build the specification:
 
 ```shell
-sudo apt install ruby-kramdown-2629 xml2rfc plantuml pipx
+sudo apt install ruby-kramdown-rfc2629 xml2rfc plantuml pipx
 pipx install svgcheck
 pipx ensurepath
 ```
 
 ```shell
-kramdown-rfc2629 ./spec/did-based-sasl.mkd >./spec/did-based-sasl.xml
-xml2rfc ./spec/did-based-sasl.xml
+kramdown-rfc2629 ./docs/did-based-sasl-00.md >./docs/did-based-sasl-00.xml
+xml2rfc ./docs/did-based-sasl-00.xml
 ```
 
 ```shell
-kdrfc -ht ./spec/did-based-sasl-00.md
+kdrfc -ht ./docs/did-based-sasl-00.md
 ```
+
+## End-to-end demonstration
+
+Based on the components listed below, see here for an end-to-end demonstration: [./demo](./demo).
 
 ## Resources
 
@@ -81,13 +85,9 @@ See https://github.com/peacekeeper/java-sasl-xmpp-client-smack for a description
 
 See https://github.com/peacekeeper/java-sasl-xmpp-client-spark for a description.
 
-### XMPP client UI using the DID-based SASL authentication mechanism (based on Spark)
+### XMPP client application using the DID-based SASL authentication mechanism (based on Spark)
 
 See https://github.com/peacekeeper/Spark/tree/did-challenge for a description.
-
-## End-to-end demonstration
-
-Based on the components listed above, see here for an end-to-end demonstration: [./demo](./demo).
 
 ## Additional Resources
 

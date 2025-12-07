@@ -338,13 +338,30 @@ Sabadello                     Informational                     [Page 6]
                            did-challenge-sasl                August 2025
 
 
-   *  XMPP server using the DID-based SASL authentication mechanism:
-      https://github.com/peacekeeper/java-sasl-xmpp-server
-      (https://github.com/peacekeeper/java-sasl-xmpp-server)
+   *  XMPP server (based on Tigase) using the DID-based SASL
+      authentication mechanism: https://github.com/peacekeeper/java-
+      sasl-xmpp-server (https://github.com/peacekeeper/java-sasl-xmpp-
+      server)
 
-   *  XMPP client using the DID-based SASL authentication mechanism:
-      https://github.com/peacekeeper/java-sasl-xmpp-client
-      (https://github.com/peacekeeper/java-sasl-xmpp-client)
+   *  XMPP client demo (based on Tigase) using the DID-based SASL
+      authentication mechanism: https://github.com/peacekeeper/java-
+      sasl-xmpp-client-tigase (https://github.com/peacekeeper/java-sasl-
+      xmpp-client-tigase)
+
+   *  XMPP client demo (based on Smack) using the DID-based SASL
+      authentication mechanism: https://github.com/peacekeeper/java-
+      sasl-xmpp-client-smack (https://github.com/peacekeeper/java-sasl-
+      xmpp-client-smack)
+
+   *  XMPP client plugin (based on Spark) using the DID-based SASL
+      authentication mechanism: https://github.com/peacekeeper/java-
+      sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
+      xmpp-client-spark)
+
+   *  XMPP client application (based on Spark) using the DID-based SASL
+      authentication mechanism: https://github.com/peacekeeper/java-
+      sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
+      xmpp-client-spark)
 
 Author's Address
 
@@ -355,23 +372,6 @@ Author's Address
    Austria
    Phone: +43-664-3154848
    Email: markus@danubetech.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

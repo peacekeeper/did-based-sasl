@@ -14,26 +14,26 @@ resolvable identifiers.
        For example, this can make it possible to
 log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security. 
     " name="description">
-<meta content="xml2rfc 3.23.0" name="generator">
+<meta content="xml2rfc 3.30.2" name="generator">
 <meta content="draft-did-challenge-sasl-00" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.23.0
-    Python 3.13.5
+  xml2rfc 3.30.2
+    Python 3.13.9
     ConfigArgParse 1.7
     google-i18n-address 2.4.0
     intervaltree 3.0.2
     Jinja2 3.1.6
-    lxml 5.4.0
-    platformdirs 4.3.7
+    lxml 6.0.2
+    platformdirs 4.4.0
     pycountry 24.6.1
-    pydyf 0.11.0
+    pypdf 5.4.0
     PyYAML 6.0.2
-    requests 2.32.3
+    requests 2.32.5
     setuptools 78.1.1
-    wcwidth 0.2.13
+    wcwidth 0.2.14
     weasyprint 62.3
 -->
-<link href="./spec/did-based-sasl-00.xml" rel="alternate" type="application/rfc+xml">
+<link href="did-based-sasl-00.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">/*
 
@@ -164,6 +164,12 @@ div {
 }
 svg {
   display: block;
+}
+@media print {
+  svg {
+    max-height: 850px;
+    max-width: 660px;
+  }
 }
 svg[font-family~="serif" i], svg [font-family~="serif" i] {
   font-family: var(--font-serif);
@@ -408,7 +414,7 @@ hr {
 /* Fix PDF info block run off issue */
 @media print {
   #identifiers dd {
-    float: none;
+    max-width: 100%;
   }
 }
 #identifiers .authors .author {
@@ -1187,6 +1193,7 @@ dl > dd > dl {
 /* This should match the element list in writer.text.TextWriter.render_dl() */
 dd > div.artwork:first-child,
 dd > aside:first-child,
+dd > blockquote:first-child,
 dd > figure:first-child,
 dd > ol:first-child,
 dd > div.sourcecode:first-child,
@@ -1210,7 +1217,6 @@ li > p:last-of-type:only-child {
 <link href="rfc-local.css" rel="stylesheet" type="text/css">
 </head>
 <body class="xml2rfc">
-<script src="metadata.min.js"></script>
 <table class="ears">
 <thead><tr>
 <td class="left"></td>
@@ -1344,7 +1350,6 @@ the "DID-CHALLENGE" mechanism.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div id="section-3-2">
         <div class="alignLeft art-svg artwork" id="section-3-2.1">
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1097px" preserveAspectRatio="none" version="1.1" viewBox="0 0 968 1097" width="968px">
-            <defs></defs>
             <g>
               <text fill="black" font-family="sans-serif" font-size="18" x="315" y="29.2419">"The DID-CHALLENGE SASL mechanism"</text>
               <line x1="104" x2="104" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"></line>
@@ -1479,7 +1484,7 @@ the "DID-CHALLENGE" mechanism.<a href="#section-3-1" class="pilcrow">¶</a></p>
               <line x1="315.5" x2="325.5" y1="1036.6462" y2="1040.6462" stroke="black" stroke-width="1.0"></line>
               <line x1="315.5" x2="611.5" y1="1036.6462" y2="1036.6462" stroke="black" stroke-width="1.0"></line>
               <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="1030.8372">Completed SASL authentication</text>
-              <!--MD5=[92b3effbe3b7efd10f56e704a6ac82be]
+              <!--MD5=[f648afcb962d7a0858147a6888fc1926]
 @startuml
 
 title "The DID-CHALLENGE SASL mechanism"
@@ -1518,11 +1523,11 @@ SASLServer->>SASLClient: Completed SASL authentication
 
 @enduml
 
-PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
+PlantUML version 1.2020.02(Sun Mar 01 18:22:07 CST 2020)
 (GPL source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 21.0.8+9-Debian-1
+Java Version: 21.0.9+10-Debian-1
 Operating System: Linux
 Default Encoding: UTF-8
 Language: en
@@ -1694,10 +1699,19 @@ authorizationId: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
           <p id="section-4-2.4.1">Implementation of a DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-did-mechanism">https://github.com/peacekeeper/java-sasl-did-mechanism</a><a href="#section-4-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-2.5">
-          <p id="section-4-2.5.1">XMPP server using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-server">https://github.com/peacekeeper/java-sasl-xmpp-server</a><a href="#section-4-2.5.1" class="pilcrow">¶</a></p>
+          <p id="section-4-2.5.1">XMPP server (based on Tigase) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-server">https://github.com/peacekeeper/java-sasl-xmpp-server</a><a href="#section-4-2.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-2.6">
-          <p id="section-4-2.6.1">XMPP client using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client">https://github.com/peacekeeper/java-sasl-xmpp-client</a><a href="#section-4-2.6.1" class="pilcrow">¶</a></p>
+          <p id="section-4-2.6.1">XMPP client demo (based on Tigase) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-tigase">https://github.com/peacekeeper/java-sasl-xmpp-client-tigase</a><a href="#section-4-2.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-2.7">
+          <p id="section-4-2.7.1">XMPP client demo (based on Smack) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-smack">https://github.com/peacekeeper/java-sasl-xmpp-client-smack</a><a href="#section-4-2.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-2.8">
+          <p id="section-4-2.8.1">XMPP client plugin (based on Spark) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-spark">https://github.com/peacekeeper/java-sasl-xmpp-client-spark</a><a href="#section-4-2.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-4-2.9">
+          <p id="section-4-2.9.1">XMPP client application (based on Spark) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-spark">https://github.com/peacekeeper/java-sasl-xmpp-client-spark</a><a href="#section-4-2.9.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
