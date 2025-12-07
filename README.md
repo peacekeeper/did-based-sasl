@@ -85,6 +85,10 @@ See https://github.com/peacekeeper/java-sasl-xmpp-client-spark for a description
 
 See https://github.com/peacekeeper/Spark/tree/did-challenge for a description.
 
+## End-to-end demonstration
+
+Based on the components listed above, see here for an end-to-end demonstration: [./demo](./demo).
+
 ## Additional Resources
 
 The following additional resources have been used during research and preparation of this project, and are useful
