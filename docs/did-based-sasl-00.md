@@ -5,7 +5,7 @@ title: The DID-CHALLENGE SASL Mechanism
 abbrev: did-challenge-sasl
 docname: draft-did-challenge-sasl-00
 category: info
-date: 2025-08-11
+date: 2025-12-07
 ipr: none
 
 area: Security
@@ -71,6 +71,81 @@ The name of the DID-based SASL mechanism is "DID-CHALLENGE".
 This section describes the interaction between a SASL client and SASL server that use
 the "DID-CHALLENGE" mechanism.
 
+## The Authentication Exchange
+
+The "DID-CHALLENGE" mechanism is a server-first mechanism.
+
+The high-level exchange looks like this:
+
+~~~
+C: Request authentication exchange
+S: Initial challenge
+C: Initial response
+S: Outcome of authentication exchange
+~~~
+
+The mechanism is capable of transferring authorization identity strings (see next section).
+
+The server is not expected to provide additional data when indicating a successful outcome.
+
+As security layers, the mechanism supports data integrity and data confidentiality, using DID-based signatures,
+and the TLS protocol.
+
+During the exchange, the authorization identity is integrity-protected by a cryptographic signature.
+
+## Authorization Identity String
+
+In the "DID-CHALLENGE" mechanism, the [authorization identity string](https://www.rfc-editor.org/rfc/rfc4422#section-3.4.1)
+is a DID as defined by [W3C DID Core - DID Syntax](https://www.w3.org/TR/did-1.0/#did-syntax), and percent-encoded as defined by
+[RFC3986 Section 2.1](https://www.rfc-editor.org/rfc/rfc3986#section-2.1).
+
+Example authorization identity string:
+
+~~~
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
+~~~
+
+## Initial challenge
+
+The initial challenge follows the following format:
+
+~~~
+"<" <nonce> "." <timestamp> "@" <realm>
+~~~
+
+Example:
+
+~~~
+<7795631894096664932.1765144656954@java-sasl-xmpp-server>
+~~~
+
+## Initial response
+
+The initial response follows the following format:
+
+~~~
+<did> <signature>
+~~~
+
+Example:
+
+~~~
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
+~~~
+
+## Verification
+
+The signature in the initial response MUST cover the entire initial challenge, and is generated using the DID's associated private key.
+
+The server MUST perform the following verification steps:
+
+- Resolve the DID to its DID document, according to the [W3C DID Resolution specification](https://www.w3.org/TR/did-resolution/).
+- Using the DID's public key, verify the signature in the initial response against the initial challenge.
+- Verify that the challenge's nonce has not been re-used.
+- Verify that the challenge's timestamp is not too long in the past, e.g. 5 minutes.
+
+# SASL Exchange
+
 ~~~ plantuml-utxt
 title "The DID-CHALLENGE SASL mechanism"
 participant ProtocolClient as "Protocol Client"
@@ -82,7 +157,7 @@ ProtocolClient-->ProtocolServer: Network Connection
 ProtocolClient->>SASLClient: Start login
 SASLClient->>ProtocolClient: NameCallback for DID
 ProtocolClient->>SASLClient: DID
-note left of SASLClient: did:key:<..did..>
+note left of SASLClient: did%3Akey%3A<..did..>
 SASLClient->>ProtocolClient: JWKCallback for DID private key
 ProtocolClient->>SASLClient: DID private key
 note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
@@ -95,7 +170,7 @@ SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
 SASLClient->>SASLClient: Create signature
 note right of SASLClient: <..signature..>
 SASLClient->>SASLServer: Response (DID, signature)
-note left of SASLServer: did:key:<..did..> 2mJ4tBo6H<..signature..>
+note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
 SASLServer->>DIDResolver: Resolve DID
 DIDResolver->>SASLServer: DID document with DID public key
 SASLServer->>SASLServer: Verify signature
@@ -114,8 +189,8 @@ When the client is initialized, it obtains a DID to be used for authentication.
     -- CLIENT CALLBACK: NameCallback
         
     >C Client DID:  --- defaultName: null, name: null
-    getName() -> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-    C> DID:  --- defaultName: null, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+    getName() -> did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+    C> DID:  --- defaultName: null, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 ## Step 2: Client JWKCallback for Private Key
 
@@ -146,21 +221,21 @@ The server initiates the authentication flow by generating and sending a challen
 contains a none, timestamp, and realm.
 
     -- SERVER -> CLIENT: Challenge
-    <4513455346757278126.1757192932938@localhost>
+    <4513455346757278126.1757192932938@java-sasl-xmpp-server>
 
 ## Step 4: Client Signature
 
 The client signs the challenge using the DID's private key.
 
     -- CLIENT
-    Created signature for challenge <4513455346757278126.1757192932938@localhost>: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+    Created signature for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
 
 ## Step 5: Client -> Server Response
 
 The client response to the server with the DID and the signed challenge.
 
     -- CLIENT -> SERVER: Response
-    did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+    did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
 
 ## Step 6: Server NameCallback with DID
 
@@ -168,9 +243,9 @@ The server obtains the DID from the client's response.
 
     -- SERVER CALLBACK: NameCallback
     
-    >S DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
-    checkName(did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --> did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-    S> DID:  --- defaultName: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+    >S DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
+    checkName(did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --> did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+    S> DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 ## Step 7: Server Verification
 
@@ -178,7 +253,7 @@ The server verifies the signature in the client's response by resolving the clie
 contains public keys need for the verification.
 
     -- SERVER
-    Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge <4513455346757278126.1757192932938@localhost>: true
+    Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: true
 
 ## Step 8: Server AuthorizeCallback with authorization ID
 
@@ -186,10 +261,10 @@ The server determines the DID as the "authorized ID", concluding the authenticat
 
     -- SERVER CALLBACK: AuthorizeCallback
     
-    >S --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
-    S> --- authenticationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
+    >S --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
+    S> --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
     
-    authorizationId: did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+    authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 # Implementations
 
