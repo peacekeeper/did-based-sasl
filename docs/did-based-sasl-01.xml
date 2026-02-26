@@ -105,16 +105,16 @@ the "DID-CHALLENGE" mechanism.</t>
 
 <t>The "DID-CHALLENGE" mechanism is a server-first mechanism.</t>
 
-<t>The high-level exchange looks like this:</t>
+<t>The exchange consists of the following steps:</t>
 
 <figure><artwork><![CDATA[
 C: Request authentication exchange
-S: Initial challenge
-C: Initial response
+S: DID challenge
+C: DID response
 S: Outcome of authentication exchange
 ]]></artwork></figure>
 
-<t>The mechanism is capable of transferring authorization identity strings (see next section).</t>
+<t>The mechanism is capable of transferring authorization identity strings (see <xref target="authorization-identity-string"></xref>).</t>
 
 <t>The server is not expected to provide additional data when indicating a successful outcome.</t>
 
@@ -137,9 +137,9 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 ]]></artwork></figure>
 
 </section>
-<section anchor="initial-challenge"><name>Initial challenge</name>
+<section anchor="did-challenge"><name>DID Challenge</name>
 
-<t>The initial challenge follows the following format:</t>
+<t>The DID challenge follows the following format:</t>
 
 <figure><artwork><![CDATA[
 "<" <nonce> "." <timestamp> "@" <realm>
@@ -152,9 +152,9 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 ]]></artwork></figure>
 
 </section>
-<section anchor="initial-response"><name>Initial response</name>
+<section anchor="did-response"><name>DID Response</name>
 
-<t>The initial response follows the following format:</t>
+<t>The DID response follows the following format:</t>
 
 <figure><artwork><![CDATA[
 <did> <signature>
@@ -183,7 +183,11 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
 </section>
 </section>
-<section anchor="sasl-exchange"><name>SASL Exchange</name>
+<section anchor="sasl-exchange-with-dids"><name>SASL Exchange with DIDs</name>
+
+<t>This section illustrates the detailed steps of the SASL exchange.</t>
+
+<t>The flow includes the DID challenge (see <xref target="did-challenge"></xref>) and DID response (see <xref target="did-response"></xref>) steps.</t>
 
 <figure><artset><artwork  type="svg"><svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1097px" preserveAspectRatio="none" version="1.1" viewBox="0 0 968 1097" width="968px">
   <defs/>
@@ -578,10 +582,90 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 <t>This section defines an optional extension of the "DID-CHALLENGE" SASL mechanism which adds support for VCs.</t>
 
+<section anchor="the-authentication-exchange-with-vcvp-support"><name>The Authentication Exchange (with VC/VP support)</name>
+
+<t>The exchange consists of the following steps (expanding on <xref target="authentication"></xref>):</t>
+
+<figure><artwork><![CDATA[
+C: Request authentication exchange
+S: DID challenge
+C: DID response
+S: VC/VP challenge
+C: VC/VP response
+S: Outcome of authentication exchange
+]]></artwork></figure>
+
+<t>The steps VC/VP challenge and response steps may be repeated multiple times.</t>
+
+</section>
+<section anchor="vc-vp-challenge"><name>VC-VP challenge</name>
+
+<t>The VC/VP challenge follows the following format:</t>
+
+<figure><artwork><![CDATA[
+"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm>
+]]></artwork></figure>
+
+<t>Example:</t>
+
+<figure><artwork><![CDATA[
+<7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
+]]></artwork></figure>
+
+</section>
+<section anchor="testvtestp-response"><name>testv/testp response</name>
+
+</section>
+<section anchor="vc-vp-response"><name>VC-VP response</name>
+
+<t>The VC/VP response follows the following format:</t>
+
+<figure><artwork><![CDATA[
+<vp>
+]]></artwork></figure>
+
+<t>Example:</t>
+
+<figure><artwork><![CDATA[
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "id": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
+  "type": ["VerifiablePresentation"],
+  "verifiableCredential": [{
+    "id": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D"
+    "type": ["DegreeCredential"]
+  }]
+}
+]]></artwork></figure>
+
+</section>
+<section anchor="verification-1"><name>Verification</name>
+
+<t>TODO The signature in the initial response MUST cover the entire initial challenge, and is generated using the DID's associated private key.</t>
+
+<t>TODO The server MUST perform the following verification steps:</t>
+
+<t><list style="symbols">
+  <t>TODO</t>
+  <t>Verify "holder"</t>
+</list></t>
+
+</section>
+</section>
+<section anchor="sasl-exchange-with-dids-and-vcsvps"><name>SASL Exchange with DIDs and VCs/VPs</name>
+
+<t>This section illustrates the detailed steps of the SASL exchange with DIDs and VCs/VPs, building on <xref target="sasl-exchange-with-dids"></xref>.</t>
+
+<t>The flow includes the DID challenge (see <xref target="did-challenge"></xref>), DID response (see <xref target="did-response"></xref>),
+VC/VP challenge (see <xref target="vc-vp-challenge"></xref>), and VC/VP response (see <xref target="vc-vp-response"></xref>).</t>
+
 <figure><artset><artwork  type="svg"><svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1097px" preserveAspectRatio="none" version="1.1" viewBox="0 0 968 1097" width="968px">
   <defs/>
   <g>
-    <text fill="black" font-family="sans-serif" font-size="18" x="315" y="29.2419">"The DID-CHALLENGE SASL mechanism"</text>
+    <text fill="black" font-family="sans-serif" font-size="18" x="276" y="29.2419">"The DID-CHALLENGE SASL mechanism with VCs"</text>
     <line x1="104" x2="104" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
     <line x1="315" x2="315" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
     <line x1="612" x2="612" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
@@ -714,10 +798,10 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
     <line x1="315.5" x2="325.5" y1="1036.6462" y2="1040.6462" stroke="black" stroke-width="1.0"/>
     <line x1="315.5" x2="611.5" y1="1036.6462" y2="1036.6462" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="1030.8372">Completed SASL authentication</text>
-    <!--MD5=[e6f18e28fb00f965862d2d4af7ea64d2]
+    <!--MD5=[d190988177e0cfd77b2c828f91323c8d]
 @startuml
 
-title "The DID-CHALLENGE SASL mechanism"
+title "The DID-CHALLENGE SASL mechanism with VCs"
 participant ProtocolClient as "Protocol Client"
 participant SASLClient as "SASL Client"
 participant SASLServer as "SASL Server"
@@ -765,7 +849,7 @@ Country: US
 -->
   </g>
 </svg>
-</artwork><artwork  type="ascii-art"><![CDATA[                                                                   "The DID-CHALLENGE SASL mechanism"                                                              
+</artwork><artwork  type="ascii-art"><![CDATA[                                                              "The DID-CHALLENGE SASL mechanism with VCs"                                                          
                                                                                                                                                                    
                      ┌───────────────┐                  ┌───────────┐                             ┌───────────┐           ┌───────────────┐          ┌────────────┐
                      │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
@@ -892,95 +976,105 @@ Country: US
   </back>
 
 <!-- ##markdown-source:
-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
-gc811XdKJ62vVsZSVyY1921DvvZbh8uWTtWRi/ZOmlYxcHIv5jgs5jXshCvf
-TrPHagvHsP2YvpKhMoxYkdAC0OTxIGHDKI6aW3+NuYGcrT9ON9k3pcQfp5mU
-/cz+N/KccbLa63ysHWXS+ZgLyaRs60OxQ6qdGPqXo59xg1tflQD1KLVZVJlW
-f0LioNeBxDQcb7j0h6YVbX9IgvgNzzRJ7+Ro/+yS9CBoX3d7x0Vlq0H4R13s
-9hIWgX4HZ5u406KRI8/UZ0svcpxy/AkTr9WsEVNv19aJuUteUj8rar3dL1n8
-RcukJqmlJplPB+cxuh9DCDzPMrm8oGuaKXecvKEMDBn1USRBLPGIsXKMGUvs
-lFutqLJL9gDuuQbTYRMt1U3eYPj6yAsiCQO04X5JXaF0z1UmAh13kO5z9fvq
-uRNK5dzauXSZPZ1Pm9kblT73B9ctc3zt7vG9+t7x5dVIDGv9uzvv3ZbclHJ6
-Ou7L9823s96b8TQ/V0k5Obg7PPr4+eNDv37RcH3zevPoP/2t2tXJh71PtHZ0
-9um+K6PJp7dXZ+2Smvpr4qbnz9B9ot0/T7fLNLtKr1+v1a/WaRqT9U5cyaJT
-xl7eKzYxkraiikEZN4rnOp1D2HRiHyrezSaf/wTzbN1XzHYvqguc1Sn4xSaO
-ZTxVUqgjkIRqdmQR29+/uN6/UMyq2M1VImrITqNZrTeazXqjtdXcqm21q7UW
-VDfNrep2bbsOf9urOiCpShopTPXTbKsUEeMRAooo7p0W9u7FDXsBbbQ/q/In
-1/XUn05Tel8tRoc0/AdvvHf3umV9PDv+aXAyOLfcgB6PuGuftduD40Zzf3LK
-P5+2ZPXD/tv26eufvJl7ynsBj+qfrvfv3h/UqLwOB7R7YR0Hhxf8NJzsddlx
-pqBmqiAwQ+w9F4V+UaypdD8bdxFiT1J5PtkhJ73e+DhHbpc7B9K4ljJ+Vuip
-ES9rIf3uymqlAba86sqHWJLWEt2krQStzx9EqtGFgHik3tA5rL8qz79EfwvF
-iTo1osqTl5CFDPktapv+ytrmW8j8bWqirdQ9ljQb9Qvd4Ipxd6F3tOAaCMP6
-RFMCSemQuIylc60p1WDLgDjfzPJYXO4inXynbd4B1V38qTUPa79XgH07vFTb
-pdQe7dQeC5uZ+OhT8dtQMYBt2JuELvdYFsPxJ+lSttmBSSU8yehZTmSvOAyC
-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
+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
+fa8Op0EAAA==
 
 -->
 

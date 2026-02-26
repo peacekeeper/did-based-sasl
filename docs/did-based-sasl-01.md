@@ -78,16 +78,16 @@ the "DID-CHALLENGE" mechanism.
 
 The "DID-CHALLENGE" mechanism is a server-first mechanism.
 
-The high-level exchange looks like this:
+The exchange consists of the following steps:
 
 ~~~
 C: Request authentication exchange
-S: Initial challenge
-C: Initial response
+S: DID challenge
+C: DID response
 S: Outcome of authentication exchange
 ~~~
 
-The mechanism is capable of transferring authorization identity strings (see next section).
+The mechanism is capable of transferring authorization identity strings (see [](#authorization-identity-string)).
 
 The server is not expected to provide additional data when indicating a successful outcome.
 
@@ -108,9 +108,9 @@ Example authorization identity string:
 did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
 ~~~
 
-## Initial challenge
+## DID Challenge
 
-The initial challenge follows the following format:
+The DID challenge follows the following format:
 
 ~~~
 "<" <nonce> "." <timestamp> "@" <realm>
@@ -122,9 +122,9 @@ Example:
 <7795631894096664932.1765144656954@java-sasl-xmpp-server>
 ~~~
 
-## Initial response
+## DID Response
 
-The initial response follows the following format:
+The DID response follows the following format:
 
 ~~~
 <did> <signature>
@@ -148,7 +148,11 @@ The server MUST perform the following verification steps:
 - Verify that the challenge's nonce has not been re-used.
 - Verify that the challenge's timestamp is not too long in the past, e.g. 5 minutes.
 
-# SASL Exchange
+# SASL Exchange with DIDs
+
+This section illustrates the detailed steps of the SASL exchange.
+
+The flow includes the DID challenge (see [](#did-challenge)) and DID response (see [](#did-response)) steps.
 
 ~~~ plantuml-utxt
 title "The DID-CHALLENGE SASL mechanism"
@@ -274,8 +278,80 @@ The server determines the DID as the "authorized ID", concluding the authenticat
 
 This section defines an optional extension of the "DID-CHALLENGE" SASL mechanism which adds support for VCs.
 
+## The Authentication Exchange (with VC/VP support)
+
+The exchange consists of the following steps (expanding on [](#authentication)):
+
+~~~
+C: Request authentication exchange
+S: DID challenge
+C: DID response
+S: VC/VP challenge
+C: VC/VP response
+S: Outcome of authentication exchange
+~~~
+
+The steps VC/VP challenge and response steps may be repeated multiple times.
+
+## VC-VP challenge
+
+The VC/VP challenge follows the following format:
+
+~~~
+"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm>
+~~~
+
+Example:
+
+~~~
+<7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
+~~~
+
+## testv/testp response
+
+## VC-VP response
+
+The VC/VP response follows the following format:
+
+~~~
+<vp>
+~~~
+
+Example:
+
+~~~
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "id": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
+  "type": ["VerifiablePresentation"],
+  "verifiableCredential": [{
+    "id": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D"
+    "type": ["DegreeCredential"]
+  }]
+}
+~~~
+
+## Verification
+
+TODO The signature in the initial response MUST cover the entire initial challenge, and is generated using the DID's associated private key.
+
+TODO The server MUST perform the following verification steps:
+
+- TODO
+- Verify "holder"
+
+# SASL Exchange with DIDs and VCs/VPs
+
+This section illustrates the detailed steps of the SASL exchange with DIDs and VCs/VPs, building on [](#sasl-exchange-with-dids).
+
+The flow includes the DID challenge (see [](#did-challenge)), DID response (see [](#did-response)),
+VC/VP challenge (see [](#vc-vp-challenge)), and VC/VP response (see [](#vc-vp-response)). 
+
 ~~~ plantuml-utxt
-title "The DID-CHALLENGE SASL mechanism"
+title "The DID-CHALLENGE SASL mechanism with VCs"
 participant ProtocolClient as "Protocol Client"
 participant SASLClient as "SASL Client"
 participant SASLServer as "SASL Server"
