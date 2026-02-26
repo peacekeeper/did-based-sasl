@@ -37,12 +37,12 @@ pipx ensurepath
 ```
 
 ```shell
-kramdown-rfc2629 ./docs/did-based-sasl-00.md >./docs/did-based-sasl-00.xml
-xml2rfc ./docs/did-based-sasl-00.xml
+kramdown-rfc2629 ./docs/did-based-sasl-01.md >./docs/did-based-sasl-01.xml
+xml2rfc ./docs/did-based-sasl-01.xml
 ```
 
 ```shell
-kdrfc -ht ./docs/did-based-sasl-00.md
+kdrfc -ht ./docs/did-based-sasl-01.md
 ```
 
 ## End-to-end demonstration
