@@ -4,7 +4,7 @@
 
 Common Authentication Technology Next Generation            M. Sabadello
                                                         Danube Tech GmbH
-                                                            February 206
+                                                        24 February 2026
 
 
                     The DID-CHALLENGE SASL Mechanism
@@ -55,7 +55,7 @@ Table of Contents
 
 Sabadello                     Informational                     [Page 1]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
 1.  Introduction
@@ -111,7 +111,7 @@ Sabadello                     Informational                     [Page 1]
 
 Sabadello                     Informational                     [Page 2]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
 3.  Authentication
@@ -167,7 +167,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
 Sabadello                     Informational                     [Page 3]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
    <7795631894096664932.1765144656954@java-sasl-xmpp-server>
@@ -192,8 +192,13 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
    *  Resolve the DID to its DID document, according to the W3C DID
       Resolution specification (https://www.w3.org/TR/did-resolution/).
 
-   *  Using the DID's public key, verify the signature in the initial
-      response against the initial challenge.
+   *  Retrieve the public keys from the DID document which have an
+      "authentication" verification relationship, according to W3C DID
+      Core - Authentication (https://www.w3.org/TR/did-
+      1.0/#authentication).
+
+   *  Using the public keys from the DID document, verify the signature
+      in the initial response against the initial challenge.
 
    *  Verify that the challenge's nonce has not been re-used.
 
@@ -213,19 +218,19 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
                              │          Start login           │                                         │                         │                        │
                              │───────────────────────────────>│                                         │                         │                        │
                              │                                │                                         │                         │                        │
-                             │     NameCallback for DID       │                                         │                         │                        │
-                             │<───────────────────────────────│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │              DID               │                                         │                         │                        │
-                             │───────────────────────────────>│                                         │                         │                        │
 
 
 
 Sabadello                     Informational                     [Page 4]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
+                             │     NameCallback for DID       │                                         │                         │                        │
+                             │<───────────────────────────────│                                         │                         │                        │
+                             │                                │                                         │                         │                        │
+                             │              DID               │                                         │                         │                        │
+                             │───────────────────────────────>│                                         │                         │                        │
                              │                                │                                         │                         │                        │
                              │      ╔═══════════════════════╗ │                                         │                         │                        │
                              │      ║did%3Akey%3A<..did..> ░║ │                                         │                         │                        │
@@ -269,19 +274,19 @@ Sabadello                     Informational                     [Page 4]
                              │                                │────────────────────────────────────────>│                         │                        │
                              │                                │                                         │                         │                        │
                              │                       ╔════════╧═══════════════════════════════════════╗ │                         │                        │
-                             │                       ║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                         │                        │
-                             │                       ╚════════╤═══════════════════════════════════════╝ │                         │                        │
-                             │                                │                                         │                   Resolve DID                    │
-                             │                                │                                         │─────────────────────────────────────────────────>│
-                             │                                │                                         │                         │                        │
 
 
 
 Sabadello                     Informational                     [Page 5]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
+                             │                       ║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                         │                        │
+                             │                       ╚════════╤═══════════════════════════════════════╝ │                         │                        │
+                             │                                │                                         │                   Resolve DID                    │
+                             │                                │                                         │─────────────────────────────────────────────────>│
+                             │                                │                                         │                         │                        │
                              │                                │                                         │        DID document with DID public key          │
                              │                                │                                         │<─────────────────────────────────────────────────│
                              │                                │                                         │                         │                        │
@@ -328,14 +333,9 @@ C> DID:  --- defaultName: null, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm
 
 
 
-
-
-
-
-
 Sabadello                     Informational                     [Page 6]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
 -- CLIENT CALLBACK: JWKCallback
@@ -391,7 +391,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPc
 
 Sabadello                     Informational                     [Page 7]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
 -- SERVER CALLBACK: NameCallback
@@ -447,7 +447,7 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 Sabadello                     Informational                     [Page 8]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
                              │                                │                                         │                         │                        │
@@ -503,7 +503,7 @@ Sabadello                     Informational                     [Page 8]
 
 Sabadello                     Informational                     [Page 9]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
                              │                                │                                         │        DID document with DID public key          │
@@ -559,7 +559,7 @@ Sabadello                     Informational                     [Page 9]
 
 Sabadello                     Informational                    [Page 10]
 
-                           did-challenge-sasl               February 206
+                           did-challenge-sasl              February 2026
 
 
    *  XMPP server (based on Tigase) using the DID-based SASL

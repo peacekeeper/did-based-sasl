@@ -1221,7 +1221,7 @@ li > p:last-of-type:only-child {
 <thead><tr>
 <td class="left"></td>
 <td class="center">did-challenge-sasl</td>
-<td class="right">February 206</td>
+<td class="right">February 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Sabadello</td>
@@ -1236,7 +1236,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">Common Authentication Technology Next Generation</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime=" 206-02" class="published">February 206</time>
+<time datetime="2026-02-24" class="published">24 February 2026</time>
     </dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
@@ -1460,13 +1460,16 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
             <p id="section-3.5-3.1.1">Resolve the DID to its DID document, according to the <a href="https://www.w3.org/TR/did-resolution/">W3C DID Resolution specification</a>.<a href="#section-3.5-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.5-3.2">
-            <p id="section-3.5-3.2.1">Using the DID's public key, verify the signature in the initial response against the initial challenge.<a href="#section-3.5-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-3.2.1">Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to <a href="https://www.w3.org/TR/did-1.0/#authentication">W3C DID Core - Authentication</a>.<a href="#section-3.5-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.5-3.3">
-            <p id="section-3.5-3.3.1">Verify that the challenge's nonce has not been re-used.<a href="#section-3.5-3.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-3.3.1">Using the public keys from the DID document, verify the signature in the initial response against the initial challenge.<a href="#section-3.5-3.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.5-3.4">
-            <p id="section-3.5-3.4.1">Verify that the challenge's timestamp is not too long in the past, e.g. 5 minutes.<a href="#section-3.5-3.4.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-3.4.1">Verify that the challenge's nonce has not been re-used.<a href="#section-3.5-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.5-3.5">
+            <p id="section-3.5-3.5.1">Verify that the challenge's timestamp is not too long in the past, e.g. 5 minutes.<a href="#section-3.5-3.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

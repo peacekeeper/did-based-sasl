@@ -143,7 +143,8 @@ The signature in the initial response MUST cover the entire initial challenge, a
 The server MUST perform the following verification steps:
 
 - Resolve the DID to its DID document, according to the [W3C DID Resolution specification](https://www.w3.org/TR/did-resolution/).
-- Using the DID's public key, verify the signature in the initial response against the initial challenge.
+- Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to [W3C DID Core - Authentication](https://www.w3.org/TR/did-1.0/#authentication).
+- Using the public keys from the DID document, verify the signature in the initial response against the initial challenge.
 - Verify that the challenge's nonce has not been re-used.
 - Verify that the challenge's timestamp is not too long in the past, e.g. 5 minutes.
 
