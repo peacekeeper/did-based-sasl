@@ -4,7 +4,7 @@
 
 Common Authentication Technology Next Generation            M. Sabadello
                                                         Danube Tech GmbH
-                                                        24 February 2026
+                                                            3 March 2026
 
 
                     The DID-CHALLENGE SASL Mechanism
@@ -33,32 +33,30 @@ Table of Contents
      3.3.  DID Challenge . . . . . . . . . . . . . . . . . . . . . .   3
      3.4.  DID Response  . . . . . . . . . . . . . . . . . . . . . .   4
      3.5.  Verification  . . . . . . . . . . . . . . . . . . . . . .   4
-   4.  SASL Exchange with DIDs . . . . . . . . . . . . . . . . . . .   4
-     4.1.  Step 1: Client NameCallback for DID . . . . . . . . . . .   6
+   4.  SASL Exchange with DIDs . . . . . . . . . . . . . . . . . . .   5
+     4.1.  Step 1: Client NameCallback for DID . . . . . . . . . . .   7
      4.2.  Step 2: Client JWKCallback for Private Key  . . . . . . .   7
      4.3.  Step 3: Server -> Client Challenge  . . . . . . . . . . .   7
-     4.4.  Step 4: Client Signature  . . . . . . . . . . . . . . . .   7
-     4.5.  Step 5: Client -> Server Response . . . . . . . . . . . .   7
+     4.4.  Step 4: Client Signature  . . . . . . . . . . . . . . . .   8
+     4.5.  Step 5: Client -> Server Response . . . . . . . . . . . .   8
      4.6.  Step 6: Server NameCallback with DID  . . . . . . . . . .   8
      4.7.  Step 7: Server Verification . . . . . . . . . . . . . . .   8
      4.8.  Step 8: Server AuthorizeCallback with authorization ID  .   8
-   5.  Optional Support for VCs  . . . . . . . . . . . . . . . . . .   8
-     5.1.  The Authentication Exchange (with VC/VP support)  . . . .   8
-     5.2.  VC-VP challenge . . . . . . . . . . . . . . . . . . . . .   9
-     5.3.  testv/testp response  . . . . . . . . . . . . . . . . . .   9
-     5.4.  VC-VP response  . . . . . . . . . . . . . . . . . . . . .   9
-     5.5.  Verification  . . . . . . . . . . . . . . . . . . . . . .   9
-   6.  SASL Exchange with DIDs and VCs/VPs . . . . . . . . . . . . .  10
+   5.  (Optional) Authentication with VCs/VPs  . . . . . . . . . . .   9
+     5.1.  The Authentication Exchange (with VC/VP support)  . . . .   9
+     5.2.  VC-VP Challenge . . . . . . . . . . . . . . . . . . . . .   9
+     5.3.  VC-VP Response  . . . . . . . . . . . . . . . . . . . . .   9
+     5.4.  Verification  . . . . . . . . . . . . . . . . . . . . . .  10
+   6.  (Optional) SASL Exchange with DIDs and VCs/VPs  . . . . . . .  10
    7.  Implementations . . . . . . . . . . . . . . . . . . . . . . .  12
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  13
 
 
 
 Sabadello                     Informational                     [Page 1]
 
-                           did-challenge-sasl              February 2026
+                           did-challenge-sasl                 March 2026
 
-
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
 
@@ -109,9 +107,11 @@ Sabadello                     Informational                     [Page 1]
 
 
 
+
+
 Sabadello                     Informational                     [Page 2]
 
-                           did-challenge-sasl              February 2026
+                           did-challenge-sasl                 March 2026
 
 
 3.  Authentication
@@ -158,17 +158,25 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
    The DID challenge follows the following format:
 
-   "<" <nonce> "." <timestamp> "@" <realm>
+   "<" <nonce> "." <timestamp> "@" <realm> ">"
 
-   Example:
+   Where:
 
 
 
 
 Sabadello                     Informational                     [Page 3]
 
-                           did-challenge-sasl              February 2026
+                           did-challenge-sasl                 March 2026
 
+
+   *  <nonce> MUST be a unique string.
+
+   *  <timestamp> MUST be a UNIX timestamp.
+
+   *  <realm> MUST be a SASL realm.
+
+   Example:
 
    <7795631894096664932.1765144656954@java-sasl-xmpp-server>
 
@@ -177,6 +185,13 @@ Sabadello                     Informational                     [Page 3]
    The DID response follows the following format:
 
    <did> <signature>
+
+   Where:
+
+   *  <did> MUST be a Decentralized Identifier (DID) as defined in W3C
+      DID Core - DID Syntax (https://www.w3.org/TR/did-1.0/#did-syntax).
+
+   *  <signature> MUST be a base64-encoded signature of the challenge
 
    Example:
 
@@ -202,6 +217,15 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
    *  Verify that the challenge's nonce has not been re-used.
 
+
+
+
+
+Sabadello                     Informational                     [Page 4]
+
+                           did-challenge-sasl                 March 2026
+
+
    *  Verify that the challenge's timestamp is not too long in the past,
       e.g. 5 minutes.
 
@@ -218,14 +242,6 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
                      │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
                      └───────┬───────┘                  └─────┬─────┘                             └─────┬─────┘           └───────┬───────┘          └─────┬──────┘
                              │                                │       Network Connection                │                         │                        │
-
-
-
-Sabadello                     Informational                     [Page 4]
-
-                           did-challenge-sasl              February 2026
-
-
                              │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │
                              │                                │                                         │                         │                        │
                              │          Start login           │                                         │                         │                        │
@@ -258,6 +274,14 @@ Sabadello                     Informational                     [Page 4]
                              │                                │Selected authn mechanism "DID-CHALLENGE" │                         │                        │
                              │                                │────────────────────────────────────────>│                         │                        │
                              │                                │                                         │                         │                        │
+
+
+
+Sabadello                     Informational                     [Page 5]
+
+                           did-challenge-sasl                 March 2026
+
+
                              │                                │                                         ────┐                     │                        │
                              │                                │                                             │ Generate challenge  │                        │
                              │                                │                                         <───┘                     │                        │
@@ -274,14 +298,6 @@ Sabadello                     Informational                     [Page 4]
                              │                                │                                         │                         │                        │
                              │                                │ ╔═════════════════╗                     │                         │                        │
                              │                                │ ║<..signature..> ░║                     │                         │                        │
-
-
-
-Sabadello                     Informational                     [Page 5]
-
-                           did-challenge-sasl              February 2026
-
-
                              │                                │ ╚═════════════════╝                     │                         │                        │
                              │                                │       Response (DID, signature)         │                         │                        │
                              │                                │────────────────────────────────────────>│                         │                        │
@@ -314,6 +330,14 @@ Sabadello                     Informational                     [Page 5]
                              │                                │                                         │authorized=true with DID │                        │
                              │                                │                                         │<────────────────────────│                        │
                              │                                │                                         │                         │                        │
+
+
+
+Sabadello                     Informational                     [Page 6]
+
+                           did-challenge-sasl                 March 2026
+
+
                              │                                │     Completed SASL authentication       │                         │                        │
                              │                                │<────────────────────────────────────────│                         │                        │
                      ┌───────┴───────┐                  ┌─────┴─────┐                             ┌─────┴─────┐           ┌───────┴───────┐          ┌─────┴──────┐
@@ -330,13 +354,6 @@ Sabadello                     Informational                     [Page 5]
 >C Client DID:  --- defaultName: null, name: null
 getName() -> did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 C> DID:  --- defaultName: null, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-
-
-
-Sabadello                     Informational                     [Page 6]
-
-                           did-challenge-sasl              February 2026
-
 
 4.2.  Step 2: Client JWKCallback for Private Key
 
@@ -370,6 +387,13 @@ C> Private key:  --- defaultText: (JWK), text: {
    -- SERVER -> CLIENT: Challenge
    <4513455346757278126.1757192932938@java-sasl-xmpp-server>
 
+
+
+Sabadello                     Informational                     [Page 7]
+
+                           did-challenge-sasl                 March 2026
+
+
 4.4.  Step 4: Client Signature
 
    The client signs the challenge using the DID's private key.
@@ -384,15 +408,6 @@ Created signature for challenge <4513455346757278126.1757192932938@java-sasl-xmp
 
 -- CLIENT -> SERVER: Response
 did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
-
-
-
-
-
-Sabadello                     Informational                     [Page 7]
-
-                           did-challenge-sasl              February 2026
-
 
 4.6.  Step 6: Server NameCallback with DID
 
@@ -425,10 +440,21 @@ S> --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3
 
 authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
-5.  Optional Support for VCs
+
+
+
+
+
+Sabadello                     Informational                     [Page 8]
+
+                           did-challenge-sasl                 March 2026
+
+
+5.  (Optional) Authentication with VCs/VPs
 
    This section defines an optional extension of the "DID-CHALLENGE"
-   SASL mechanism which adds support for VCs.
+   SASL mechanism which adds support for Verifiable Credentials (VCs)
+   and Verifiable Presentations (VPs).
 
 5.1.  The Authentication Exchange (with VC/VP support)
 
@@ -442,34 +468,52 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
    C: VC/VP response
    S: Outcome of authentication exchange
 
-
-
-
-Sabadello                     Informational                     [Page 8]
-
-                           did-challenge-sasl              February 2026
-
-
    The steps VC/VP challenge and response steps may be repeated multiple
    times.
 
-5.2.  VC-VP challenge
+5.2.  VC-VP Challenge
 
    The VC/VP challenge follows the following format:
 
-   "<" <nonce> "." <timestamp> "." <vc.type> "@" <realm>
+   "<" <nonce> "." <timestamp> "." <vc.type> "@" <realm> ">"
+
+   Where:
+
+   *  <nonce> MUST be a unique string.
+
+   *  <timestamp> MUST be a UNIX timestamp.
+
+   *  <vc.type> MUST be a type of a Verifiable Credential as defined in
+      W3C Verifiable Credentials Data Model v2.0 - Types
+      (https://www.w3.org/TR/2025/REC-vc-data-model-
+      2.0-20250515/#types).
+
+   *  <realm> MUST be a SASL realm.
 
    Example:
 
 <7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
 
-5.3.  testv/testp response
-
-5.4.  VC-VP response
+5.3.  VC-VP Response
 
    The VC/VP response follows the following format:
 
+
+
+
+Sabadello                     Informational                     [Page 9]
+
+                           did-challenge-sasl                 March 2026
+
+
    <vp>
+
+   Where:
+
+   *  <vp> MUST be a Verifiable Presentation as defined in W3C
+      Verifiable Credentials Data Model v2.0 - Verifiable Presentations
+      (https://www.w3.org/TR/2025/REC-vc-data-model-2.0-
+      20250515/#verifiable-presentations).
 
    Example:
 
@@ -486,7 +530,7 @@ Sabadello                     Informational                     [Page 8]
      }]
    }
 
-5.5.  Verification
+5.4.  Verification
 
    TODO The signature in the initial response MUST cover the entire
    initial challenge, and is generated using the DID's associated
@@ -498,22 +542,25 @@ Sabadello                     Informational                     [Page 8]
 
    *  Verify "holder"
 
-
-
-
-Sabadello                     Informational                     [Page 9]
-
-                           did-challenge-sasl              February 2026
-
-
-6.  SASL Exchange with DIDs and VCs/VPs
+6.  (Optional) SASL Exchange with DIDs and VCs/VPs
 
    This section illustrates the detailed steps of the SASL exchange with
    DIDs and VCs/VPs, building on Section 4.
 
    The flow includes the DID challenge (see Section 3.3), DID response
    (see Section 3.4), VC/VP challenge (see Section 5.2), and VC/VP
-   response (see Section 5.4).
+   response (see Section 5.3).
+
+
+
+
+
+
+
+Sabadello                     Informational                    [Page 10]
+
+                           did-challenge-sasl                 March 2026
+
 
                                                               "The DID-CHALLENGE SASL mechanism with VCs"
 
@@ -554,14 +601,6 @@ Sabadello                     Informational                     [Page 9]
                              │                                │────────────────────────────────────────>│                         │                        │
                              │                                │                                         │                         │                        │
                              │                                │                                         ────┐                     │                        │
-
-
-
-Sabadello                     Informational                    [Page 10]
-
-                           did-challenge-sasl              February 2026
-
-
                              │                                │                                             │ Generate challenge  │                        │
                              │                                │                                         <───┘                     │                        │
                              │                                │                                         │                         │                        │
@@ -571,6 +610,14 @@ Sabadello                     Informational                    [Page 10]
                              │                                │ Challenge (nonce, timestamp, hostname)  │                         │                        │
                              │                                │<────────────────────────────────────────│                         │                        │
                              │                                │                                         │                         │                        │
+
+
+
+Sabadello                     Informational                    [Page 11]
+
+                           did-challenge-sasl                 March 2026
+
+
                              │                                ────┐                                     │                         │                        │
                              │                                    │ Create signature                    │                         │                        │
                              │                                <───┘                                     │                         │                        │
@@ -610,14 +657,6 @@ Sabadello                     Informational                    [Page 10]
                              │                                │                                         │<────────────────────────│                        │
                              │                                │                                         │                         │                        │
                              │                                │     Completed SASL authentication       │                         │                        │
-
-
-
-Sabadello                     Informational                    [Page 11]
-
-                           did-challenge-sasl              February 2026
-
-
                              │                                │<────────────────────────────────────────│                         │                        │
                      ┌───────┴───────┐                  ┌─────┴─────┐                             ┌─────┴─────┐           ┌───────┴───────┐          ┌─────┴──────┐
                      │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
@@ -627,6 +666,13 @@ Sabadello                     Informational                    [Page 11]
 
    The following repositories contain various parts of an example
    implementation:
+
+
+
+Sabadello                     Informational                    [Page 12]
+
+                           did-challenge-sasl                 March 2026
+
 
    *  SASL client demonstration components:
       https://github.com/peacekeeper/java-sasl-client-demo
@@ -664,16 +710,6 @@ Sabadello                     Informational                    [Page 11]
       sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
       xmpp-client-spark)
 
-
-
-
-
-
-Sabadello                     Informational                    [Page 12]
-
-                           did-challenge-sasl              February 2026
-
-
    *  XMPP client application (based on Spark) using the DID-based SASL
       authentication mechanism: https://github.com/peacekeeper/java-
       sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
@@ -686,6 +722,14 @@ Author's Address
    Margaretenstraße 70/1/7
    A-1050 Wien
    Austria
+
+
+
+Sabadello                     Informational                    [Page 13]
+
+                           did-challenge-sasl                 March 2026
+
+
    Phone: +43-664-3154848
    Email: markus@danubetech.com
 
@@ -725,4 +769,16 @@ Author's Address
 
 
 
-Sabadello                     Informational                    [Page 13]
+
+
+
+
+
+
+
+
+
+
+
+
+Sabadello                     Informational                    [Page 14]

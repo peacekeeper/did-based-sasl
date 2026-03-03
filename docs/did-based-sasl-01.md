@@ -5,7 +5,7 @@ title: The DID-CHALLENGE SASL Mechanism
 abbrev: did-challenge-sasl
 docname: draft-did-challenge-sasl-01
 category: info
-date: 2026-02-24
+date: 2026-03-03
 ipr: none
 
 area: Security
@@ -113,8 +113,14 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 The DID challenge follows the following format:
 
 ~~~
-"<" <nonce> "." <timestamp> "@" <realm>
+"<" <nonce> "." <timestamp> "@" <realm> ">"
 ~~~
+
+Where:
+
+- `<nonce>` MUST be a unique string.
+- `<timestamp>` MUST be a UNIX timestamp.
+- `<realm>` MUST be a SASL realm.
 
 Example:
 
@@ -129,6 +135,11 @@ The DID response follows the following format:
 ~~~
 <did> <signature>
 ~~~
+
+Where:
+
+- `<did>` MUST be a Decentralized Identifier (DID) as defined in [W3C DID Core - DID Syntax](https://www.w3.org/TR/did-1.0/#did-syntax).
+- `<signature>` MUST be a base64-encoded signature of the challenge 
 
 Example:
 
@@ -274,9 +285,10 @@ The server determines the DID as the "authorized ID", concluding the authenticat
     
     authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
-# Optional Support for VCs
+# (Optional) Authentication with VCs/VPs
 
-This section defines an optional extension of the "DID-CHALLENGE" SASL mechanism which adds support for VCs.
+This section defines an optional extension of the "DID-CHALLENGE" SASL mechanism which adds support for Verifiable Credentials (VCs)
+and Verifiable Presentations (VPs).
 
 ## The Authentication Exchange (with VC/VP support)
 
@@ -293,13 +305,20 @@ S: Outcome of authentication exchange
 
 The steps VC/VP challenge and response steps may be repeated multiple times.
 
-## VC-VP challenge
+## VC-VP Challenge
 
 The VC/VP challenge follows the following format:
 
 ~~~
-"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm>
+"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm> ">"
 ~~~
+
+Where:
+
+- `<nonce>` MUST be a unique string.
+- `<timestamp>` MUST be a UNIX timestamp.
+- `<vc.type>` MUST be a type of a Verifiable Credential as defined in [W3C Verifiable Credentials Data Model v2.0 - Types](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types).
+- `<realm>` MUST be a SASL realm.
 
 Example:
 
@@ -307,15 +326,17 @@ Example:
 <7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
 ~~~
 
-## testv/testp response
-
-## VC-VP response
+## VC-VP Response
 
 The VC/VP response follows the following format:
 
 ~~~
 <vp>
 ~~~
+
+Where:
+
+- `<vp>` MUST be a Verifiable Presentation as defined in [W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations).
 
 Example:
 
@@ -343,7 +364,7 @@ TODO The server MUST perform the following verification steps:
 - TODO
 - Verify "holder"
 
-# SASL Exchange with DIDs and VCs/VPs
+# (Optional) SASL Exchange with DIDs and VCs/VPs
 
 This section illustrates the detailed steps of the SASL exchange with DIDs and VCs/VPs, building on [](#sasl-exchange-with-dids).
 
