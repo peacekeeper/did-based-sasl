@@ -109,8 +109,8 @@ the "DID-CHALLENGE" mechanism.</t>
 
 <figure><artwork><![CDATA[
 C: Request authentication exchange
-S: DID challenge
-C: DID response
+S: DID Challenge
+C: DID Response
 S: Outcome of authentication exchange
 ]]></artwork></figure>
 
@@ -139,7 +139,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 </section>
 <section anchor="did-challenge"><name>DID Challenge</name>
 
-<t>The DID challenge follows the following format:</t>
+<t>The DID Challenge follows the following format:</t>
 
 <figure><artwork><![CDATA[
 "<" <nonce> "." <timestamp> "@" <realm> ">"
@@ -162,7 +162,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 </section>
 <section anchor="did-response"><name>DID Response</name>
 
-<t>The DID response follows the following format:</t>
+<t>The DID Response follows the following format:</t>
 
 <figure><artwork><![CDATA[
 <did> <signature>
@@ -184,16 +184,16 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 </section>
 <section anchor="verification"><name>Verification</name>
 
-<t>The signature in the initial response MUST cover the entire initial challenge, and is generated using the DID's associated private key.</t>
+<t>The signature in the initial response MUST cover the entire DID Challenge, and is generated using the DID's associated private key.</t>
 
 <t>The server MUST perform the following verification steps:</t>
 
 <t><list style="symbols">
   <t>Resolve the DID to its DID document, according to the <eref target="https://www.w3.org/TR/did-resolution/">W3C DID Resolution specification</eref>.</t>
   <t>Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to <eref target="https://www.w3.org/TR/did-1.0/#authentication">W3C DID Core - Authentication</eref>.</t>
-  <t>Using the public keys from the DID document, verify the signature in the initial response against the initial challenge.</t>
-  <t>Verify that the challenge's nonce has not been re-used.</t>
-  <t>Verify that the challenge's timestamp is not too long in the past, e.g. 5 minutes.</t>
+  <t>Using the public keys from the DID document, verify the signature in the DID Response against the DID Challenge.</t>
+  <t>Verify that the DID Challenge nonce has not been re-used.</t>
+  <t>Verify that the DID Challenge timestamp is not too long in the past, e.g. 5 minutes.</t>
 </list></t>
 
 </section>
@@ -202,17 +202,17 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
 <t>This section illustrates the detailed steps of the SASL exchange.</t>
 
-<t>The flow includes the DID challenge (see <xref target="did-challenge"></xref>) and DID response (see <xref target="did-response"></xref>) steps.</t>
+<t>The flow includes the DID Challenge (see <xref target="did-challenge"></xref>) and DID Response (see <xref target="did-response"></xref>) steps.</t>
 
-<figure><artset><artwork  type="svg"><svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1097px" preserveAspectRatio="none" version="1.1" viewBox="0 0 968 1097" width="968px">
+<figure><artset><artwork  type="svg"><svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1097px" preserveAspectRatio="none" version="1.1" viewBox="0 0 1016 1097" width="1016px">
   <defs/>
   <g>
-    <text fill="black" font-family="sans-serif" font-size="18" x="315" y="29.2419">"The DID-CHALLENGE SASL mechanism"</text>
+    <text fill="black" font-family="sans-serif" font-size="18" x="339" y="29.2419">"The DID-CHALLENGE SASL mechanism"</text>
     <line x1="104" x2="104" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
     <line x1="315" x2="315" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
     <line x1="612" x2="612" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
-    <line x1="787" x2="787" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
-    <line x1="909" x2="909" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
+    <line x1="835" x2="835" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
+    <line x1="957" x2="957" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
     <rect fill="white" height="33.0679" width="111" x="47" y="41.5158" stroke="black" stroke-width="1.5"/>
     <text fill="black" font-family="sans-serif" font-size="14" x="54" y="63.4818">Protocol Client</text>
     <rect fill="white" height="33.0679" width="111" x="47" y="1053.6462" stroke="black" stroke-width="1.5"/>
@@ -225,16 +225,16 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
     <text fill="black" font-family="sans-serif" font-size="14" x="571" y="63.4818">SASL Server</text>
     <rect fill="white" height="33.0679" width="93" x="564" y="1053.6462" stroke="black" stroke-width="1.5"/>
     <text fill="black" font-family="sans-serif" font-size="14" x="571" y="1075.6121">SASL Server</text>
-    <rect fill="white" height="33.0679" width="115" x="728" y="41.5158" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="735" y="63.4818">Protocol Server</text>
-    <rect fill="white" height="33.0679" width="115" x="728" y="1053.6462" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="735" y="1075.6121">Protocol Server</text>
-    <rect fill="white" height="33.0679" width="100" x="857" y="41.5158" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="864" y="63.4818">DID Resolver</text>
-    <rect fill="white" height="33.0679" width="100" x="857" y="1053.6462" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="864" y="1075.6121">DID Resolver</text>
-    <polygon fill="black" points="775.5,109.2898,785.5,113.2898,775.5,117.2898,779.5,113.2898" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="781.5" y1="113.2898" y2="113.2898" stroke="black" stroke-width="1.0"/>
+    <rect fill="white" height="33.0679" width="115" x="776" y="41.5158" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="783" y="63.4818">Protocol Server</text>
+    <rect fill="white" height="33.0679" width="115" x="776" y="1053.6462" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="783" y="1075.6121">Protocol Server</text>
+    <rect fill="white" height="33.0679" width="100" x="905" y="41.5158" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="912" y="63.4818">DID Resolver</text>
+    <rect fill="white" height="33.0679" width="100" x="905" y="1053.6462" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="912" y="1075.6121">DID Resolver</text>
+    <polygon fill="black" points="823.5,109.2898,833.5,113.2898,823.5,117.2898,827.5,113.2898" stroke="black" stroke-width="1.0"/>
+    <line x1="104.5" x2="829.5" y1="113.2898" y2="113.2898" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="107.4808">Network Connection</text>
     <line x1="313.5" x2="303.5" y1="144.9958" y2="140.9958" stroke="black" stroke-width="1.0"/>
     <line x1="313.5" x2="303.5" y1="144.9958" y2="148.9958" stroke="black" stroke-width="1.0"/>
@@ -279,68 +279,68 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
     <line x1="613.5" x2="654.5" y1="495.056" y2="495.056" stroke="black" stroke-width="1.0"/>
     <line x1="613.5" x2="623.5" y1="495.056" y2="491.056" stroke="black" stroke-width="1.0"/>
     <line x1="613.5" x2="623.5" y1="495.056" y2="499.056" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="476.247">Generate challenge</text>
-    <path d="M268,508.056 L268,535.056 L603,535.056 L603,518.056 L593,508.056 L268,508.056 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="476.247">Generate DID Challenge</text>
+    <path d="M199,508.056 L199,535.056 L603,535.056 L603,518.056 L593,508.056 L199,508.056 " fill="white" stroke="black" stroke-width="1.0"/>
     <path d="M593,508.056 L593,518.056 L603,518.056 L593,508.056 " fill="white" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="274" y="526.953">&lt;1809528678543235072.1724868615672@hostname&gt;</text>
+    <text fill="black" font-family="sans-serif" font-size="13" x="205" y="526.953">&lt;1809528678543235072.1724868615672@java-sasl-xmpp-server&gt;</text>
     <line x1="315.5" x2="325.5" y1="568.468" y2="564.468" stroke="black" stroke-width="1.0"/>
     <line x1="315.5" x2="325.5" y1="568.468" y2="572.468" stroke="black" stroke-width="1.0"/>
     <line x1="315.5" x2="611.5" y1="568.468" y2="568.468" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="562.659">Challenge (nonce, timestamp, hostname)</text>
+    <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="562.659">DID Challenge (nonce, timestamp, realm)</text>
     <line x1="315.5" x2="357.5" y1="600.174" y2="600.174" stroke="black" stroke-width="1.0"/>
     <line x1="357.5" x2="357.5" y1="600.174" y2="613.174" stroke="black" stroke-width="1.0"/>
     <line x1="316.5" x2="357.5" y1="613.174" y2="613.174" stroke="black" stroke-width="1.0"/>
     <line x1="316.5" x2="326.5" y1="613.174" y2="609.174" stroke="black" stroke-width="1.0"/>
     <line x1="316.5" x2="326.5" y1="613.174" y2="617.174" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="594.365">Create signature</text>
+    <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="594.365">Generate DID Response with signature</text>
     <path d="M320,626.174 L320,653.174 L424,653.174 L424,636.174 L414,626.174 L320,626.174 " fill="white" stroke="black" stroke-width="1.0"/>
     <path d="M414,626.174 L414,636.174 L424,636.174 L414,626.174 " fill="white" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="326" y="645.071">&lt;..signature..&gt;</text>
     <line x1="610.5" x2="600.5" y1="686.586" y2="682.586" stroke="black" stroke-width="1.0"/>
     <line x1="610.5" x2="600.5" y1="686.586" y2="690.586" stroke="black" stroke-width="1.0"/>
     <line x1="315.5" x2="611.5" y1="686.586" y2="686.586" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="680.777">Response (DID, signature)</text>
+    <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="680.777">DID Response (DID, signature)</text>
     <path d="M291,699.586 L291,726.586 L603,726.586 L603,709.586 L593,699.586 L291,699.586 " fill="white" stroke="black" stroke-width="1.0"/>
     <path d="M593,699.586 L593,709.586 L603,709.586 L593,699.586 " fill="white" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="297" y="718.4831">did%3Akey%3A&lt;..did..&gt; 2mJ4tBo6H&lt;..signature..&gt;</text>
-    <line x1="907" x2="897" y1="759.9981" y2="755.9981" stroke="black" stroke-width="1.0"/>
-    <line x1="907" x2="897" y1="759.9981" y2="763.9981" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="908" y1="759.9981" y2="759.9981" stroke="black" stroke-width="1.0"/>
+    <line x1="955" x2="945" y1="759.9981" y2="755.9981" stroke="black" stroke-width="1.0"/>
+    <line x1="955" x2="945" y1="759.9981" y2="763.9981" stroke="black" stroke-width="1.0"/>
+    <line x1="612.5" x2="956" y1="759.9981" y2="759.9981" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="754.1891">Resolve DID</text>
     <line x1="612.5" x2="622.5" y1="791.7041" y2="787.7041" stroke="black" stroke-width="1.0"/>
     <line x1="612.5" x2="622.5" y1="791.7041" y2="795.7041" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="908" y1="791.7041" y2="791.7041" stroke="black" stroke-width="1.0"/>
+    <line x1="612.5" x2="956" y1="791.7041" y2="791.7041" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="785.8951">DID document with DID public key</text>
     <line x1="612.5" x2="654.5" y1="823.4101" y2="823.4101" stroke="black" stroke-width="1.0"/>
     <line x1="654.5" x2="654.5" y1="823.4101" y2="836.4101" stroke="black" stroke-width="1.0"/>
     <line x1="613.5" x2="654.5" y1="836.4101" y2="836.4101" stroke="black" stroke-width="1.0"/>
     <line x1="613.5" x2="623.5" y1="836.4101" y2="832.4101" stroke="black" stroke-width="1.0"/>
     <line x1="613.5" x2="623.5" y1="836.4101" y2="840.4101" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="817.6011">Verify signature</text>
+    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="817.6011">Verify DID Response with signature</text>
     <path d="M617,849.4101 L617,876.4101 L663,876.4101 L663,859.4101 L653,849.4101 L617,849.4101 " fill="white" stroke="black" stroke-width="1.0"/>
     <path d="M653,849.4101 L653,859.4101 L663,859.4101 L653,849.4101 " fill="white" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="623" y="868.3071">true</text>
-    <line x1="785.5" x2="775.5" y1="909.8221" y2="905.8221" stroke="black" stroke-width="1.0"/>
-    <line x1="785.5" x2="775.5" y1="909.8221" y2="913.8221" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="786.5" y1="909.8221" y2="909.8221" stroke="black" stroke-width="1.0"/>
+    <line x1="833.5" x2="823.5" y1="909.8221" y2="905.8221" stroke="black" stroke-width="1.0"/>
+    <line x1="833.5" x2="823.5" y1="909.8221" y2="913.8221" stroke="black" stroke-width="1.0"/>
+    <line x1="612.5" x2="834.5" y1="909.8221" y2="909.8221" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="904.0131">NameCallback with DID</text>
     <line x1="612.5" x2="622.5" y1="941.5282" y2="937.5282" stroke="black" stroke-width="1.0"/>
     <line x1="612.5" x2="622.5" y1="941.5282" y2="945.5282" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="786.5" y1="941.5282" y2="941.5282" stroke="black" stroke-width="1.0"/>
+    <line x1="612.5" x2="834.5" y1="941.5282" y2="941.5282" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="935.7192">(empty)</text>
-    <line x1="785.5" x2="775.5" y1="973.2342" y2="969.2342" stroke="black" stroke-width="1.0"/>
-    <line x1="785.5" x2="775.5" y1="973.2342" y2="977.2342" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="786.5" y1="973.2342" y2="973.2342" stroke="black" stroke-width="1.0"/>
+    <line x1="833.5" x2="823.5" y1="973.2342" y2="969.2342" stroke="black" stroke-width="1.0"/>
+    <line x1="833.5" x2="823.5" y1="973.2342" y2="977.2342" stroke="black" stroke-width="1.0"/>
+    <line x1="612.5" x2="834.5" y1="973.2342" y2="973.2342" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="967.4252">AuthorizeCallback</text>
     <line x1="612.5" x2="622.5" y1="1004.9402" y2="1000.9402" stroke="black" stroke-width="1.0"/>
     <line x1="612.5" x2="622.5" y1="1004.9402" y2="1008.9402" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="786.5" y1="1004.9402" y2="1004.9402" stroke="black" stroke-width="1.0"/>
+    <line x1="612.5" x2="834.5" y1="1004.9402" y2="1004.9402" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="999.1312">authorized=true with DID</text>
     <line x1="315.5" x2="325.5" y1="1036.6462" y2="1032.6462" stroke="black" stroke-width="1.0"/>
     <line x1="315.5" x2="325.5" y1="1036.6462" y2="1040.6462" stroke="black" stroke-width="1.0"/>
     <line x1="315.5" x2="611.5" y1="1036.6462" y2="1036.6462" stroke="black" stroke-width="1.0"/>
     <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="1030.8372">Completed SASL authentication</text>
-    <!--MD5=[e6f18e28fb00f965862d2d4af7ea64d2]
+    <!--MD5=[089f576bbd5406c894fe43177a37eaad]
 @startuml
 
 title "The DID-CHALLENGE SASL mechanism"
@@ -360,16 +360,16 @@ note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." 
 SASLClient->>SASLServer: Start SASL authentication
 SASLServer->>SASLClient: List of authn mechanisms
 SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
-SASLServer->>SASLServer: Generate challenge
-note left of SASLServer: <1809528678543235072.1724868615672@hostname>
-SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
-SASLClient->>SASLClient: Create signature
+SASLServer->>SASLServer: Generate DID Challenge
+note left of SASLServer: <1809528678543235072.1724868615672@java-sasl-xmpp-server>
+SASLServer->>SASLClient: DID Challenge (nonce, timestamp, realm)
+SASLClient->>SASLClient: Generate DID Response with signature
 note right of SASLClient: <..signature..>
-SASLClient->>SASLServer: Response (DID, signature)
+SASLClient->>SASLServer: DID Response (DID, signature)
 note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
 SASLServer->>DIDResolver: Resolve DID
 DIDResolver->>SASLServer: DID document with DID public key
-SASLServer->>SASLServer: Verify signature
+SASLServer->>SASLServer: Verify DID Response with signature
 note right of SASLServer: true
 SASLServer->>ProtocolServer: NameCallback with DID
 ProtocolServer->>SASLServer: (empty)
@@ -391,98 +391,606 @@ Country: US
 -->
   </g>
 </svg>
-</artwork><artwork  type="ascii-art"><![CDATA[                                                                   "The DID-CHALLENGE SASL mechanism"                                                              
-                                                                                                                                                                   
-                     ┌───────────────┐                  ┌───────────┐                             ┌───────────┐           ┌───────────────┐          ┌────────────┐
-                     │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
-                     └───────┬───────┘                  └─────┬─────┘                             └─────┬─────┘           └───────┬───────┘          └─────┬──────┘
-                             │                                │       Network Connection                │                         │                        │       
-                             │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │       
-                             │                                │                                         │                         │                        │       
-                             │          Start login           │                                         │                         │                        │       
-                             │───────────────────────────────>│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │     NameCallback for DID       │                                         │                         │                        │       
-                             │<───────────────────────────────│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │              DID               │                                         │                         │                        │       
-                             │───────────────────────────────>│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │      ╔═══════════════════════╗ │                                         │                         │                        │       
-                             │      ║did%3Akey%3A<..did..> ░║ │                                         │                         │                        │       
-                             │      ╚═══════════════════════╝ │                                         │                         │                        │       
-                             │JWKCallback for DID private key │                                         │                         │                        │       
-                             │<───────────────────────────────│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │        DID private key         │                                         │                         │                        │       
-                             │───────────────────────────────>│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-  ╔══════════════════════════╧═══════════════════════════════╗│                                         │                         │                        │       
-  ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║│                                         │                         │                        │       
-  ╚══════════════════════════╤═══════════════════════════════╝│                                         │                         │                        │       
-                             │                                │       Start SASL authentication         │                         │                        │       
-                             │                                │────────────────────────────────────────>│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │        List of authn mechanisms         │                         │                        │       
-                             │                                │<────────────────────────────────────────│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │Selected authn mechanism "DID-CHALLENGE" │                         │                        │       
-                             │                                │────────────────────────────────────────>│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         ────┐                     │                        │       
-                             │                                │                                             │ Generate challenge  │                        │       
-                             │                                │                                         <───┘                     │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                         ╔══════╧═══════════════════════════════════════╗ │                         │                        │       
-                             │                         ║<1809528678543235072.1724868615672@hostname> ░║ │                         │                        │       
-                             │                         ╚══════╤═══════════════════════════════════════╝ │                         │                        │       
-                             │                                │ Challenge (nonce, timestamp, hostname)  │                         │                        │       
-                             │                                │<────────────────────────────────────────│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                ────┐                                     │                         │                        │       
-                             │                                    │ Create signature                    │                         │                        │       
-                             │                                <───┘                                     │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │ ╔═════════════════╗                     │                         │                        │       
-                             │                                │ ║<..signature..> ░║                     │                         │                        │       
-                             │                                │ ╚═════════════════╝                     │                         │                        │       
-                             │                                │       Response (DID, signature)         │                         │                        │       
-                             │                                │────────────────────────────────────────>│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                       ╔════════╧═══════════════════════════════════════╗ │                         │                        │       
-                             │                       ║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                         │                        │       
-                             │                       ╚════════╤═══════════════════════════════════════╝ │                         │                        │       
-                             │                                │                                         │                   Resolve DID                    │       
-                             │                                │                                         │─────────────────────────────────────────────────>│       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │        DID document with DID public key          │       
-                             │                                │                                         │<─────────────────────────────────────────────────│       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         ────┐                     │                        │       
-                             │                                │                                             │ Verify signature    │                        │       
-                             │                                │                                         <───┘                     │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │ ╔══════╗                │                        │       
-                             │                                │                                         │ ║true ░║                │                        │       
-                             │                                │                                         │ ╚══════╝                │                        │       
-                             │                                │                                         │ NameCallback with DID   │                        │       
-                             │                                │                                         │────────────────────────>│                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │        (empty)          │                        │       
-                             │                                │                                         │<────────────────────────│                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │   AuthorizeCallback     │                        │       
-                             │                                │                                         │────────────────────────>│                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │authorized=true with DID │                        │       
-                             │                                │                                         │<────────────────────────│                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │     Completed SASL authentication       │                         │                        │       
-                             │                                │<────────────────────────────────────────│                         │                        │       
-                     ┌───────┴───────┐                  ┌─────┴─────┐                             ┌─────┴─────┐           ┌───────┴───────┐          ┌─────┴──────┐
-                     │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
-                     └───────────────┘                  └───────────┘                             └───────────┘           └───────────────┘          └────────────┘
+</artwork><artwork  type="ascii-art"><![CDATA[                                                                          "The DID-CHALLENGE SASL mechanism"                                                                     
+                                                                                                                                                                                 
+                     ┌───────────────┐                  ┌───────────┐                             ┌───────────┐                         ┌───────────────┐          ┌────────────┐
+                     │Protocol Client│                  │SASL Client│                             │SASL Server│                         │Protocol Server│          │DID Resolver│
+                     └───────┬───────┘                  └─────┬─────┘                             └─────┬─────┘                         └───────┬───────┘          └─────┬──────┘
+                             │                                │              Network Connection         │                                       │                        │       
+                             │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │       
+                             │                                │                                         │                                       │                        │       
+                             │          Start login           │                                         │                                       │                        │       
+                             │───────────────────────────────>│                                         │                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │     NameCallback for DID       │                                         │                                       │                        │       
+                             │<───────────────────────────────│                                         │                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │              DID               │                                         │                                       │                        │       
+                             │───────────────────────────────>│                                         │                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │      ╔═══════════════════════╗ │                                         │                                       │                        │       
+                             │      ║did%3Akey%3A<..did..> ░║ │                                         │                                       │                        │       
+                             │      ╚═══════════════════════╝ │                                         │                                       │                        │       
+                             │JWKCallback for DID private key │                                         │                                       │                        │       
+                             │<───────────────────────────────│                                         │                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │        DID private key         │                                         │                                       │                        │       
+                             │───────────────────────────────>│                                         │                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+  ╔══════════════════════════╧═══════════════════════════════╗│                                         │                                       │                        │       
+  ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║│                                         │                                       │                        │       
+  ╚══════════════════════════╤═══════════════════════════════╝│                                         │                                       │                        │       
+                             │                                │       Start SASL authentication         │                                       │                        │       
+                             │                                │────────────────────────────────────────>│                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │        List of authn mechanisms         │                                       │                        │       
+                             │                                │<────────────────────────────────────────│                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │Selected authn mechanism "DID-CHALLENGE" │                                       │                        │       
+                             │                                │────────────────────────────────────────>│                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │                                         ────┐                                   │                        │       
+                             │                                │                                             │ Generate DID Challenge            │                        │       
+                             │                                │                                         <───┘                                   │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │            ╔═══════════════════╧═══════════════════════════════════════╗ │                                       │                        │       
+                             │            ║<1809528678543235072.1724868615672@java-sasl-xmpp-server> ░║ │                                       │                        │       
+                             │            ╚═══════════════════╤═══════════════════════════════════════╝ │                                       │                        │       
+                             │                                │DID Challenge (nonce, timestamp, realm)  │                                       │                        │       
+                             │                                │<────────────────────────────────────────│                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                ────┐                                     │                                       │                        │       
+                             │                                    │ Generate DID Response with signature│                                       │                        │       
+                             │                                <───┘                                     │                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │ ╔═════════════════╗                     │                                       │                        │       
+                             │                                │ ║<..signature..> ░║                     │                                       │                        │       
+                             │                                │ ╚═════════════════╝                     │                                       │                        │       
+                             │                                │     DID Response (DID, signature)       │                                       │                        │       
+                             │                                │────────────────────────────────────────>│                                       │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                       ╔════════╧═══════════════════════════════════════╗ │                                       │                        │       
+                             │                       ║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                                       │                        │       
+                             │                       ╚════════╤═══════════════════════════════════════╝ │                                       │                        │       
+                             │                                │                                         │                          Resolve DID  │                        │       
+                             │                                │                                         │───────────────────────────────────────────────────────────────>│       
+                             │                                │                                         │                                       │                        │       
+                             │                                │                                         │               DID document with DID public key                 │       
+                             │                                │                                         │<───────────────────────────────────────────────────────────────│       
+                             │                                │                                         │                                       │                        │       
+                             │                                │                                         ────┐                                   │                        │       
+                             │                                │                                             │ Verify DID Response with signature│                        │       
+                             │                                │                                         <───┘                                   │                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │                                         │ ╔══════╗                              │                        │       
+                             │                                │                                         │ ║true ░║                              │                        │       
+                             │                                │                                         │ ╚══════╝                              │                        │       
+                             │                                │                                         │        NameCallback with DID          │                        │       
+                             │                                │                                         │──────────────────────────────────────>│                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │                                         │               (empty)                 │                        │       
+                             │                                │                                         │<──────────────────────────────────────│                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │                                         │          AuthorizeCallback            │                        │       
+                             │                                │                                         │──────────────────────────────────────>│                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │                                         │       authorized=true with DID        │                        │       
+                             │                                │                                         │<──────────────────────────────────────│                        │       
+                             │                                │                                         │                                       │                        │       
+                             │                                │     Completed SASL authentication       │                                       │                        │       
+                             │                                │<────────────────────────────────────────│                                       │                        │       
+                     ┌───────┴───────┐                  ┌─────┴─────┐                             ┌─────┴─────┐                         ┌───────┴───────┐          ┌─────┴──────┐
+                     │Protocol Client│                  │SASL Client│                             │SASL Server│                         │Protocol Server│          │DID Resolver│
+                     └───────────────┘                  └───────────┘                             └───────────┘                         └───────────────┘          └────────────┘
 ]]></artwork></artset></figure>
+
+</section>
+<section anchor="optional-authentication-with-vcsvps"><name>(Optional) Authentication with VCs/VPs</name>
+
+<t>This section defines an optional extension of the "DID-CHALLENGE" SASL mechanism which adds support for Verifiable Credentials (VCs)
+and Verifiable Presentations (VPs).</t>
+
+<section anchor="the-authentication-exchange-with-vcvp-support"><name>The Authentication Exchange (with VC/VP support)</name>
+
+<t>The exchange consists of the following steps (expanding on <xref target="authentication"></xref>):</t>
+
+<figure><artwork><![CDATA[
+C: Request authentication exchange
+S: DID Challenge
+C: DID Response
+S: VC/VP Challenge
+C: VC/VP Response
+S: Outcome of authentication exchange
+]]></artwork></figure>
+
+<t>The steps VC/VP Challenge and VC/VP Response may be repeated multiple times.</t>
+
+</section>
+<section anchor="vc-vp-challenge"><name>VC-VP Challenge</name>
+
+<t>The VC/VP Challenge follows the following format:</t>
+
+<figure><artwork><![CDATA[
+"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm> ">"
+]]></artwork></figure>
+
+<t>Where:</t>
+
+<t><list style="symbols">
+  <t><spanx style="verb">&lt;nonce&gt;</spanx> MUST be a unique string.</t>
+  <t><spanx style="verb">&lt;timestamp&gt;</spanx> MUST be a UNIX timestamp.</t>
+  <t><spanx style="verb">&lt;vc.type&gt;</spanx> MUST be a type of a Verifiable Credential as defined in <eref target="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types">W3C Verifiable Credentials Data Model v2.0 - Types</eref>.</t>
+  <t><spanx style="verb">&lt;realm&gt;</spanx> MUST be a SASL realm.</t>
+</list></t>
+
+<t>Example:</t>
+
+<figure><artwork><![CDATA[
+<7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
+]]></artwork></figure>
+
+</section>
+<section anchor="vc-vp-response"><name>VC-VP Response</name>
+
+<t>The VC/VP Response follows the following format:</t>
+
+<figure><artwork><![CDATA[
+<vp>
+]]></artwork></figure>
+
+<t>Where:</t>
+
+<t><list style="symbols">
+  <t><spanx style="verb">&lt;vp&gt;</spanx> MUST be a Verifiable Presentation as defined in <eref target="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations">W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations</eref>.</t>
+</list></t>
+
+<t>Example:</t>
+
+<figure><artwork><![CDATA[
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "id": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
+  "type": ["VerifiablePresentation"],
+  "verifiableCredential": [{
+    "id": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D"
+    "type": ["DegreeCredential"]
+  }]
+}
+]]></artwork></figure>
+
+</section>
+<section anchor="verification-1"><name>Verification</name>
+
+<t>The signature in the Verifiable Presentation MUST be generated using the DID's associated private key.</t>
+
+<t>The server MUST perform the following verification steps, in addition to the steps in <xref target="verification"></xref>.</t>
+
+<t><list style="symbols">
+  <t>Retrieve the public keys from the DID document which have an "assertionMethod" verification relationship, according to <eref target="https://www.w3.org/TR/did-1.0/#assertion">W3C DID Core - Assertion</eref>.</t>
+  <t>Using the public keys from the DID document, verify the proof in the VC/VP Response against the VC/VP Challenge.</t>
+  <t>Verify that the VC/VP Challenge nonce has not been re-used.</t>
+  <t>Verify that the VC/VP Challenge timestamp is not too long in the past, e.g. 5 minutes.</t>
+  <t>Verify that the "holder" property of the VC/VP Response matches the DID.</t>
+</list></t>
+
+</section>
+</section>
+<section anchor="optional-sasl-exchange-with-dids-and-vcsvps"><name>(Optional) SASL Exchange with DIDs and VCs/VPs</name>
+
+<t>This section illustrates the detailed steps of the SASL exchange with DIDs and VCs/VPs, building on <xref target="sasl-exchange-with-dids"></xref>.</t>
+
+<t>The flow includes the DID Challenge (see <xref target="did-challenge"></xref>), DID Response (see <xref target="did-response"></xref>),
+VC/VP Challenge (see <xref target="vc-vp-challenge"></xref>), and VC/VP Response (see <xref target="vc-vp-response"></xref>).</t>
+
+<figure><artset><artwork  type="svg"><svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1634px" preserveAspectRatio="none" version="1.1" viewBox="0 0 1052 1634" width="1052px">
+  <defs/>
+  <g>
+    <text fill="black" font-family="sans-serif" font-size="18" x="318" y="29.2419">"The DID-CHALLENGE SASL mechanism with VCs"</text>
+    <rect fill="white" height="124.8241" width="361" x="13" y="370.2319" stroke="#000000" stroke-width="2.0"/>
+    <rect fill="white" height="384.0602" width="749.5" x="118" y="1031.9402" stroke="#000000" stroke-width="2.0"/>
+    <line x1="80" x2="80" y1="79.5838" y2="1591.5304" stroke="black" stroke-width="1.0"/>
+    <line x1="317" x2="317" y1="79.5838" y2="1591.5304" stroke="black" stroke-width="1.0"/>
+    <line x1="648" x2="648" y1="79.5838" y2="1591.5304" stroke="black" stroke-width="1.0"/>
+    <line x1="871" x2="871" y1="79.5838" y2="1591.5304" stroke="black" stroke-width="1.0"/>
+    <line x1="993" x2="993" y1="79.5838" y2="1591.5304" stroke="black" stroke-width="1.0"/>
+    <rect fill="white" height="33.0679" width="111" x="23" y="41.5158" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="30" y="63.4818">Protocol Client</text>
+    <rect fill="white" height="33.0679" width="111" x="23" y="1590.5304" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="30" y="1612.4964">Protocol Client</text>
+    <rect fill="white" height="33.0679" width="89" x="271" y="41.5158" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="278" y="63.4818">SASL Client</text>
+    <rect fill="white" height="33.0679" width="89" x="271" y="1590.5304" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="278" y="1612.4964">SASL Client</text>
+    <rect fill="white" height="33.0679" width="93" x="600" y="41.5158" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="607" y="63.4818">SASL Server</text>
+    <rect fill="white" height="33.0679" width="93" x="600" y="1590.5304" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="607" y="1612.4964">SASL Server</text>
+    <rect fill="white" height="33.0679" width="115" x="812" y="41.5158" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="819" y="63.4818">Protocol Server</text>
+    <rect fill="white" height="33.0679" width="115" x="812" y="1590.5304" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="819" y="1612.4964">Protocol Server</text>
+    <rect fill="white" height="33.0679" width="100" x="941" y="41.5158" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="948" y="63.4818">DID Resolver</text>
+    <rect fill="white" height="33.0679" width="100" x="941" y="1590.5304" stroke="black" stroke-width="1.5"/>
+    <text fill="black" font-family="sans-serif" font-size="14" x="948" y="1612.4964">DID Resolver</text>
+    <polygon fill="black" points="859.5,109.2898,869.5,113.2898,859.5,117.2898,863.5,113.2898" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="865.5" y1="113.2898" y2="113.2898" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="87.5" y="107.4808">Network Connection</text>
+    <line x1="315.5" x2="305.5" y1="144.9958" y2="140.9958" stroke="black" stroke-width="1.0"/>
+    <line x1="315.5" x2="305.5" y1="144.9958" y2="148.9958" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="316.5" y1="144.9958" y2="144.9958" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="87.5" y="139.1868">Start login</text>
+    <line x1="80.5" x2="90.5" y1="176.7018" y2="172.7018" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="90.5" y1="176.7018" y2="180.7018" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="316.5" y1="176.7018" y2="176.7018" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="97.5" y="170.8928">NameCallback for DID</text>
+    <line x1="315.5" x2="305.5" y1="208.4078" y2="204.4078" stroke="black" stroke-width="1.0"/>
+    <line x1="315.5" x2="305.5" y1="208.4078" y2="212.4078" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="316.5" y1="208.4078" y2="208.4078" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="87.5" y="202.5988">DID</text>
+    <path d="M150,221.4078 L150,248.4078 L308,248.4078 L308,231.4078 L298,221.4078 L150,221.4078 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M298,221.4078 L298,231.4078 L308,231.4078 L298,221.4078 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="156" y="240.3048">did%3Akey%3A&lt;..did..&gt;</text>
+    <line x1="80.5" x2="90.5" y1="281.8199" y2="277.8199" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="90.5" y1="281.8199" y2="285.8199" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="316.5" y1="281.8199" y2="281.8199" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="97.5" y="276.0109">JWKCallback for DID private key</text>
+    <line x1="315.5" x2="305.5" y1="313.5259" y2="309.5259" stroke="black" stroke-width="1.0"/>
+    <line x1="315.5" x2="305.5" y1="313.5259" y2="317.5259" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="316.5" y1="313.5259" y2="313.5259" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="87.5" y="307.7169">DID private key</text>
+    <path d="M9,326.5259 L9,353.5259 L308,353.5259 L308,336.5259 L298,326.5259 L9,326.5259 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M298,326.5259 L298,336.5259 L308,336.5259 L298,326.5259 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="15" y="345.4229">{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }</text>
+    <path d="M13,370.2319 L80,370.2319 L80,379.2319 L70,389.2319 L13,389.2319 L13,370.2319 " fill="white" stroke="#000000" stroke-width="1.0"/>
+    <rect fill="none" height="124.8241" width="361" x="13" y="370.2319" stroke="#000000" stroke-width="2.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" font-weight="bold" x="28" y="385.1289">opt</text>
+    <text fill="black" font-family="sans-serif" font-size="11" font-weight="bold" x="95" y="383.9908">[Authentication with VCs/VPs]</text>
+    <line x1="80.5" x2="90.5" y1="413.6439" y2="409.6439" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="90.5" y1="413.6439" y2="417.6439" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="316.5" y1="413.6439" y2="413.6439" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="97.5" y="407.8349">VCCallback for Verifiable Credentials</text>
+    <line x1="315.5" x2="305.5" y1="445.3499" y2="441.3499" stroke="black" stroke-width="1.0"/>
+    <line x1="315.5" x2="305.5" y1="445.3499" y2="449.3499" stroke="black" stroke-width="1.0"/>
+    <line x1="80.5" x2="316.5" y1="445.3499" y2="445.3499" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="87.5" y="439.5409">Verifiable Credentials</text>
+    <path d="M225,458.3499 L225,485.3499 L308,485.3499 L308,468.3499 L298,458.3499 L225,458.3499 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M298,458.3499 L298,468.3499 L308,468.3499 L298,458.3499 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="231" y="477.247">{ ... VCs ... }</text>
+    <line x1="646.5" x2="636.5" y1="525.762" y2="521.762" stroke="black" stroke-width="1.0"/>
+    <line x1="646.5" x2="636.5" y1="525.762" y2="529.762" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="647.5" y1="525.762" y2="525.762" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="324.5" y="519.953">Start SASL authentication</text>
+    <line x1="317.5" x2="327.5" y1="557.468" y2="553.468" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="327.5" y1="557.468" y2="561.468" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="647.5" y1="557.468" y2="557.468" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="334.5" y="551.659">List of authn mechanisms</text>
+    <line x1="646.5" x2="636.5" y1="589.174" y2="585.174" stroke="black" stroke-width="1.0"/>
+    <line x1="646.5" x2="636.5" y1="589.174" y2="593.174" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="647.5" y1="589.174" y2="589.174" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="324.5" y="583.365">Selected authn mechanism "DID-CHALLENGE"</text>
+    <line x1="648.5" x2="690.5" y1="620.88" y2="620.88" stroke="black" stroke-width="1.0"/>
+    <line x1="690.5" x2="690.5" y1="620.88" y2="633.88" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="690.5" y1="633.88" y2="633.88" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="659.5" y1="633.88" y2="629.88" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="659.5" y1="633.88" y2="637.88" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="655.5" y="615.071">Generate DID Challenge</text>
+    <path d="M235,646.88 L235,673.88 L639,673.88 L639,656.88 L629,646.88 L235,646.88 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M629,646.88 L629,656.88 L639,656.88 L629,646.88 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="241" y="665.777">&lt;1809528678543235072.1724868615672@java-sasl-xmpp-server&gt;</text>
+    <line x1="317.5" x2="327.5" y1="707.2921" y2="703.2921" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="327.5" y1="707.2921" y2="711.2921" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="647.5" y1="707.2921" y2="707.2921" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="334.5" y="701.4831">DID Challenge (nonce, timestamp, realm)</text>
+    <line x1="317.5" x2="359.5" y1="738.9981" y2="738.9981" stroke="black" stroke-width="1.0"/>
+    <line x1="359.5" x2="359.5" y1="738.9981" y2="751.9981" stroke="black" stroke-width="1.0"/>
+    <line x1="318.5" x2="359.5" y1="751.9981" y2="751.9981" stroke="black" stroke-width="1.0"/>
+    <line x1="318.5" x2="328.5" y1="751.9981" y2="747.9981" stroke="black" stroke-width="1.0"/>
+    <line x1="318.5" x2="328.5" y1="751.9981" y2="755.9981" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="324.5" y="733.1891">Generate DID Response with signature</text>
+    <path d="M322,764.9981 L322,791.9981 L426,791.9981 L426,774.9981 L416,764.9981 L322,764.9981 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M416,764.9981 L416,774.9981 L426,774.9981 L416,764.9981 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="328" y="783.8951">&lt;..signature..&gt;</text>
+    <line x1="646.5" x2="636.5" y1="825.4101" y2="821.4101" stroke="black" stroke-width="1.0"/>
+    <line x1="646.5" x2="636.5" y1="825.4101" y2="829.4101" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="647.5" y1="825.4101" y2="825.4101" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="324.5" y="819.6011">DID Response (DID, signature)</text>
+    <path d="M327,838.4101 L327,865.4101 L639,865.4101 L639,848.4101 L629,838.4101 L327,838.4101 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M629,838.4101 L629,848.4101 L639,848.4101 L629,838.4101 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="333" y="857.3071">did%3Akey%3A&lt;..did..&gt; 2mJ4tBo6H&lt;..signature..&gt;</text>
+    <line x1="991" x2="981" y1="898.8221" y2="894.8221" stroke="black" stroke-width="1.0"/>
+    <line x1="991" x2="981" y1="898.8221" y2="902.8221" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="992" y1="898.8221" y2="898.8221" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="655.5" y="893.0131">Resolve DID</text>
+    <line x1="648.5" x2="658.5" y1="930.5282" y2="926.5282" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="658.5" y1="930.5282" y2="934.5282" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="992" y1="930.5282" y2="930.5282" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="665.5" y="924.7192">DID document with DID public key</text>
+    <line x1="648.5" x2="690.5" y1="962.2342" y2="962.2342" stroke="black" stroke-width="1.0"/>
+    <line x1="690.5" x2="690.5" y1="962.2342" y2="975.2342" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="690.5" y1="975.2342" y2="975.2342" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="659.5" y1="975.2342" y2="971.2342" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="659.5" y1="975.2342" y2="979.2342" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="655.5" y="956.4252">Verify DID Response with signature</text>
+    <path d="M653,988.2342 L653,1015.2342 L699,1015.2342 L699,998.2342 L689,988.2342 L653,988.2342 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M689,988.2342 L689,998.2342 L699,998.2342 L689,988.2342 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="659" y="1007.1312">true</text>
+    <path d="M118,1031.9402 L185,1031.9402 L185,1040.9402 L175,1050.9402 L118,1050.9402 L118,1031.9402 " fill="white" stroke="#000000" stroke-width="1.0"/>
+    <rect fill="none" height="384.0602" width="749.5" x="118" y="1031.9402" stroke="#000000" stroke-width="2.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" font-weight="bold" x="133" y="1046.8372">opt</text>
+    <text fill="black" font-family="sans-serif" font-size="11" font-weight="bold" x="200" y="1045.6991">[Authentication with VCs/VPs]</text>
+    <line x1="648.5" x2="690.5" y1="1075.3522" y2="1075.3522" stroke="black" stroke-width="1.0"/>
+    <line x1="690.5" x2="690.5" y1="1075.3522" y2="1088.3522" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="690.5" y1="1088.3522" y2="1088.3522" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="659.5" y1="1088.3522" y2="1084.3522" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="659.5" y1="1088.3522" y2="1092.3522" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="655.5" y="1069.5432">Generate VC/VP Challenge</text>
+    <path d="M128,1101.3522 L128,1128.3522 L639,1128.3522 L639,1111.3522 L629,1101.3522 L128,1101.3522 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M629,1101.3522 L629,1111.3522 L639,1111.3522 L629,1101.3522 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="134" y="1120.2492">&lt;1809528678543235072.1724868615672.DegreeCredential@java-sasl-xmpp-server&gt;</text>
+    <line x1="317.5" x2="327.5" y1="1161.7643" y2="1157.7643" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="327.5" y1="1161.7643" y2="1165.7643" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="647.5" y1="1161.7643" y2="1161.7643" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="334.5" y="1155.9553">VC/VP Challenge (nonce, timestamp, vc.type, realm)</text>
+    <line x1="317.5" x2="359.5" y1="1193.4703" y2="1193.4703" stroke="black" stroke-width="1.0"/>
+    <line x1="359.5" x2="359.5" y1="1193.4703" y2="1206.4703" stroke="black" stroke-width="1.0"/>
+    <line x1="318.5" x2="359.5" y1="1206.4703" y2="1206.4703" stroke="black" stroke-width="1.0"/>
+    <line x1="318.5" x2="328.5" y1="1206.4703" y2="1202.4703" stroke="black" stroke-width="1.0"/>
+    <line x1="318.5" x2="328.5" y1="1206.4703" y2="1210.4703" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="324.5" y="1187.6613">Generate VC/VP Response with proof</text>
+    <path d="M322,1219.4703 L322,1246.4703 L384,1246.4703 L384,1229.4703 L374,1219.4703 L322,1219.4703 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M374,1219.4703 L374,1229.4703 L384,1229.4703 L374,1219.4703 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="328" y="1238.3673">&lt;..vp..&gt;</text>
+    <line x1="646.5" x2="636.5" y1="1279.8823" y2="1275.8823" stroke="black" stroke-width="1.0"/>
+    <line x1="646.5" x2="636.5" y1="1279.8823" y2="1283.8823" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="647.5" y1="1279.8823" y2="1279.8823" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="324.5" y="1274.0733">VC/VP Response (VP)</text>
+    <path d="M577,1292.8823 L577,1319.8823 L639,1319.8823 L639,1302.8823 L629,1292.8823 L577,1292.8823 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M629,1292.8823 L629,1302.8823 L639,1302.8823 L629,1292.8823 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="583" y="1311.7793">&lt;..vp..&gt;</text>
+    <line x1="648.5" x2="690.5" y1="1353.2943" y2="1353.2943" stroke="black" stroke-width="1.0"/>
+    <line x1="690.5" x2="690.5" y1="1353.2943" y2="1366.2943" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="690.5" y1="1366.2943" y2="1366.2943" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="659.5" y1="1366.2943" y2="1362.2943" stroke="black" stroke-width="1.0"/>
+    <line x1="649.5" x2="659.5" y1="1366.2943" y2="1370.2943" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="655.5" y="1347.4853">Verify VC/VP Response with proof</text>
+    <path d="M653,1379.2943 L653,1406.2943 L699,1406.2943 L699,1389.2943 L689,1379.2943 L653,1379.2943 " fill="white" stroke="black" stroke-width="1.0"/>
+    <path d="M689,1379.2943 L689,1389.2943 L699,1389.2943 L689,1379.2943 " fill="white" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="659" y="1398.1914">true</text>
+    <line x1="869.5" x2="859.5" y1="1446.7064" y2="1442.7064" stroke="black" stroke-width="1.0"/>
+    <line x1="869.5" x2="859.5" y1="1446.7064" y2="1450.7064" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="870.5" y1="1446.7064" y2="1446.7064" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="655.5" y="1440.8974">NameCallback with DID</text>
+    <line x1="648.5" x2="658.5" y1="1478.4124" y2="1474.4124" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="658.5" y1="1478.4124" y2="1482.4124" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="870.5" y1="1478.4124" y2="1478.4124" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="665.5" y="1472.6034">(empty)</text>
+    <line x1="869.5" x2="859.5" y1="1510.1184" y2="1506.1184" stroke="black" stroke-width="1.0"/>
+    <line x1="869.5" x2="859.5" y1="1510.1184" y2="1514.1184" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="870.5" y1="1510.1184" y2="1510.1184" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="655.5" y="1504.3094">AuthorizeCallback</text>
+    <line x1="648.5" x2="658.5" y1="1541.8244" y2="1537.8244" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="658.5" y1="1541.8244" y2="1545.8244" stroke="black" stroke-width="1.0"/>
+    <line x1="648.5" x2="870.5" y1="1541.8244" y2="1541.8244" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="665.5" y="1536.0154">authorized=true with DID</text>
+    <line x1="317.5" x2="327.5" y1="1573.5304" y2="1569.5304" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="327.5" y1="1573.5304" y2="1577.5304" stroke="black" stroke-width="1.0"/>
+    <line x1="317.5" x2="647.5" y1="1573.5304" y2="1573.5304" stroke="black" stroke-width="1.0"/>
+    <text fill="black" font-family="sans-serif" font-size="13" x="334.5" y="1567.7214">Completed SASL authentication</text>
+    <!--MD5=[83349222c5899734810a125d7a49a60f]
+@startuml
+
+title "The DID-CHALLENGE SASL mechanism with VCs"
+participant ProtocolClient as "Protocol Client"
+participant SASLClient as "SASL Client"
+participant SASLServer as "SASL Server"
+participant ProtocolServer as "Protocol Server"
+participant DIDResolver as "DID Resolver"
+ProtocolClient- ->ProtocolServer: Network Connection
+ProtocolClient->>SASLClient: Start login
+SASLClient->>ProtocolClient: NameCallback for DID
+ProtocolClient->>SASLClient: DID
+note left of SASLClient: did%3Akey%3A<..did..>
+SASLClient->>ProtocolClient: JWKCallback for DID private key
+ProtocolClient->>SASLClient: DID private key
+note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
+opt Authentication with VCs/VPs
+    SASLClient->>ProtocolClient: VCCallback for Verifiable Credentials
+    ProtocolClient->>SASLClient: Verifiable Credentials
+    note left of SASLClient: { ... VCs ... }
+end
+SASLClient->>SASLServer: Start SASL authentication
+SASLServer->>SASLClient: List of authn mechanisms
+SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
+SASLServer->>SASLServer: Generate DID Challenge
+note left of SASLServer: <1809528678543235072.1724868615672@java-sasl-xmpp-server>
+SASLServer->>SASLClient: DID Challenge (nonce, timestamp, realm)
+SASLClient->>SASLClient: Generate DID Response with signature
+note right of SASLClient: <..signature..>
+SASLClient->>SASLServer: DID Response (DID, signature)
+note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
+SASLServer->>DIDResolver: Resolve DID
+DIDResolver->>SASLServer: DID document with DID public key
+SASLServer->>SASLServer: Verify DID Response with signature
+note right of SASLServer: true
+opt Authentication with VCs/VPs
+    SASLServer->>SASLServer: Generate VC/VP Challenge
+    note left of SASLServer: <1809528678543235072.1724868615672.DegreeCredential@java-sasl-xmpp-server>
+    SASLServer->>SASLClient: VC/VP Challenge (nonce, timestamp, vc.type, realm)
+    SASLClient->>SASLClient: Generate VC/VP Response with proof
+    note right of SASLClient: <..vp..>
+    SASLClient->>SASLServer: VC/VP Response (VP)
+    note left of SASLServer: <..vp..>
+    SASLServer->>SASLServer: Verify VC/VP Response with proof
+    note right of SASLServer: true
+end
+SASLServer->>ProtocolServer: NameCallback with DID
+ProtocolServer->>SASLServer: (empty)
+SASLServer->>ProtocolServer: AuthorizeCallback
+ProtocolServer->>SASLServer: authorized=true with DID
+SASLServer->>SASLClient: Completed SASL authentication
+
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 21.0.10+7-Debian-1
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>
+</artwork><artwork  type="ascii-art"><![CDATA[                                                                             "The DID-CHALLENGE SASL mechanism with VCs"                                                                        
+                                                                                                                                                                                                
+                    ┌───────────────┐                        ┌───────────┐                                       ┌───────────┐                         ┌───────────────┐          ┌────────────┐
+                    │Protocol Client│                        │SASL Client│                                       │SASL Server│                         │Protocol Server│          │DID Resolver│
+                    └───────┬───────┘                        └─────┬─────┘                                       └─────┬─────┘                         └───────┬───────┘          └─────┬──────┘
+                            │                                      │                Network Connection                 │                                       │                        │       
+                            │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │             Start login              │                                                   │                                       │                        │       
+                            │─────────────────────────────────────>│                                                   │                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │        NameCallback for DID          │                                                   │                                       │                        │       
+                            │<─────────────────────────────────────│                                                   │                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                 DID                  │                                                   │                                       │                        │       
+                            │─────────────────────────────────────>│                                                   │                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │            ╔═══════════════════════╗ │                                                   │                                       │                        │       
+                            │            ║did%3Akey%3A<..did..> ░║ │                                                   │                                       │                        │       
+                            │            ╚═══════════════════════╝ │                                                   │                                       │                        │       
+                            │   JWKCallback for DID private key    │                                                   │                                       │                        │       
+                            │<─────────────────────────────────────│                                                   │                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │           DID private key            │                                                   │                                       │                        │       
+                            │─────────────────────────────────────>│                                                   │                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+      ╔═════════════════════╧════════════════════════════════════╗ │                                                   │                                       │                        │       
+      ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║ │                                                   │                                       │                        │       
+      ╚═════════════════════╤════════════════════════════════════╝ │                                                   │                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+          ╔══════╤══════════╪══════════════════════════════════════╪═══════════════╗                                   │                                       │                        │       
+          ║ OPT  │  Authentication with VCs/VPs                    │               ║                                   │                                       │                        │       
+          ╟──────┘          │                                      │               ║                                   │                                       │                        │       
+          ║                 │VCCallback for Verifiable Credentials │               ║                                   │                                       │                        │       
+          ║                 │<─────────────────────────────────────│               ║                                   │                                       │                        │       
+          ║                 │                                      │               ║                                   │                                       │                        │       
+          ║                 │       Verifiable Credentials         │               ║                                   │                                       │                        │       
+          ║                 │─────────────────────────────────────>│               ║                                   │                                       │                        │       
+          ║                 │                                      │               ║                                   │                                       │                        │       
+          ║                 │                  ╔═════════════════╗ │               ║                                   │                                       │                        │       
+          ║                 │                  ║{ ... VCs ... } ░║ │               ║                                   │                                       │                        │       
+          ╚═════════════════╪══════════════════╚═════════════════╝═╪═══════════════╝                                   │                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │            Start SASL authentication              │                                       │                        │       
+                            │                                      │──────────────────────────────────────────────────>│                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │             List of authn mechanisms              │                                       │                        │       
+                            │                                      │<──────────────────────────────────────────────────│                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │     Selected authn mechanism "DID-CHALLENGE"      │                                       │                        │       
+                            │                                      │──────────────────────────────────────────────────>│                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │                                                   ────┐                                   │                        │       
+                            │                                      │                                                       │ Generate DID Challenge            │                        │       
+                            │                                      │                                                   <───┘                                   │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                            ╔═════════╧═════════════════════════════════════════════════╗ │                                       │                        │       
+                            │                            ║<1809528678543235072.1724868615672@java-sasl-xmpp-server> ░║ │                                       │                        │       
+                            │                            ╚═════════╤═════════════════════════════════════════════════╝ │                                       │                        │       
+                            │                                      │     DID Challenge (nonce, timestamp, realm)       │                                       │                        │       
+                            │                                      │<──────────────────────────────────────────────────│                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      ────┐                                               │                                       │                        │       
+                            │                                          │ Generate DID Response with signature          │                                       │                        │       
+                            │                                      <───┘                                               │                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │ ╔═════════════════╗                               │                                       │                        │       
+                            │                                      │ ║<..signature..> ░║                               │                                       │                        │       
+                            │                                      │ ╚═════════════════╝                               │                                       │                        │       
+                            │                                      │          DID Response (DID, signature)            │                                       │                        │       
+                            │                                      │──────────────────────────────────────────────────>│                                       │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │╔════════════════════════════════════════════════╗ │                                       │                        │       
+                            │                                      │║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                                       │                        │       
+                            │                                      │╚════════════════════════════════════════════════╝ │                                       │                        │       
+                            │                                      │                                                   │                          Resolve DID  │                        │       
+                            │                                      │                                                   │───────────────────────────────────────────────────────────────>│       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │                                                   │               DID document with DID public key                 │       
+                            │                                      │                                                   │<───────────────────────────────────────────────────────────────│       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │                                                   ────┐                                   │                        │       
+                            │                                      │                                                       │ Verify DID Response with signature│                        │       
+                            │                                      │                                                   <───┘                                   │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │                                                   │ ╔══════╗                              │                        │       
+                            │                                      │                                                   │ ║true ░║                              │                        │       
+                            │                                      │                                                   │ ╚══════╝                              │                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │    ╔══════╤══════════════════════════╪═══════════════════════════════════════════════════╪═══════════════════════════════════════╪═╗                      │       
+                            │    ║ OPT  │  Authentication with VCs/VPs                                                 │                                       │ ║                      │       
+                            │    ╟──────┘                          │                                                   │                                       │ ║                      │       
+                            │    ║                                 │                                                   ────┐                                   │ ║                      │       
+                            │    ║                                 │                                                       │ Generate VC/VP Challenge          │ ║                      │       
+                            │    ║                                 │                                                   <───┘                                   │ ║                      │       
+                            │    ║                                 │                                                   │                                       │ ║                      │       
+                            │    ║      ╔══════════════════════════╧═════════════════════════════════════════════════╗ │                                       │ ║                      │       
+                            │    ║      ║<1809528678543235072.1724868615672.DegreeCredential@java-sasl-xmpp-server> ░║ │                                       │ ║                      │       
+                            │    ║      ╚══════════════════════════╤═════════════════════════════════════════════════╝ │                                       │ ║                      │       
+                            │    ║                                 │VC/VP Challenge (nonce, timestamp, vc.type, realm) │                                       │ ║                      │       
+                            │    ║                                 │<──────────────────────────────────────────────────│                                       │ ║                      │       
+                            │    ║                                 │                                                   │                                       │ ║                      │       
+                            │    ║                                 ────┐                                               │                                       │ ║                      │       
+                            │    ║                                     │ Generate VC/VP Response with proof            │                                       │ ║                      │       
+                            │    ║                                 <───┘                                               │                                       │ ║                      │       
+                            │    ║                                 │                                                   │                                       │ ║                      │       
+                            │    ║                                 │ ╔══════════╗                                      │                                       │ ║                      │       
+                            │    ║                                 │ ║<..vp..> ░║                                      │                                       │ ║                      │       
+                            │    ║                                 │ ╚══════════╝                                      │                                       │ ║                      │       
+                            │    ║                                 │               VC/VP Response (VP)                 │                                       │ ║                      │       
+                            │    ║                                 │──────────────────────────────────────────────────>│                                       │ ║                      │       
+                            │    ║                                 │                                                   │                                       │ ║                      │       
+                            │    ║                                 │                                      ╔══════════╗ │                                       │ ║                      │       
+                            │    ║                                 │                                      ║<..vp..> ░║ │                                       │ ║                      │       
+                            │    ║                                 │                                      ╚══════════╝ │                                       │ ║                      │       
+                            │    ║                                 │                                                   ────┐                                   │ ║                      │       
+                            │    ║                                 │                                                       │ Verify VC/VP Response with proof  │ ║                      │       
+                            │    ║                                 │                                                   <───┘                                   │ ║                      │       
+                            │    ║                                 │                                                   │                                       │ ║                      │       
+                            │    ║                                 │                                                   │ ╔══════╗                              │ ║                      │       
+                            │    ║                                 │                                                   │ ║true ░║                              │ ║                      │       
+                            │    ╚═════════════════════════════════╪═══════════════════════════════════════════════════╪═╚══════╝══════════════════════════════╪═╝                      │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │                                                   │        NameCallback with DID          │                        │       
+                            │                                      │                                                   │──────────────────────────────────────>│                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │                                                   │               (empty)                 │                        │       
+                            │                                      │                                                   │<──────────────────────────────────────│                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │                                                   │          AuthorizeCallback            │                        │       
+                            │                                      │                                                   │──────────────────────────────────────>│                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │                                                   │       authorized=true with DID        │                        │       
+                            │                                      │                                                   │<──────────────────────────────────────│                        │       
+                            │                                      │                                                   │                                       │                        │       
+                            │                                      │          Completed SASL authentication            │                                       │                        │       
+                            │                                      │<──────────────────────────────────────────────────│                                       │                        │       
+                    ┌───────┴───────┐                        ┌─────┴─────┐                                       ┌─────┴─────┐                         ┌───────┴───────┐          ┌─────┴──────┐
+                    │Protocol Client│                        │SASL Client│                                       │SASL Server│                         │Protocol Server│          │DID Resolver│
+                    └───────────────┘                        └───────────┘                                       └───────────┘                         └───────────────┘          └────────────┘
+]]></artwork></artset></figure>
+
+</section>
+<section anchor="example-exchange"><name>Example Exchange</name>
 
 <section anchor="step-1-client-namecallback-for-did"><name>Step 1: Client NameCallback for DID</name>
 
@@ -593,384 +1101,6 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 </section>
 </section>
-<section anchor="optional-authentication-with-vcsvps"><name>(Optional) Authentication with VCs/VPs</name>
-
-<t>This section defines an optional extension of the "DID-CHALLENGE" SASL mechanism which adds support for Verifiable Credentials (VCs)
-and Verifiable Presentations (VPs).</t>
-
-<section anchor="the-authentication-exchange-with-vcvp-support"><name>The Authentication Exchange (with VC/VP support)</name>
-
-<t>The exchange consists of the following steps (expanding on <xref target="authentication"></xref>):</t>
-
-<figure><artwork><![CDATA[
-C: Request authentication exchange
-S: DID challenge
-C: DID response
-S: VC/VP challenge
-C: VC/VP response
-S: Outcome of authentication exchange
-]]></artwork></figure>
-
-<t>The steps VC/VP challenge and response steps may be repeated multiple times.</t>
-
-</section>
-<section anchor="vc-vp-challenge"><name>VC-VP Challenge</name>
-
-<t>The VC/VP challenge follows the following format:</t>
-
-<figure><artwork><![CDATA[
-"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm> ">"
-]]></artwork></figure>
-
-<t>Where:</t>
-
-<t><list style="symbols">
-  <t><spanx style="verb">&lt;nonce&gt;</spanx> MUST be a unique string.</t>
-  <t><spanx style="verb">&lt;timestamp&gt;</spanx> MUST be a UNIX timestamp.</t>
-  <t><spanx style="verb">&lt;vc.type&gt;</spanx> MUST be a type of a Verifiable Credential as defined in <eref target="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types">W3C Verifiable Credentials Data Model v2.0 - Types</eref>.</t>
-  <t><spanx style="verb">&lt;realm&gt;</spanx> MUST be a SASL realm.</t>
-</list></t>
-
-<t>Example:</t>
-
-<figure><artwork><![CDATA[
-<7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
-]]></artwork></figure>
-
-</section>
-<section anchor="vc-vp-response"><name>VC-VP Response</name>
-
-<t>The VC/VP response follows the following format:</t>
-
-<figure><artwork><![CDATA[
-<vp>
-]]></artwork></figure>
-
-<t>Where:</t>
-
-<t><list style="symbols">
-  <t><spanx style="verb">&lt;vp&gt;</spanx> MUST be a Verifiable Presentation as defined in <eref target="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations">W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations</eref>.</t>
-</list></t>
-
-<t>Example:</t>
-
-<figure><artwork><![CDATA[
-{
-  "@context": [
-    "https://www.w3.org/ns/credentials/v2",
-    "https://www.w3.org/ns/credentials/examples/v2"
-  ],
-  "id": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
-  "type": ["VerifiablePresentation"],
-  "verifiableCredential": [{
-    "id": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D"
-    "type": ["DegreeCredential"]
-  }]
-}
-]]></artwork></figure>
-
-</section>
-<section anchor="verification-1"><name>Verification</name>
-
-<t>TODO The signature in the initial response MUST cover the entire initial challenge, and is generated using the DID's associated private key.</t>
-
-<t>TODO The server MUST perform the following verification steps:</t>
-
-<t><list style="symbols">
-  <t>TODO</t>
-  <t>Verify "holder"</t>
-</list></t>
-
-</section>
-</section>
-<section anchor="optional-sasl-exchange-with-dids-and-vcsvps"><name>(Optional) SASL Exchange with DIDs and VCs/VPs</name>
-
-<t>This section illustrates the detailed steps of the SASL exchange with DIDs and VCs/VPs, building on <xref target="sasl-exchange-with-dids"></xref>.</t>
-
-<t>The flow includes the DID challenge (see <xref target="did-challenge"></xref>), DID response (see <xref target="did-response"></xref>),
-VC/VP challenge (see <xref target="vc-vp-challenge"></xref>), and VC/VP response (see <xref target="vc-vp-response"></xref>).</t>
-
-<figure><artset><artwork  type="svg"><svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1097px" preserveAspectRatio="none" version="1.1" viewBox="0 0 968 1097" width="968px">
-  <defs/>
-  <g>
-    <text fill="black" font-family="sans-serif" font-size="18" x="276" y="29.2419">"The DID-CHALLENGE SASL mechanism with VCs"</text>
-    <line x1="104" x2="104" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
-    <line x1="315" x2="315" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
-    <line x1="612" x2="612" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
-    <line x1="787" x2="787" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
-    <line x1="909" x2="909" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"/>
-    <rect fill="white" height="33.0679" width="111" x="47" y="41.5158" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="54" y="63.4818">Protocol Client</text>
-    <rect fill="white" height="33.0679" width="111" x="47" y="1053.6462" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="54" y="1075.6121">Protocol Client</text>
-    <rect fill="white" height="33.0679" width="89" x="269" y="41.5158" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="276" y="63.4818">SASL Client</text>
-    <rect fill="white" height="33.0679" width="89" x="269" y="1053.6462" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="276" y="1075.6121">SASL Client</text>
-    <rect fill="white" height="33.0679" width="93" x="564" y="41.5158" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="571" y="63.4818">SASL Server</text>
-    <rect fill="white" height="33.0679" width="93" x="564" y="1053.6462" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="571" y="1075.6121">SASL Server</text>
-    <rect fill="white" height="33.0679" width="115" x="728" y="41.5158" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="735" y="63.4818">Protocol Server</text>
-    <rect fill="white" height="33.0679" width="115" x="728" y="1053.6462" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="735" y="1075.6121">Protocol Server</text>
-    <rect fill="white" height="33.0679" width="100" x="857" y="41.5158" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="864" y="63.4818">DID Resolver</text>
-    <rect fill="white" height="33.0679" width="100" x="857" y="1053.6462" stroke="black" stroke-width="1.5"/>
-    <text fill="black" font-family="sans-serif" font-size="14" x="864" y="1075.6121">DID Resolver</text>
-    <polygon fill="black" points="775.5,109.2898,785.5,113.2898,775.5,117.2898,779.5,113.2898" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="781.5" y1="113.2898" y2="113.2898" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="107.4808">Network Connection</text>
-    <line x1="313.5" x2="303.5" y1="144.9958" y2="140.9958" stroke="black" stroke-width="1.0"/>
-    <line x1="313.5" x2="303.5" y1="144.9958" y2="148.9958" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="314.5" y1="144.9958" y2="144.9958" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="139.1868">Start login</text>
-    <line x1="104.5" x2="114.5" y1="176.7018" y2="172.7018" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="114.5" y1="176.7018" y2="180.7018" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="314.5" y1="176.7018" y2="176.7018" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="121.5" y="170.8928">NameCallback for DID</text>
-    <line x1="313.5" x2="303.5" y1="208.4078" y2="204.4078" stroke="black" stroke-width="1.0"/>
-    <line x1="313.5" x2="303.5" y1="208.4078" y2="212.4078" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="314.5" y1="208.4078" y2="208.4078" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="202.5988">DID</text>
-    <path d="M148,221.4078 L148,248.4078 L306,248.4078 L306,231.4078 L296,221.4078 L148,221.4078 " fill="white" stroke="black" stroke-width="1.0"/>
-    <path d="M296,221.4078 L296,231.4078 L306,231.4078 L296,221.4078 " fill="white" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="154" y="240.3048">did%3Akey%3A&lt;..did..&gt;</text>
-    <line x1="104.5" x2="114.5" y1="281.8199" y2="277.8199" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="114.5" y1="281.8199" y2="285.8199" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="314.5" y1="281.8199" y2="281.8199" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="121.5" y="276.0109">JWKCallback for DID private key</text>
-    <line x1="313.5" x2="303.5" y1="313.5259" y2="309.5259" stroke="black" stroke-width="1.0"/>
-    <line x1="313.5" x2="303.5" y1="313.5259" y2="317.5259" stroke="black" stroke-width="1.0"/>
-    <line x1="104.5" x2="314.5" y1="313.5259" y2="313.5259" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="307.7169">DID private key</text>
-    <path d="M8,326.5259 L8,353.5259 L307,353.5259 L307,336.5259 L297,326.5259 L8,326.5259 " fill="white" stroke="black" stroke-width="1.0"/>
-    <path d="M297,326.5259 L297,336.5259 L307,336.5259 L297,326.5259 " fill="white" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="14" y="345.4229">{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }</text>
-    <line x1="610.5" x2="600.5" y1="386.9379" y2="382.9379" stroke="black" stroke-width="1.0"/>
-    <line x1="610.5" x2="600.5" y1="386.9379" y2="390.9379" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="611.5" y1="386.9379" y2="386.9379" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="381.1289">Start SASL authentication</text>
-    <line x1="315.5" x2="325.5" y1="418.6439" y2="414.6439" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="325.5" y1="418.6439" y2="422.6439" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="611.5" y1="418.6439" y2="418.6439" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="412.8349">List of authn mechanisms</text>
-    <line x1="610.5" x2="600.5" y1="450.3499" y2="446.3499" stroke="black" stroke-width="1.0"/>
-    <line x1="610.5" x2="600.5" y1="450.3499" y2="454.3499" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="611.5" y1="450.3499" y2="450.3499" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="444.5409">Selected authn mechanism "DID-CHALLENGE"</text>
-    <line x1="612.5" x2="654.5" y1="482.056" y2="482.056" stroke="black" stroke-width="1.0"/>
-    <line x1="654.5" x2="654.5" y1="482.056" y2="495.056" stroke="black" stroke-width="1.0"/>
-    <line x1="613.5" x2="654.5" y1="495.056" y2="495.056" stroke="black" stroke-width="1.0"/>
-    <line x1="613.5" x2="623.5" y1="495.056" y2="491.056" stroke="black" stroke-width="1.0"/>
-    <line x1="613.5" x2="623.5" y1="495.056" y2="499.056" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="476.247">Generate challenge</text>
-    <path d="M268,508.056 L268,535.056 L603,535.056 L603,518.056 L593,508.056 L268,508.056 " fill="white" stroke="black" stroke-width="1.0"/>
-    <path d="M593,508.056 L593,518.056 L603,518.056 L593,508.056 " fill="white" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="274" y="526.953">&lt;1809528678543235072.1724868615672@hostname&gt;</text>
-    <line x1="315.5" x2="325.5" y1="568.468" y2="564.468" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="325.5" y1="568.468" y2="572.468" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="611.5" y1="568.468" y2="568.468" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="562.659">Challenge (nonce, timestamp, hostname)</text>
-    <line x1="315.5" x2="357.5" y1="600.174" y2="600.174" stroke="black" stroke-width="1.0"/>
-    <line x1="357.5" x2="357.5" y1="600.174" y2="613.174" stroke="black" stroke-width="1.0"/>
-    <line x1="316.5" x2="357.5" y1="613.174" y2="613.174" stroke="black" stroke-width="1.0"/>
-    <line x1="316.5" x2="326.5" y1="613.174" y2="609.174" stroke="black" stroke-width="1.0"/>
-    <line x1="316.5" x2="326.5" y1="613.174" y2="617.174" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="594.365">Create signature</text>
-    <path d="M320,626.174 L320,653.174 L424,653.174 L424,636.174 L414,626.174 L320,626.174 " fill="white" stroke="black" stroke-width="1.0"/>
-    <path d="M414,626.174 L414,636.174 L424,636.174 L414,626.174 " fill="white" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="326" y="645.071">&lt;..signature..&gt;</text>
-    <line x1="610.5" x2="600.5" y1="686.586" y2="682.586" stroke="black" stroke-width="1.0"/>
-    <line x1="610.5" x2="600.5" y1="686.586" y2="690.586" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="611.5" y1="686.586" y2="686.586" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="680.777">Response (DID, signature)</text>
-    <path d="M291,699.586 L291,726.586 L603,726.586 L603,709.586 L593,699.586 L291,699.586 " fill="white" stroke="black" stroke-width="1.0"/>
-    <path d="M593,699.586 L593,709.586 L603,709.586 L593,699.586 " fill="white" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="297" y="718.4831">did%3Akey%3A&lt;..did..&gt; 2mJ4tBo6H&lt;..signature..&gt;</text>
-    <line x1="907" x2="897" y1="759.9981" y2="755.9981" stroke="black" stroke-width="1.0"/>
-    <line x1="907" x2="897" y1="759.9981" y2="763.9981" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="908" y1="759.9981" y2="759.9981" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="754.1891">Resolve DID</text>
-    <line x1="612.5" x2="622.5" y1="791.7041" y2="787.7041" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="622.5" y1="791.7041" y2="795.7041" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="908" y1="791.7041" y2="791.7041" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="785.8951">DID document with DID public key</text>
-    <line x1="612.5" x2="654.5" y1="823.4101" y2="823.4101" stroke="black" stroke-width="1.0"/>
-    <line x1="654.5" x2="654.5" y1="823.4101" y2="836.4101" stroke="black" stroke-width="1.0"/>
-    <line x1="613.5" x2="654.5" y1="836.4101" y2="836.4101" stroke="black" stroke-width="1.0"/>
-    <line x1="613.5" x2="623.5" y1="836.4101" y2="832.4101" stroke="black" stroke-width="1.0"/>
-    <line x1="613.5" x2="623.5" y1="836.4101" y2="840.4101" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="817.6011">Verify signature</text>
-    <path d="M617,849.4101 L617,876.4101 L663,876.4101 L663,859.4101 L653,849.4101 L617,849.4101 " fill="white" stroke="black" stroke-width="1.0"/>
-    <path d="M653,849.4101 L653,859.4101 L663,859.4101 L653,849.4101 " fill="white" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="623" y="868.3071">true</text>
-    <line x1="785.5" x2="775.5" y1="909.8221" y2="905.8221" stroke="black" stroke-width="1.0"/>
-    <line x1="785.5" x2="775.5" y1="909.8221" y2="913.8221" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="786.5" y1="909.8221" y2="909.8221" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="904.0131">NameCallback with DID</text>
-    <line x1="612.5" x2="622.5" y1="941.5282" y2="937.5282" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="622.5" y1="941.5282" y2="945.5282" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="786.5" y1="941.5282" y2="941.5282" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="935.7192">(empty)</text>
-    <line x1="785.5" x2="775.5" y1="973.2342" y2="969.2342" stroke="black" stroke-width="1.0"/>
-    <line x1="785.5" x2="775.5" y1="973.2342" y2="977.2342" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="786.5" y1="973.2342" y2="973.2342" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="967.4252">AuthorizeCallback</text>
-    <line x1="612.5" x2="622.5" y1="1004.9402" y2="1000.9402" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="622.5" y1="1004.9402" y2="1008.9402" stroke="black" stroke-width="1.0"/>
-    <line x1="612.5" x2="786.5" y1="1004.9402" y2="1004.9402" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="999.1312">authorized=true with DID</text>
-    <line x1="315.5" x2="325.5" y1="1036.6462" y2="1032.6462" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="325.5" y1="1036.6462" y2="1040.6462" stroke="black" stroke-width="1.0"/>
-    <line x1="315.5" x2="611.5" y1="1036.6462" y2="1036.6462" stroke="black" stroke-width="1.0"/>
-    <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="1030.8372">Completed SASL authentication</text>
-    <!--MD5=[d190988177e0cfd77b2c828f91323c8d]
-@startuml
-
-title "The DID-CHALLENGE SASL mechanism with VCs"
-participant ProtocolClient as "Protocol Client"
-participant SASLClient as "SASL Client"
-participant SASLServer as "SASL Server"
-participant ProtocolServer as "Protocol Server"
-participant DIDResolver as "DID Resolver"
-ProtocolClient- ->ProtocolServer: Network Connection
-ProtocolClient->>SASLClient: Start login
-SASLClient->>ProtocolClient: NameCallback for DID
-ProtocolClient->>SASLClient: DID
-note left of SASLClient: did%3Akey%3A<..did..>
-SASLClient->>ProtocolClient: JWKCallback for DID private key
-ProtocolClient->>SASLClient: DID private key
-note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
-SASLClient->>SASLServer: Start SASL authentication
-SASLServer->>SASLClient: List of authn mechanisms
-SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
-SASLServer->>SASLServer: Generate challenge
-note left of SASLServer: <1809528678543235072.1724868615672@hostname>
-SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
-SASLClient->>SASLClient: Create signature
-note right of SASLClient: <..signature..>
-SASLClient->>SASLServer: Response (DID, signature)
-note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
-SASLServer->>DIDResolver: Resolve DID
-DIDResolver->>SASLServer: DID document with DID public key
-SASLServer->>SASLServer: Verify signature
-note right of SASLServer: true
-SASLServer->>ProtocolServer: NameCallback with DID
-ProtocolServer->>SASLServer: (empty)
-SASLServer->>ProtocolServer: AuthorizeCallback
-ProtocolServer->>SASLServer: authorized=true with DID
-SASLServer->>SASLClient: Completed SASL authentication
-
-@enduml
-
-PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
-(GPL source distribution)
-Java Runtime: OpenJDK Runtime Environment
-JVM: OpenJDK 64-Bit Server VM
-Java Version: 21.0.10+7-Debian-1
-Operating System: Linux
-Default Encoding: UTF-8
-Language: en
-Country: US
--->
-  </g>
-</svg>
-</artwork><artwork  type="ascii-art"><![CDATA[                                                              "The DID-CHALLENGE SASL mechanism with VCs"                                                          
-                                                                                                                                                                   
-                     ┌───────────────┐                  ┌───────────┐                             ┌───────────┐           ┌───────────────┐          ┌────────────┐
-                     │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
-                     └───────┬───────┘                  └─────┬─────┘                             └─────┬─────┘           └───────┬───────┘          └─────┬──────┘
-                             │                                │       Network Connection                │                         │                        │       
-                             │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │       
-                             │                                │                                         │                         │                        │       
-                             │          Start login           │                                         │                         │                        │       
-                             │───────────────────────────────>│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │     NameCallback for DID       │                                         │                         │                        │       
-                             │<───────────────────────────────│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │              DID               │                                         │                         │                        │       
-                             │───────────────────────────────>│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │      ╔═══════════════════════╗ │                                         │                         │                        │       
-                             │      ║did%3Akey%3A<..did..> ░║ │                                         │                         │                        │       
-                             │      ╚═══════════════════════╝ │                                         │                         │                        │       
-                             │JWKCallback for DID private key │                                         │                         │                        │       
-                             │<───────────────────────────────│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │        DID private key         │                                         │                         │                        │       
-                             │───────────────────────────────>│                                         │                         │                        │       
-                             │                                │                                         │                         │                        │       
-  ╔══════════════════════════╧═══════════════════════════════╗│                                         │                         │                        │       
-  ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║│                                         │                         │                        │       
-  ╚══════════════════════════╤═══════════════════════════════╝│                                         │                         │                        │       
-                             │                                │       Start SASL authentication         │                         │                        │       
-                             │                                │────────────────────────────────────────>│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │        List of authn mechanisms         │                         │                        │       
-                             │                                │<────────────────────────────────────────│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │Selected authn mechanism "DID-CHALLENGE" │                         │                        │       
-                             │                                │────────────────────────────────────────>│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         ────┐                     │                        │       
-                             │                                │                                             │ Generate challenge  │                        │       
-                             │                                │                                         <───┘                     │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                         ╔══════╧═══════════════════════════════════════╗ │                         │                        │       
-                             │                         ║<1809528678543235072.1724868615672@hostname> ░║ │                         │                        │       
-                             │                         ╚══════╤═══════════════════════════════════════╝ │                         │                        │       
-                             │                                │ Challenge (nonce, timestamp, hostname)  │                         │                        │       
-                             │                                │<────────────────────────────────────────│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                ────┐                                     │                         │                        │       
-                             │                                    │ Create signature                    │                         │                        │       
-                             │                                <───┘                                     │                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │ ╔═════════════════╗                     │                         │                        │       
-                             │                                │ ║<..signature..> ░║                     │                         │                        │       
-                             │                                │ ╚═════════════════╝                     │                         │                        │       
-                             │                                │       Response (DID, signature)         │                         │                        │       
-                             │                                │────────────────────────────────────────>│                         │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                       ╔════════╧═══════════════════════════════════════╗ │                         │                        │       
-                             │                       ║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                         │                        │       
-                             │                       ╚════════╤═══════════════════════════════════════╝ │                         │                        │       
-                             │                                │                                         │                   Resolve DID                    │       
-                             │                                │                                         │─────────────────────────────────────────────────>│       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │        DID document with DID public key          │       
-                             │                                │                                         │<─────────────────────────────────────────────────│       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         ────┐                     │                        │       
-                             │                                │                                             │ Verify signature    │                        │       
-                             │                                │                                         <───┘                     │                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │ ╔══════╗                │                        │       
-                             │                                │                                         │ ║true ░║                │                        │       
-                             │                                │                                         │ ╚══════╝                │                        │       
-                             │                                │                                         │ NameCallback with DID   │                        │       
-                             │                                │                                         │────────────────────────>│                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │        (empty)          │                        │       
-                             │                                │                                         │<────────────────────────│                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │   AuthorizeCallback     │                        │       
-                             │                                │                                         │────────────────────────>│                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │                                         │authorized=true with DID │                        │       
-                             │                                │                                         │<────────────────────────│                        │       
-                             │                                │                                         │                         │                        │       
-                             │                                │     Completed SASL authentication       │                         │                        │       
-                             │                                │<────────────────────────────────────────│                         │                        │       
-                     ┌───────┴───────┐                  ┌─────┴─────┐                             ┌─────┴─────┐           ┌───────┴───────┐          ┌─────┴──────┐
-                     │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
-                     └───────────────┘                  └───────────┘                             └───────────┘           └───────────────┘          └────────────┘
-]]></artwork></artset></figure>
-
-</section>
 <section anchor="implementations"><name>Implementations</name>
 
 <t>The following repositories contain various parts of an example implementation:</t>
@@ -1004,109 +1134,113 @@ Country: US
   </back>
 
 <!-- ##markdown-source:
-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
-Hw+g2iWm/Dhc+MK6va80bkASeoEfuBxaVUAL+yks9kzq4zbXKa5kfDp7M2ht
-9bpYwUnBmvXGtwiDc1JhYA467Z6qTe4PAx3CwOZfWjuAxvDv1+7xzZieXkxv
-jy679nGnbU8+tkdvPX/POT/xWle747YVzaedm7OWs99p7JL22WDz7Lr9ZnBB
-O62dq8XR3vUvO5PwzAktMf9g7Z20b87bfrhztIj53GKi7bV2WOfwNLzaec0v
-4y8fF+fjN29v3h5eLSgdbf08+3A12ft5OlXhDh4jVZ9Ch6EbNxmaaFziJYyC
-YsKzhJaw8rJCXvoBVP3bpFKHz4JBPS5ARfD9FXyHWtv14PN2Ra17BQmHwmST
-/FPP+yc5vhie444FNm0+A8TTSqzLQRnB/MCLk4MPJH2lRqql8qNkGpCPM8Np
-xl9ubm51uq1Gb6u9sdXtdttbLTDwZrfTaLe7ne5Wp/3q2ppZqut064WhqZBq
-u6C+swRoU+0l0PstynsJ/rFNXqaBvH1XRTgiL9GqTaXcU1bzbg8Z/PsEmFJu
-xmSeHYTBbjuNunRQktkyXyrr/88dGqoky8oRmhON+boQYZgXMoNLrdiBKjkA
-7cEyUTYs1YTCK4DEieox0tweFC30E1+xuS8mTLkaoB46VMnHZjnm04rCTPYQ
-yTqYYhkkP/zoBHbsyV4Ubp8iR7ITqIyQ+JCcHiua+ar4PleK0jnr0o3OKAQ2
-1TzkGgfZfjLPjd6XqX5HsZsAFCtFOSPqyg9qU1EQoxwGxQLvwVAoLivluEgN
-9qAQNcXmQr542ImsCZTeUPHlX6aug0tfJtQsUYywn7CCwu4L7jGwlhphaRxR
-E/tAD81MkTQpxEQQEDfwJwmjsBkQuv/WIR7zY0F5th9IamTVO8NeTKmGZ66L
-PWbwZAWIDhWwWUfEQPdM0ELSyu020N3H4NTABGz+HD23mKPScrNwWFCtyigr
-AHJhZPIUBkoW6hKVcOfji9hzzVjcCnWiQSorTjTS0qlihFYE/sFg3yrIqa79
-Bno3Ajue5BFRz4rjkVZurCS9atxQxX46Tn1fvn5ubLr+svEgWdJdkIPz7YaK
-UZTGNLeL5PvkBPZg2LzSjU/Ey9Kc7e1MxD7Uo7A2tlGZb2TPYVBxFhCG/eQA
-zDmybNUaA8buJ40DwHcpcelYoE/lX+bzzct6Hb7W69v3c/Du6rDMQB6PH2Sm
-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
-LdZ/Ac6CnWtURQAA
+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
+jZjX+qT25vi81iA1O5rh2aHT7HS2d/HKHZ5bFh466SH5WuY99w6tYukgZdwy
+8lEVbk94LPTOsNjgW7MIc9WOpDKlurNYXFNTSJ+tVQJ6UVF6/PPt3tZup9nr
+7vQ67Vaz1dnawUqt2e51e93tTnenuapSWyl2BUokgjZyMGyomrG+qAVNoCRD
+hjQSBTOcVxJFfDJdsD04Yr57q7pjUfYykMlmZTaxvlplS52eNL3XbfFz0H21
+bPlMTwVc6Gd1A4ZY4cYSLvPEnaaCQnpc7QtpdnqcFvVkESWsTHoBpIpYohkz
+yqMqHG0wLxTz+nq6eq+dEV9PU28VmfPfyHPOyUoHHQRYKgvdQKuEs6pSycab
+tM9br/as5AJXg3jz6ryakdX2QD6EyNrE6dMIuJsm5GqXoNLFU7UZdZy41GFe
+12A28garHHAOiRgGqLINhpzjo917OnBkI5ULxNIL1x/XWgPz3kH2k9UhUNZt
+qkKJV/++3TfFbGmIuvStLTolRoWsal+X6BKPznGPFrGQyd2El7iCY+NCwpxS
+9tXALHEnV6jSfmoXAM9ntiXmIfvzewJ64eI4vJA235d57LJN9ArXPsAu4Sk+
+GyGzprUF+4tLoB2v2lY0t5qdzYvDgbnwWMXEW1ud7c7mM+Qurv8hHQ3rgE0i
+xnIJ7mtxKP8oNzkqbvaQNscsXNLZmJWNtwIbnmSMVXjzJPvk72aYYZFofcEg
+vxkE/B0f+AHAQv32Qb5FU1uyth9v2rkkm7NmrfHQsemjUjkJ5nzEiTUuy8Uk
+8vtJwp1+a3en12q3x2avs9s123aLmhQumb2xTUe0tbvVsjtyxRo6H3Jay1VX
+1FxNkc9VkOsfZ/2mmFarQ9HRh9zff2xzp6aIZJxUfbb2EQZ8/Wh8fUyzZpV3
+af/7E/sxDfk0M32moTstCtW5ykjFOehVT+6dxMAnEjtlUIc4T2ieaEL39030
+yCe1TMIoAJjWJizjTrFhUslYy9oe1aT2uKZJdfY3tk0WCdem8mFxDUUFBxJz
+XbcsJHNhT/M+iFUp/1Y0Y9KyYFkZ+A2NmeV0G2SUcLdYUMl0oieZOAlf5Izr
+T2zsNB7U1WkYVVtlAwHUZ2GZ4pKyqTI8p2yRJ7SKsor8R8/oR8/oL+gZwVZv
+7R4RU+5a+a4GJfGWl2CSzFpJ18xbI7Rlqdd68N+vBvOdHz2wHz2wHz2wrAf2
+0Ohe74rVVsXSoHy4Qz54s7mUuxx3Ktl80U/TLX7msAtYttRpK2lfvfSN9WYu
+9yq3nYXoMEuXyWxaKSquzuv36LNKdp2rPJb3krNo+Px/2jTVr+/kr/XBDnII
+RS/Z7qe11PJyApsXqrhP3zOUb2rJdwDUJx0c9D0SuCtJ33ZSH36seA0fqmE0
+lmmSwcnR4dklGUDW+Hl/cFw2gByE/8mDvYFmEej3cbaJ3RGauOJMfkbkJ67b
+SD8pwmM5a8Lk3Y06MffIU967kNQGew9Z/EnLZCZpZiap1lfnabl0DMj6OMsU
+Ci21D7uFvVDRUAbirvxIQaNOvMZYBcaMJXYqrFZW2SW7A5fdgOmwDxHypGgw
+vH3kh4mAAcpwv2WuULt5Wofl2aNbMo3C2oX6M79arUPzO7IePRxddc3plXfA
+D1oHx5dvJ/G4Ofz0yX+zI7aEuD2dDsUvndfzwYvpbXGulHL28tOro/df3t8N
+WxdtLzCvto7+Odxpvj15d/CZNo/OPt/si2T2+fXbs55qHX3Vbnr+CN1r7f51
+ul2m2VV6/XatfrNOs5hs9dOtITpl6uWVJwj6nV4Zg7rDUHmyIdsAo7nuvOnP
+cWKmHs7QPPos+UwoOzWwoZrGMn7lWaoFkITujqcROzy8uDq8kMzK2O1XSpzn
+7c52q93ptNrdnc5Oc6e33exCJdPZ2d5t7rbgT29V4ZKppJ3B1DAr2aQiUjxC
+QIkr78NV+4zl5mIJbZQ/R+oxTt7alJ8yZfS+WYw+aQd3/vTg089d+/3Z8a+j
+k9G57YX0eMI956zXGx23O4ezU/7ltCu23x2+7p3+/Ks/9075IORJ6/PV4adf
+XjapuIpGdP/CPg5fXfDTaHawz45zBXUyBYEZUu8pP1VINZW9TKf7omqszP26
+VaRftE4/r8z9pArSuJY0fj9fDEc87dXDP1xZ3SzAlldixRDTaU3rJuupKn3+
+I840uhAQa+oNlcOGq/L8U/S3UJzIrzhlefIUspAhv0dtM1xZ23wPmb9PTbST
+uceS5x7qhurvp7i78CxkwTUQhtUXxhqSsiFpGUsrPXr5gCEH4mJX32dpuYt0
+ig8aqg4oz9JPn4qw9kcF2PfDS7mNyuzRy+yxsMFJP0Uuf5hRDmAH9iuRJ9/I
+yPBNHdbyDRBMquEvC8im+YqPMzGfronxxc1XMdDlt/slehgFT/P5ktjfjxxz
+kJbaavA4E8vpkzF1U4CHMP63k+hptMqakA6a2bfMtvNkHCJHuIH2sgff6WOd
+7JFnxMIgxi9pEIFSjCAzGvEgAaigkXo5R34ErbbivESvbxj/Wfqez2FeIH/e
+Qvo5fh4KVZ8v4j75oJ9CTiDOkhH+DsVmyKjNbhgLWbSZB7AiZSKp/NnlY2bV
+NVNZ3D6dqfRjwUcyVZiVMeUGNnVJ7RX+cgi5DiLXqZU5fAxbkthjuconIVNl
+D8k+Yy5+E7rq2/LHcIqP/rKJj2C2NA/5LXwfTjayj2ov+QQO6+VS/XvLUEgt
+j5CgMCvjvxAuf4kQabQIueBjZSlNvkekoQf560+UKMb1vlEgObcqD/5KA2Bi
+QSKAxT9VIlzvWyWSvFYkKv4MxL+1WP8H8Q7dDthKAAA=
 
 -->
 

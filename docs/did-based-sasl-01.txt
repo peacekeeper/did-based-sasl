@@ -34,22 +34,22 @@ Table of Contents
      3.4.  DID Response  . . . . . . . . . . . . . . . . . . . . . .   4
      3.5.  Verification  . . . . . . . . . . . . . . . . . . . . . .   4
    4.  SASL Exchange with DIDs . . . . . . . . . . . . . . . . . . .   5
-     4.1.  Step 1: Client NameCallback for DID . . . . . . . . . . .   7
-     4.2.  Step 2: Client JWKCallback for Private Key  . . . . . . .   7
-     4.3.  Step 3: Server -> Client Challenge  . . . . . . . . . . .   7
-     4.4.  Step 4: Client Signature  . . . . . . . . . . . . . . . .   8
-     4.5.  Step 5: Client -> Server Response . . . . . . . . . . . .   8
-     4.6.  Step 6: Server NameCallback with DID  . . . . . . . . . .   8
-     4.7.  Step 7: Server Verification . . . . . . . . . . . . . . .   8
-     4.8.  Step 8: Server AuthorizeCallback with authorization ID  .   8
-   5.  (Optional) Authentication with VCs/VPs  . . . . . . . . . . .   9
-     5.1.  The Authentication Exchange (with VC/VP support)  . . . .   9
-     5.2.  VC-VP Challenge . . . . . . . . . . . . . . . . . . . . .   9
-     5.3.  VC-VP Response  . . . . . . . . . . . . . . . . . . . . .   9
-     5.4.  Verification  . . . . . . . . . . . . . . . . . . . . . .  10
-   6.  (Optional) SASL Exchange with DIDs and VCs/VPs  . . . . . . .  10
-   7.  Implementations . . . . . . . . . . . . . . . . . . . . . . .  12
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  13
+   5.  (Optional) Authentication with VCs/VPs  . . . . . . . . . . .   7
+     5.1.  The Authentication Exchange (with VC/VP support)  . . . .   7
+     5.2.  VC-VP Challenge . . . . . . . . . . . . . . . . . . . . .   7
+     5.3.  VC-VP Response  . . . . . . . . . . . . . . . . . . . . .   8
+     5.4.  Verification  . . . . . . . . . . . . . . . . . . . . . .   8
+   6.  (Optional) SASL Exchange with DIDs and VCs/VPs  . . . . . . .   9
+   7.  Example Exchange  . . . . . . . . . . . . . . . . . . . . . .  12
+     7.1.  Step 1: Client NameCallback for DID . . . . . . . . . . .  12
+     7.2.  Step 2: Client JWKCallback for Private Key  . . . . . . .  12
+     7.3.  Step 3: Server -> Client Challenge  . . . . . . . . . . .  13
+     7.4.  Step 4: Client Signature  . . . . . . . . . . . . . . . .  13
+     7.5.  Step 5: Client -> Server Response . . . . . . . . . . . .  13
+     7.6.  Step 6: Server NameCallback with DID  . . . . . . . . . .  13
+     7.7.  Step 7: Server Verification . . . . . . . . . . . . . . .  13
+     7.8.  Step 8: Server AuthorizeCallback with authorization ID  .  13
+   8.  Implementations . . . . . . . . . . . . . . . . . . . . . . .  14
 
 
 
@@ -57,6 +57,8 @@ Sabadello                     Informational                     [Page 1]
 
                            did-challenge-sasl                 March 2026
 
+
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -107,8 +109,6 @@ Sabadello                     Informational                     [Page 1]
 
 
 
-
-
 Sabadello                     Informational                     [Page 2]
 
                            did-challenge-sasl                 March 2026
@@ -126,8 +126,8 @@ Sabadello                     Informational                     [Page 2]
    The exchange consists of the following steps:
 
    C: Request authentication exchange
-   S: DID challenge
-   C: DID response
+   S: DID Challenge
+   C: DID Response
    S: Outcome of authentication exchange
 
    The mechanism is capable of transferring authorization identity
@@ -156,7 +156,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
 3.3.  DID Challenge
 
-   The DID challenge follows the following format:
+   The DID Challenge follows the following format:
 
    "<" <nonce> "." <timestamp> "@" <realm> ">"
 
@@ -182,7 +182,7 @@ Sabadello                     Informational                     [Page 3]
 
 3.4.  DID Response
 
-   The DID response follows the following format:
+   The DID Response follows the following format:
 
    <did> <signature>
 
@@ -199,8 +199,8 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
 3.5.  Verification
 
-   The signature in the initial response MUST cover the entire initial
-   challenge, and is generated using the DID's associated private key.
+   The signature in the initial response MUST cover the entire DID
+   Challenge, and is generated using the DID's associated private key.
 
    The server MUST perform the following verification steps:
 
@@ -213,9 +213,9 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
       1.0/#authentication).
 
    *  Using the public keys from the DID document, verify the signature
-      in the initial response against the initial challenge.
+      in the DID Response against the DID Challenge.
 
-   *  Verify that the challenge's nonce has not been re-used.
+   *  Verify that the DID Challenge nonce has not been re-used.
 
 
 
@@ -226,54 +226,54 @@ Sabadello                     Informational                     [Page 4]
                            did-challenge-sasl                 March 2026
 
 
-   *  Verify that the challenge's timestamp is not too long in the past,
-      e.g. 5 minutes.
+   *  Verify that the DID Challenge timestamp is not too long in the
+      past, e.g. 5 minutes.
 
 4.  SASL Exchange with DIDs
 
    This section illustrates the detailed steps of the SASL exchange.
 
-   The flow includes the DID challenge (see Section 3.3) and DID
-   response (see Section 3.4) steps.
+   The flow includes the DID Challenge (see Section 3.3) and DID
+   Response (see Section 3.4) steps.
 
-                                                                   "The DID-CHALLENGE SASL mechanism"
+                                                                          "The DID-CHALLENGE SASL mechanism"
 
-                     ┌───────────────┐                  ┌───────────┐                             ┌───────────┐           ┌───────────────┐          ┌────────────┐
-                     │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
-                     └───────┬───────┘                  └─────┬─────┘                             └─────┬─────┘           └───────┬───────┘          └─────┬──────┘
-                             │                                │       Network Connection                │                         │                        │
-                             │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │
-                             │                                │                                         │                         │                        │
-                             │          Start login           │                                         │                         │                        │
-                             │───────────────────────────────>│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │     NameCallback for DID       │                                         │                         │                        │
-                             │<───────────────────────────────│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │              DID               │                                         │                         │                        │
-                             │───────────────────────────────>│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │      ╔═══════════════════════╗ │                                         │                         │                        │
-                             │      ║did%3Akey%3A<..did..> ░║ │                                         │                         │                        │
-                             │      ╚═══════════════════════╝ │                                         │                         │                        │
-                             │JWKCallback for DID private key │                                         │                         │                        │
-                             │<───────────────────────────────│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │        DID private key         │                                         │                         │                        │
-                             │───────────────────────────────>│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-  ╔══════════════════════════╧═══════════════════════════════╗│                                         │                         │                        │
-  ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║│                                         │                         │                        │
-  ╚══════════════════════════╤═══════════════════════════════╝│                                         │                         │                        │
-                             │                                │       Start SASL authentication         │                         │                        │
-                             │                                │────────────────────────────────────────>│                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │        List of authn mechanisms         │                         │                        │
-                             │                                │<────────────────────────────────────────│                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │Selected authn mechanism "DID-CHALLENGE" │                         │                        │
-                             │                                │────────────────────────────────────────>│                         │                        │
-                             │                                │                                         │                         │                        │
+                     ┌───────────────┐                  ┌───────────┐                             ┌───────────┐                         ┌───────────────┐          ┌────────────┐
+                     │Protocol Client│                  │SASL Client│                             │SASL Server│                         │Protocol Server│          │DID Resolver│
+                     └───────┬───────┘                  └─────┬─────┘                             └─────┬─────┘                         └───────┬───────┘          └─────┬──────┘
+                             │                                │              Network Connection         │                                       │                        │
+                             │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │
+                             │                                │                                         │                                       │                        │
+                             │          Start login           │                                         │                                       │                        │
+                             │───────────────────────────────>│                                         │                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │     NameCallback for DID       │                                         │                                       │                        │
+                             │<───────────────────────────────│                                         │                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │              DID               │                                         │                                       │                        │
+                             │───────────────────────────────>│                                         │                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │      ╔═══════════════════════╗ │                                         │                                       │                        │
+                             │      ║did%3Akey%3A<..did..> ░║ │                                         │                                       │                        │
+                             │      ╚═══════════════════════╝ │                                         │                                       │                        │
+                             │JWKCallback for DID private key │                                         │                                       │                        │
+                             │<───────────────────────────────│                                         │                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │        DID private key         │                                         │                                       │                        │
+                             │───────────────────────────────>│                                         │                                       │                        │
+                             │                                │                                         │                                       │                        │
+  ╔══════════════════════════╧═══════════════════════════════╗│                                         │                                       │                        │
+  ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║│                                         │                                       │                        │
+  ╚══════════════════════════╤═══════════════════════════════╝│                                         │                                       │                        │
+                             │                                │       Start SASL authentication         │                                       │                        │
+                             │                                │────────────────────────────────────────>│                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │                                │        List of authn mechanisms         │                                       │                        │
+                             │                                │<────────────────────────────────────────│                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │                                │Selected authn mechanism "DID-CHALLENGE" │                                       │                        │
+                             │                                │────────────────────────────────────────>│                                       │                        │
+                             │                                │                                         │                                       │                        │
 
 
 
@@ -282,54 +282,54 @@ Sabadello                     Informational                     [Page 5]
                            did-challenge-sasl                 March 2026
 
 
-                             │                                │                                         ────┐                     │                        │
-                             │                                │                                             │ Generate challenge  │                        │
-                             │                                │                                         <───┘                     │                        │
-                             │                                │                                         │                         │                        │
-                             │                         ╔══════╧═══════════════════════════════════════╗ │                         │                        │
-                             │                         ║<1809528678543235072.1724868615672@hostname> ░║ │                         │                        │
-                             │                         ╚══════╤═══════════════════════════════════════╝ │                         │                        │
-                             │                                │ Challenge (nonce, timestamp, hostname)  │                         │                        │
-                             │                                │<────────────────────────────────────────│                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                                ────┐                                     │                         │                        │
-                             │                                    │ Create signature                    │                         │                        │
-                             │                                <───┘                                     │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │ ╔═════════════════╗                     │                         │                        │
-                             │                                │ ║<..signature..> ░║                     │                         │                        │
-                             │                                │ ╚═════════════════╝                     │                         │                        │
-                             │                                │       Response (DID, signature)         │                         │                        │
-                             │                                │────────────────────────────────────────>│                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                       ╔════════╧═══════════════════════════════════════╗ │                         │                        │
-                             │                       ║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                         │                        │
-                             │                       ╚════════╤═══════════════════════════════════════╝ │                         │                        │
-                             │                                │                                         │                   Resolve DID                    │
-                             │                                │                                         │─────────────────────────────────────────────────>│
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │        DID document with DID public key          │
-                             │                                │                                         │<─────────────────────────────────────────────────│
-                             │                                │                                         │                         │                        │
-                             │                                │                                         ────┐                     │                        │
-                             │                                │                                             │ Verify signature    │                        │
-                             │                                │                                         <───┘                     │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │ ╔══════╗                │                        │
-                             │                                │                                         │ ║true ░║                │                        │
-                             │                                │                                         │ ╚══════╝                │                        │
-                             │                                │                                         │ NameCallback with DID   │                        │
-                             │                                │                                         │────────────────────────>│                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │        (empty)          │                        │
-                             │                                │                                         │<────────────────────────│                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │   AuthorizeCallback     │                        │
-                             │                                │                                         │────────────────────────>│                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │authorized=true with DID │                        │
-                             │                                │                                         │<────────────────────────│                        │
-                             │                                │                                         │                         │                        │
+                             │                                │                                         ────┐                                   │                        │
+                             │                                │                                             │ Generate DID Challenge            │                        │
+                             │                                │                                         <───┘                                   │                        │
+                             │                                │                                         │                                       │                        │
+                             │            ╔═══════════════════╧═══════════════════════════════════════╗ │                                       │                        │
+                             │            ║<1809528678543235072.1724868615672@java-sasl-xmpp-server> ░║ │                                       │                        │
+                             │            ╚═══════════════════╤═══════════════════════════════════════╝ │                                       │                        │
+                             │                                │DID Challenge (nonce, timestamp, realm)  │                                       │                        │
+                             │                                │<────────────────────────────────────────│                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │                                ────┐                                     │                                       │                        │
+                             │                                    │ Generate DID Response with signature│                                       │                        │
+                             │                                <───┘                                     │                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │                                │ ╔═════════════════╗                     │                                       │                        │
+                             │                                │ ║<..signature..> ░║                     │                                       │                        │
+                             │                                │ ╚═════════════════╝                     │                                       │                        │
+                             │                                │     DID Response (DID, signature)       │                                       │                        │
+                             │                                │────────────────────────────────────────>│                                       │                        │
+                             │                                │                                         │                                       │                        │
+                             │                       ╔════════╧═══════════════════════════════════════╗ │                                       │                        │
+                             │                       ║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                                       │                        │
+                             │                       ╚════════╤═══════════════════════════════════════╝ │                                       │                        │
+                             │                                │                                         │                          Resolve DID  │                        │
+                             │                                │                                         │───────────────────────────────────────────────────────────────>│
+                             │                                │                                         │                                       │                        │
+                             │                                │                                         │               DID document with DID public key                 │
+                             │                                │                                         │<───────────────────────────────────────────────────────────────│
+                             │                                │                                         │                                       │                        │
+                             │                                │                                         ────┐                                   │                        │
+                             │                                │                                             │ Verify DID Response with signature│                        │
+                             │                                │                                         <───┘                                   │                        │
+                             │                                │                                         │                                       │                        │
+                             │                                │                                         │ ╔══════╗                              │                        │
+                             │                                │                                         │ ║true ░║                              │                        │
+                             │                                │                                         │ ╚══════╝                              │                        │
+                             │                                │                                         │        NameCallback with DID          │                        │
+                             │                                │                                         │──────────────────────────────────────>│                        │
+                             │                                │                                         │                                       │                        │
+                             │                                │                                         │               (empty)                 │                        │
+                             │                                │                                         │<──────────────────────────────────────│                        │
+                             │                                │                                         │                                       │                        │
+                             │                                │                                         │          AuthorizeCallback            │                        │
+                             │                                │                                         │──────────────────────────────────────>│                        │
+                             │                                │                                         │                                       │                        │
+                             │                                │                                         │       authorized=true with DID        │                        │
+                             │                                │                                         │<──────────────────────────────────────│                        │
+                             │                                │                                         │                                       │                        │
 
 
 
@@ -338,117 +338,11 @@ Sabadello                     Informational                     [Page 6]
                            did-challenge-sasl                 March 2026
 
 
-                             │                                │     Completed SASL authentication       │                         │                        │
-                             │                                │<────────────────────────────────────────│                         │                        │
-                     ┌───────┴───────┐                  ┌─────┴─────┐                             ┌─────┴─────┐           ┌───────┴───────┐          ┌─────┴──────┐
-                     │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
-                     └───────────────┘                  └───────────┘                             └───────────┘           └───────────────┘          └────────────┘
-
-4.1.  Step 1: Client NameCallback for DID
-
-   When the client is initialized, it obtains a DID to be used for
-   authentication.
-
--- CLIENT CALLBACK: NameCallback
-
->C Client DID:  --- defaultName: null, name: null
-getName() -> did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-C> DID:  --- defaultName: null, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-
-4.2.  Step 2: Client JWKCallback for Private Key
-
-   When the client is initialized, it obtains a private key that will be
-   used for signing challenges.
-
--- CLIENT CALLBACK: JWKCallback
-
->C Client private key:  --- defaultText: (JWK), text: null
-getTextInputJWK() -> {
-    "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
-    "kty": "OKP",
-    "crv": "Ed25519",
-    "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
-    "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
-}
-C> Private key:  --- defaultText: (JWK), text: {
-  "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
-  "kty": "OKP",
-  "crv": "Ed25519",
-  "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
-  "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
-}
-
-4.3.  Step 3: Server -> Client Challenge
-
-   The server initiates the authentication flow by generating and
-   sending a challenge.  The challenge contains a none, timestamp, and
-   realm.
-
-   -- SERVER -> CLIENT: Challenge
-   <4513455346757278126.1757192932938@java-sasl-xmpp-server>
-
-
-
-Sabadello                     Informational                     [Page 7]
-
-                           did-challenge-sasl                 March 2026
-
-
-4.4.  Step 4: Client Signature
-
-   The client signs the challenge using the DID's private key.
-
--- CLIENT
-Created signature for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
-
-4.5.  Step 5: Client -> Server Response
-
-   The client response to the server with the DID and the signed
-   challenge.
-
--- CLIENT -> SERVER: Response
-did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
-
-4.6.  Step 6: Server NameCallback with DID
-
-   The server obtains the DID from the client's response.
-
--- SERVER CALLBACK: NameCallback
-
->S DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
-checkName(did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --> did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-S> DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-
-4.7.  Step 7: Server Verification
-
-   The server verifies the signature in the client's response by
-   resolving the client's DID to a DID document, which contains public
-   keys need for the verification.
-
--- SERVER
-Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: true
-
-4.8.  Step 8: Server AuthorizeCallback with authorization ID
-
-   The server determines the DID as the "authorized ID", concluding the
-   authentication flow.
-
--- SERVER CALLBACK: AuthorizeCallback
-
->S --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
-S> --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
-
-authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-
-
-
-
-
-
-Sabadello                     Informational                     [Page 8]
-
-                           did-challenge-sasl                 March 2026
-
+                             │                                │     Completed SASL authentication       │                                       │                        │
+                             │                                │<────────────────────────────────────────│                                       │                        │
+                     ┌───────┴───────┐                  ┌─────┴─────┐                             ┌─────┴─────┐                         ┌───────┴───────┐          ┌─────┴──────┐
+                     │Protocol Client│                  │SASL Client│                             │SASL Server│                         │Protocol Server│          │DID Resolver│
+                     └───────────────┘                  └───────────┘                             └───────────┘                         └───────────────┘          └────────────┘
 
 5.  (Optional) Authentication with VCs/VPs
 
@@ -462,18 +356,18 @@ Sabadello                     Informational                     [Page 8]
    Section 3):
 
    C: Request authentication exchange
-   S: DID challenge
-   C: DID response
-   S: VC/VP challenge
-   C: VC/VP response
+   S: DID Challenge
+   C: DID Response
+   S: VC/VP Challenge
+   C: VC/VP Response
    S: Outcome of authentication exchange
 
-   The steps VC/VP challenge and response steps may be repeated multiple
+   The steps VC/VP Challenge and VC/VP Response may be repeated multiple
    times.
 
 5.2.  VC-VP Challenge
 
-   The VC/VP challenge follows the following format:
+   The VC/VP Challenge follows the following format:
 
    "<" <nonce> "." <timestamp> "." <vc.type> "@" <realm> ">"
 
@@ -492,19 +386,19 @@ Sabadello                     Informational                     [Page 8]
 
    Example:
 
+
+
+
+Sabadello                     Informational                     [Page 7]
+
+                           did-challenge-sasl                 March 2026
+
+
 <7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
 
 5.3.  VC-VP Response
 
-   The VC/VP response follows the following format:
-
-
-
-
-Sabadello                     Informational                     [Page 9]
-
-                           did-challenge-sasl                 March 2026
-
+   The VC/VP Response follows the following format:
 
    <vp>
 
@@ -532,28 +426,134 @@ Sabadello                     Informational                     [Page 9]
 
 5.4.  Verification
 
-   TODO The signature in the initial response MUST cover the entire
-   initial challenge, and is generated using the DID's associated
-   private key.
+   The signature in the Verifiable Presentation MUST be generated using
+   the DID's associated private key.
 
-   TODO The server MUST perform the following verification steps:
+   The server MUST perform the following verification steps, in addition
+   to the steps in Section 3.5.
 
-   *  TODO
+   *  Retrieve the public keys from the DID document which have an
+      "assertionMethod" verification relationship, according to W3C DID
+      Core - Assertion (https://www.w3.org/TR/did-1.0/#assertion).
 
-   *  Verify "holder"
+   *  Using the public keys from the DID document, verify the proof in
+      the VC/VP Response against the VC/VP Challenge.
+
+   *  Verify that the VC/VP Challenge nonce has not been re-used.
+
+
+
+
+
+Sabadello                     Informational                     [Page 8]
+
+                           did-challenge-sasl                 March 2026
+
+
+   *  Verify that the VC/VP Challenge timestamp is not too long in the
+      past, e.g. 5 minutes.
+
+   *  Verify that the "holder" property of the VC/VP Response matches
+      the DID.
 
 6.  (Optional) SASL Exchange with DIDs and VCs/VPs
 
    This section illustrates the detailed steps of the SASL exchange with
    DIDs and VCs/VPs, building on Section 4.
 
-   The flow includes the DID challenge (see Section 3.3), DID response
-   (see Section 3.4), VC/VP challenge (see Section 5.2), and VC/VP
-   response (see Section 5.3).
+   The flow includes the DID Challenge (see Section 3.3), DID Response
+   (see Section 3.4), VC/VP Challenge (see Section 5.2), and VC/VP
+   Response (see Section 5.3).
+
+                                                                             "The DID-CHALLENGE SASL mechanism with VCs"
+
+                    ┌───────────────┐                        ┌───────────┐                                       ┌───────────┐                         ┌───────────────┐          ┌────────────┐
+                    │Protocol Client│                        │SASL Client│                                       │SASL Server│                         │Protocol Server│          │DID Resolver│
+                    └───────┬───────┘                        └─────┬─────┘                                       └─────┬─────┘                         └───────┬───────┘          └─────┬──────┘
+                            │                                      │                Network Connection                 │                                       │                        │
+                            │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │
+                            │                                      │                                                   │                                       │                        │
+                            │             Start login              │                                                   │                                       │                        │
+                            │─────────────────────────────────────>│                                                   │                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │        NameCallback for DID          │                                                   │                                       │                        │
+                            │<─────────────────────────────────────│                                                   │                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                 DID                  │                                                   │                                       │                        │
+                            │─────────────────────────────────────>│                                                   │                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │            ╔═══════════════════════╗ │                                                   │                                       │                        │
+                            │            ║did%3Akey%3A<..did..> ░║ │                                                   │                                       │                        │
+                            │            ╚═══════════════════════╝ │                                                   │                                       │                        │
+                            │   JWKCallback for DID private key    │                                                   │                                       │                        │
+                            │<─────────────────────────────────────│                                                   │                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │           DID private key            │                                                   │                                       │                        │
+                            │─────────────────────────────────────>│                                                   │                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+      ╔═════════════════════╧════════════════════════════════════╗ │                                                   │                                       │                        │
+      ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║ │                                                   │                                       │                        │
+      ╚═════════════════════╤════════════════════════════════════╝ │                                                   │                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+          ╔══════╤══════════╪══════════════════════════════════════╪═══════════════╗                                   │                                       │                        │
+          ║ OPT  │  Authentication with VCs/VPs                    │               ║                                   │                                       │                        │
+          ╟──────┘          │                                      │               ║                                   │                                       │                        │
 
 
 
+Sabadello                     Informational                     [Page 9]
+
+                           did-challenge-sasl                 March 2026
 
+
+          ║                 │VCCallback for Verifiable Credentials │               ║                                   │                                       │                        │
+          ║                 │<─────────────────────────────────────│               ║                                   │                                       │                        │
+          ║                 │                                      │               ║                                   │                                       │                        │
+          ║                 │       Verifiable Credentials         │               ║                                   │                                       │                        │
+          ║                 │─────────────────────────────────────>│               ║                                   │                                       │                        │
+          ║                 │                                      │               ║                                   │                                       │                        │
+          ║                 │                  ╔═════════════════╗ │               ║                                   │                                       │                        │
+          ║                 │                  ║{ ... VCs ... } ░║ │               ║                                   │                                       │                        │
+          ╚═════════════════╪══════════════════╚═════════════════╝═╪═══════════════╝                                   │                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │            Start SASL authentication              │                                       │                        │
+                            │                                      │──────────────────────────────────────────────────>│                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │             List of authn mechanisms              │                                       │                        │
+                            │                                      │<──────────────────────────────────────────────────│                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │     Selected authn mechanism "DID-CHALLENGE"      │                                       │                        │
+                            │                                      │──────────────────────────────────────────────────>│                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │                                                   ────┐                                   │                        │
+                            │                                      │                                                       │ Generate DID Challenge            │                        │
+                            │                                      │                                                   <───┘                                   │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                            ╔═════════╧═════════════════════════════════════════════════╗ │                                       │                        │
+                            │                            ║<1809528678543235072.1724868615672@java-sasl-xmpp-server> ░║ │                                       │                        │
+                            │                            ╚═════════╤═════════════════════════════════════════════════╝ │                                       │                        │
+                            │                                      │     DID Challenge (nonce, timestamp, realm)       │                                       │                        │
+                            │                                      │<──────────────────────────────────────────────────│                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      ────┐                                               │                                       │                        │
+                            │                                          │ Generate DID Response with signature          │                                       │                        │
+                            │                                      <───┘                                               │                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │ ╔═════════════════╗                               │                                       │                        │
+                            │                                      │ ║<..signature..> ░║                               │                                       │                        │
+                            │                                      │ ╚═════════════════╝                               │                                       │                        │
+                            │                                      │          DID Response (DID, signature)            │                                       │                        │
+                            │                                      │──────────────────────────────────────────────────>│                                       │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │╔════════════════════════════════════════════════╗ │                                       │                        │
+                            │                                      │║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                                       │                        │
+                            │                                      │╚════════════════════════════════════════════════╝ │                                       │                        │
+                            │                                      │                                                   │                          Resolve DID  │                        │
+                            │                                      │                                                   │───────────────────────────────────────────────────────────────>│
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │                                                   │               DID document with DID public key                 │
+                            │                                      │                                                   │<───────────────────────────────────────────────────────────────│
+                            │                                      │                                                   │                                       │                        │
 
 
 
@@ -562,54 +562,54 @@ Sabadello                     Informational                    [Page 10]
                            did-challenge-sasl                 March 2026
 
 
-                                                              "The DID-CHALLENGE SASL mechanism with VCs"
-
-                     ┌───────────────┐                  ┌───────────┐                             ┌───────────┐           ┌───────────────┐          ┌────────────┐
-                     │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
-                     └───────┬───────┘                  └─────┬─────┘                             └─────┬─────┘           └───────┬───────┘          └─────┬──────┘
-                             │                                │       Network Connection                │                         │                        │
-                             │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │
-                             │                                │                                         │                         │                        │
-                             │          Start login           │                                         │                         │                        │
-                             │───────────────────────────────>│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │     NameCallback for DID       │                                         │                         │                        │
-                             │<───────────────────────────────│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │              DID               │                                         │                         │                        │
-                             │───────────────────────────────>│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │      ╔═══════════════════════╗ │                                         │                         │                        │
-                             │      ║did%3Akey%3A<..did..> ░║ │                                         │                         │                        │
-                             │      ╚═══════════════════════╝ │                                         │                         │                        │
-                             │JWKCallback for DID private key │                                         │                         │                        │
-                             │<───────────────────────────────│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │        DID private key         │                                         │                         │                        │
-                             │───────────────────────────────>│                                         │                         │                        │
-                             │                                │                                         │                         │                        │
-  ╔══════════════════════════╧═══════════════════════════════╗│                                         │                         │                        │
-  ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║│                                         │                         │                        │
-  ╚══════════════════════════╤═══════════════════════════════╝│                                         │                         │                        │
-                             │                                │       Start SASL authentication         │                         │                        │
-                             │                                │────────────────────────────────────────>│                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │        List of authn mechanisms         │                         │                        │
-                             │                                │<────────────────────────────────────────│                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │Selected authn mechanism "DID-CHALLENGE" │                         │                        │
-                             │                                │────────────────────────────────────────>│                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         ────┐                     │                        │
-                             │                                │                                             │ Generate challenge  │                        │
-                             │                                │                                         <───┘                     │                        │
-                             │                                │                                         │                         │                        │
-                             │                         ╔══════╧═══════════════════════════════════════╗ │                         │                        │
-                             │                         ║<1809528678543235072.1724868615672@hostname> ░║ │                         │                        │
-                             │                         ╚══════╤═══════════════════════════════════════╝ │                         │                        │
-                             │                                │ Challenge (nonce, timestamp, hostname)  │                         │                        │
-                             │                                │<────────────────────────────────────────│                         │                        │
-                             │                                │                                         │                         │                        │
+                            │                                      │                                                   ────┐                                   │                        │
+                            │                                      │                                                       │ Verify DID Response with signature│                        │
+                            │                                      │                                                   <───┘                                   │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │                                                   │ ╔══════╗                              │                        │
+                            │                                      │                                                   │ ║true ░║                              │                        │
+                            │                                      │                                                   │ ╚══════╝                              │                        │
+                            │                                      │                                                   │                                       │                        │
+                            │    ╔══════╤══════════════════════════╪═══════════════════════════════════════════════════╪═══════════════════════════════════════╪═╗                      │
+                            │    ║ OPT  │  Authentication with VCs/VPs                                                 │                                       │ ║                      │
+                            │    ╟──────┘                          │                                                   │                                       │ ║                      │
+                            │    ║                                 │                                                   ────┐                                   │ ║                      │
+                            │    ║                                 │                                                       │ Generate VC/VP Challenge          │ ║                      │
+                            │    ║                                 │                                                   <───┘                                   │ ║                      │
+                            │    ║                                 │                                                   │                                       │ ║                      │
+                            │    ║      ╔══════════════════════════╧═════════════════════════════════════════════════╗ │                                       │ ║                      │
+                            │    ║      ║<1809528678543235072.1724868615672.DegreeCredential@java-sasl-xmpp-server> ░║ │                                       │ ║                      │
+                            │    ║      ╚══════════════════════════╤═════════════════════════════════════════════════╝ │                                       │ ║                      │
+                            │    ║                                 │VC/VP Challenge (nonce, timestamp, vc.type, realm) │                                       │ ║                      │
+                            │    ║                                 │<──────────────────────────────────────────────────│                                       │ ║                      │
+                            │    ║                                 │                                                   │                                       │ ║                      │
+                            │    ║                                 ────┐                                               │                                       │ ║                      │
+                            │    ║                                     │ Generate VC/VP Response with proof            │                                       │ ║                      │
+                            │    ║                                 <───┘                                               │                                       │ ║                      │
+                            │    ║                                 │                                                   │                                       │ ║                      │
+                            │    ║                                 │ ╔══════════╗                                      │                                       │ ║                      │
+                            │    ║                                 │ ║<..vp..> ░║                                      │                                       │ ║                      │
+                            │    ║                                 │ ╚══════════╝                                      │                                       │ ║                      │
+                            │    ║                                 │               VC/VP Response (VP)                 │                                       │ ║                      │
+                            │    ║                                 │──────────────────────────────────────────────────>│                                       │ ║                      │
+                            │    ║                                 │                                                   │                                       │ ║                      │
+                            │    ║                                 │                                      ╔══════════╗ │                                       │ ║                      │
+                            │    ║                                 │                                      ║<..vp..> ░║ │                                       │ ║                      │
+                            │    ║                                 │                                      ╚══════════╝ │                                       │ ║                      │
+                            │    ║                                 │                                                   ────┐                                   │ ║                      │
+                            │    ║                                 │                                                       │ Verify VC/VP Response with proof  │ ║                      │
+                            │    ║                                 │                                                   <───┘                                   │ ║                      │
+                            │    ║                                 │                                                   │                                       │ ║                      │
+                            │    ║                                 │                                                   │ ╔══════╗                              │ ║                      │
+                            │    ║                                 │                                                   │ ║true ░║                              │ ║                      │
+                            │    ╚═════════════════════════════════╪═══════════════════════════════════════════════════╪═╚══════╝══════════════════════════════╪═╝                      │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │                                                   │        NameCallback with DID          │                        │
+                            │                                      │                                                   │──────────────────────────────────────>│                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │                                                   │               (empty)                 │                        │
+                            │                                      │                                                   │<──────────────────────────────────────│                        │
+                            │                                      │                                                   │                                       │                        │
 
 
 
@@ -618,54 +618,54 @@ Sabadello                     Informational                    [Page 11]
                            did-challenge-sasl                 March 2026
 
 
-                             │                                ────┐                                     │                         │                        │
-                             │                                    │ Create signature                    │                         │                        │
-                             │                                <───┘                                     │                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │ ╔═════════════════╗                     │                         │                        │
-                             │                                │ ║<..signature..> ░║                     │                         │                        │
-                             │                                │ ╚═════════════════╝                     │                         │                        │
-                             │                                │       Response (DID, signature)         │                         │                        │
-                             │                                │────────────────────────────────────────>│                         │                        │
-                             │                                │                                         │                         │                        │
-                             │                       ╔════════╧═══════════════════════════════════════╗ │                         │                        │
-                             │                       ║did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..> ░║ │                         │                        │
-                             │                       ╚════════╤═══════════════════════════════════════╝ │                         │                        │
-                             │                                │                                         │                   Resolve DID                    │
-                             │                                │                                         │─────────────────────────────────────────────────>│
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │        DID document with DID public key          │
-                             │                                │                                         │<─────────────────────────────────────────────────│
-                             │                                │                                         │                         │                        │
-                             │                                │                                         ────┐                     │                        │
-                             │                                │                                             │ Verify signature    │                        │
-                             │                                │                                         <───┘                     │                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │ ╔══════╗                │                        │
-                             │                                │                                         │ ║true ░║                │                        │
-                             │                                │                                         │ ╚══════╝                │                        │
-                             │                                │                                         │ NameCallback with DID   │                        │
-                             │                                │                                         │────────────────────────>│                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │        (empty)          │                        │
-                             │                                │                                         │<────────────────────────│                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │   AuthorizeCallback     │                        │
-                             │                                │                                         │────────────────────────>│                        │
-                             │                                │                                         │                         │                        │
-                             │                                │                                         │authorized=true with DID │                        │
-                             │                                │                                         │<────────────────────────│                        │
-                             │                                │                                         │                         │                        │
-                             │                                │     Completed SASL authentication       │                         │                        │
-                             │                                │<────────────────────────────────────────│                         │                        │
-                     ┌───────┴───────┐                  ┌─────┴─────┐                             ┌─────┴─────┐           ┌───────┴───────┐          ┌─────┴──────┐
-                     │Protocol Client│                  │SASL Client│                             │SASL Server│           │Protocol Server│          │DID Resolver│
-                     └───────────────┘                  └───────────┘                             └───────────┘           └───────────────┘          └────────────┘
+                            │                                      │                                                   │          AuthorizeCallback            │                        │
+                            │                                      │                                                   │──────────────────────────────────────>│                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │                                                   │       authorized=true with DID        │                        │
+                            │                                      │                                                   │<──────────────────────────────────────│                        │
+                            │                                      │                                                   │                                       │                        │
+                            │                                      │          Completed SASL authentication            │                                       │                        │
+                            │                                      │<──────────────────────────────────────────────────│                                       │                        │
+                    ┌───────┴───────┐                        ┌─────┴─────┐                                       ┌─────┴─────┐                         ┌───────┴───────┐          ┌─────┴──────┐
+                    │Protocol Client│                        │SASL Client│                                       │SASL Server│                         │Protocol Server│          │DID Resolver│
+                    └───────────────┘                        └───────────┘                                       └───────────┘                         └───────────────┘          └────────────┘
 
-7.  Implementations
+7.  Example Exchange
 
-   The following repositories contain various parts of an example
-   implementation:
+7.1.  Step 1: Client NameCallback for DID
+
+   When the client is initialized, it obtains a DID to be used for
+   authentication.
+
+-- CLIENT CALLBACK: NameCallback
+
+>C Client DID:  --- defaultName: null, name: null
+getName() -> did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+C> DID:  --- defaultName: null, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+
+7.2.  Step 2: Client JWKCallback for Private Key
+
+   When the client is initialized, it obtains a private key that will be
+   used for signing challenges.
+
+-- CLIENT CALLBACK: JWKCallback
+
+>C Client private key:  --- defaultText: (JWK), text: null
+getTextInputJWK() -> {
+    "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+    "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+C> Private key:  --- defaultText: (JWK), text: {
+  "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+  "kty": "OKP",
+  "crv": "Ed25519",
+  "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+  "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+
 
 
 
@@ -673,6 +673,74 @@ Sabadello                     Informational                    [Page 12]
 
                            did-challenge-sasl                 March 2026
 
+
+7.3.  Step 3: Server -> Client Challenge
+
+   The server initiates the authentication flow by generating and
+   sending a challenge.  The challenge contains a none, timestamp, and
+   realm.
+
+   -- SERVER -> CLIENT: Challenge
+   <4513455346757278126.1757192932938@java-sasl-xmpp-server>
+
+7.4.  Step 4: Client Signature
+
+   The client signs the challenge using the DID's private key.
+
+-- CLIENT
+Created signature for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+
+7.5.  Step 5: Client -> Server Response
+
+   The client response to the server with the DID and the signed
+   challenge.
+
+-- CLIENT -> SERVER: Response
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+
+7.6.  Step 6: Server NameCallback with DID
+
+   The server obtains the DID from the client's response.
+
+-- SERVER CALLBACK: NameCallback
+
+>S DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
+checkName(did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --> did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+S> DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+
+7.7.  Step 7: Server Verification
+
+   The server verifies the signature in the client's response by
+   resolving the client's DID to a DID document, which contains public
+   keys need for the verification.
+
+-- SERVER
+Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: true
+
+7.8.  Step 8: Server AuthorizeCallback with authorization ID
+
+   The server determines the DID as the "authorized ID", concluding the
+   authentication flow.
+
+
+
+
+Sabadello                     Informational                    [Page 13]
+
+                           did-challenge-sasl                 March 2026
+
+
+-- SERVER CALLBACK: AuthorizeCallback
+
+>S --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
+S> --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
+
+authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+
+8.  Implementations
+
+   The following repositories contain various parts of an example
+   implementation:
 
    *  SASL client demonstration components:
       https://github.com/peacekeeper/java-sasl-client-demo
@@ -710,6 +778,14 @@ Sabadello                     Informational                    [Page 12]
       sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
       xmpp-client-spark)
 
+
+
+
+Sabadello                     Informational                    [Page 14]
+
+                           did-challenge-sasl                 March 2026
+
+
    *  XMPP client application (based on Spark) using the DID-based SASL
       authentication mechanism: https://github.com/peacekeeper/java-
       sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
@@ -722,14 +798,6 @@ Author's Address
    Margaretenstraße 70/1/7
    A-1050 Wien
    Austria
-
-
-
-Sabadello                     Informational                    [Page 13]
-
-                           did-challenge-sasl                 March 2026
-
-
    Phone: +43-664-3154848
    Email: markus@danubetech.com
 
@@ -769,16 +837,4 @@ Sabadello                     Informational                    [Page 13]
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Sabadello                     Informational                    [Page 14]
+Sabadello                     Informational                    [Page 15]

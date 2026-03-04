@@ -82,8 +82,8 @@ The exchange consists of the following steps:
 
 ~~~
 C: Request authentication exchange
-S: DID challenge
-C: DID response
+S: DID Challenge
+C: DID Response
 S: Outcome of authentication exchange
 ~~~
 
@@ -110,7 +110,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
 ## DID Challenge
 
-The DID challenge follows the following format:
+The DID Challenge follows the following format:
 
 ~~~
 "<" <nonce> "." <timestamp> "@" <realm> ">"
@@ -130,7 +130,7 @@ Example:
 
 ## DID Response
 
-The DID response follows the following format:
+The DID Response follows the following format:
 
 ~~~
 <did> <signature>
@@ -149,21 +149,21 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
 ## Verification
 
-The signature in the initial response MUST cover the entire initial challenge, and is generated using the DID's associated private key.
+The signature in the initial response MUST cover the entire DID Challenge, and is generated using the DID's associated private key.
 
 The server MUST perform the following verification steps:
 
 - Resolve the DID to its DID document, according to the [W3C DID Resolution specification](https://www.w3.org/TR/did-resolution/).
 - Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to [W3C DID Core - Authentication](https://www.w3.org/TR/did-1.0/#authentication).
-- Using the public keys from the DID document, verify the signature in the initial response against the initial challenge.
-- Verify that the challenge's nonce has not been re-used.
-- Verify that the challenge's timestamp is not too long in the past, e.g. 5 minutes.
+- Using the public keys from the DID document, verify the signature in the DID Response against the DID Challenge.
+- Verify that the DID Challenge nonce has not been re-used.
+- Verify that the DID Challenge timestamp is not too long in the past, e.g. 5 minutes.
 
 # SASL Exchange with DIDs
 
 This section illustrates the detailed steps of the SASL exchange.
 
-The flow includes the DID challenge (see [](#did-challenge)) and DID response (see [](#did-response)) steps.
+The flow includes the DID Challenge (see [](#did-challenge)) and DID Response (see [](#did-response)) steps.
 
 ~~~ plantuml-utxt
 title "The DID-CHALLENGE SASL mechanism"
@@ -183,16 +183,16 @@ note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." 
 SASLClient->>SASLServer: Start SASL authentication
 SASLServer->>SASLClient: List of authn mechanisms
 SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
-SASLServer->>SASLServer: Generate challenge
-note left of SASLServer: <1809528678543235072.1724868615672@hostname>
-SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
-SASLClient->>SASLClient: Create signature
+SASLServer->>SASLServer: Generate DID Challenge
+note left of SASLServer: <1809528678543235072.1724868615672@java-sasl-xmpp-server>
+SASLServer->>SASLClient: DID Challenge (nonce, timestamp, realm)
+SASLClient->>SASLClient: Generate DID Response with signature
 note right of SASLClient: <..signature..>
-SASLClient->>SASLServer: Response (DID, signature)
+SASLClient->>SASLServer: DID Response (DID, signature)
 note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
 SASLServer->>DIDResolver: Resolve DID
 DIDResolver->>SASLServer: DID document with DID public key
-SASLServer->>SASLServer: Verify signature
+SASLServer->>SASLServer: Verify DID Response with signature
 note right of SASLServer: true
 SASLServer->>ProtocolServer: NameCallback with DID
 ProtocolServer->>SASLServer: (empty)
@@ -200,6 +200,149 @@ SASLServer->>ProtocolServer: AuthorizeCallback
 ProtocolServer->>SASLServer: authorized=true with DID
 SASLServer->>SASLClient: Completed SASL authentication
 ~~~
+
+# (Optional) Authentication with VCs/VPs
+
+This section defines an optional extension of the "DID-CHALLENGE" SASL mechanism which adds support for Verifiable Credentials (VCs)
+and Verifiable Presentations (VPs).
+
+## The Authentication Exchange (with VC/VP support)
+
+The exchange consists of the following steps (expanding on [](#authentication)):
+
+~~~
+C: Request authentication exchange
+S: DID Challenge
+C: DID Response
+S: VC/VP Challenge
+C: VC/VP Response
+S: Outcome of authentication exchange
+~~~
+
+The steps VC/VP Challenge and VC/VP Response may be repeated multiple times.
+
+## VC-VP Challenge
+
+The VC/VP Challenge follows the following format:
+
+~~~
+"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm> ">"
+~~~
+
+Where:
+
+- `<nonce>` MUST be a unique string.
+- `<timestamp>` MUST be a UNIX timestamp.
+- `<vc.type>` MUST be a type of a Verifiable Credential as defined in [W3C Verifiable Credentials Data Model v2.0 - Types](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types).
+- `<realm>` MUST be a SASL realm.
+
+Example:
+
+~~~
+<7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
+~~~
+
+## VC-VP Response
+
+The VC/VP Response follows the following format:
+
+~~~
+<vp>
+~~~
+
+Where:
+
+- `<vp>` MUST be a Verifiable Presentation as defined in [W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations).
+
+Example:
+
+~~~
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "id": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
+  "type": ["VerifiablePresentation"],
+  "verifiableCredential": [{
+    "id": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D"
+    "type": ["DegreeCredential"]
+  }]
+}
+~~~
+
+## Verification
+
+The signature in the Verifiable Presentation MUST be generated using the DID's associated private key.
+
+The server MUST perform the following verification steps, in addition to the steps in [](#verification).
+
+- Retrieve the public keys from the DID document which have an "assertionMethod" verification relationship, according to [W3C DID Core - Assertion](https://www.w3.org/TR/did-1.0/#assertion).
+- Using the public keys from the DID document, verify the proof in the VC/VP Response against the VC/VP Challenge.
+- Verify that the VC/VP Challenge nonce has not been re-used.
+- Verify that the VC/VP Challenge timestamp is not too long in the past, e.g. 5 minutes.
+- Verify that the "holder" property of the VC/VP Response matches the DID.
+
+# (Optional) SASL Exchange with DIDs and VCs/VPs
+
+This section illustrates the detailed steps of the SASL exchange with DIDs and VCs/VPs, building on [](#sasl-exchange-with-dids).
+
+The flow includes the DID Challenge (see [](#did-challenge)), DID Response (see [](#did-response)),
+VC/VP Challenge (see [](#vc-vp-challenge)), and VC/VP Response (see [](#vc-vp-response)). 
+
+~~~ plantuml-utxt
+title "The DID-CHALLENGE SASL mechanism with VCs"
+participant ProtocolClient as "Protocol Client"
+participant SASLClient as "SASL Client"
+participant SASLServer as "SASL Server"
+participant ProtocolServer as "Protocol Server"
+participant DIDResolver as "DID Resolver"
+ProtocolClient-->ProtocolServer: Network Connection
+ProtocolClient->>SASLClient: Start login
+SASLClient->>ProtocolClient: NameCallback for DID
+ProtocolClient->>SASLClient: DID
+note left of SASLClient: did%3Akey%3A<..did..>
+SASLClient->>ProtocolClient: JWKCallback for DID private key
+ProtocolClient->>SASLClient: DID private key
+note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
+opt Authentication with VCs/VPs
+    SASLClient->>ProtocolClient: VCCallback for Verifiable Credentials
+    ProtocolClient->>SASLClient: Verifiable Credentials
+    note left of SASLClient: { ... VCs ... }
+end
+SASLClient->>SASLServer: Start SASL authentication
+SASLServer->>SASLClient: List of authn mechanisms
+SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
+SASLServer->>SASLServer: Generate DID Challenge
+note left of SASLServer: <1809528678543235072.1724868615672@java-sasl-xmpp-server>
+SASLServer->>SASLClient: DID Challenge (nonce, timestamp, realm)
+SASLClient->>SASLClient: Generate DID Response with signature
+note right of SASLClient: <..signature..>
+SASLClient->>SASLServer: DID Response (DID, signature)
+note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
+SASLServer->>DIDResolver: Resolve DID
+DIDResolver->>SASLServer: DID document with DID public key
+SASLServer->>SASLServer: Verify DID Response with signature
+note right of SASLServer: true
+opt Authentication with VCs/VPs
+    SASLServer->>SASLServer: Generate VC/VP Challenge
+    note left of SASLServer: <1809528678543235072.1724868615672.DegreeCredential@java-sasl-xmpp-server>
+    SASLServer->>SASLClient: VC/VP Challenge (nonce, timestamp, vc.type, realm)
+    SASLClient->>SASLClient: Generate VC/VP Response with proof
+    note right of SASLClient: <..vp..>
+    SASLClient->>SASLServer: VC/VP Response (VP)
+    note left of SASLServer: <..vp..>
+    SASLServer->>SASLServer: Verify VC/VP Response with proof
+    note right of SASLServer: true
+end
+SASLServer->>ProtocolServer: NameCallback with DID
+ProtocolServer->>SASLServer: (empty)
+SASLServer->>ProtocolServer: AuthorizeCallback
+ProtocolServer->>SASLServer: authorized=true with DID
+SASLServer->>SASLClient: Completed SASL authentication
+~~~
+
+# Example Exchange
 
 ## Step 1: Client NameCallback for DID
 
@@ -284,128 +427,6 @@ The server determines the DID as the "authorized ID", concluding the authenticat
     S> --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
     
     authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
-
-# (Optional) Authentication with VCs/VPs
-
-This section defines an optional extension of the "DID-CHALLENGE" SASL mechanism which adds support for Verifiable Credentials (VCs)
-and Verifiable Presentations (VPs).
-
-## The Authentication Exchange (with VC/VP support)
-
-The exchange consists of the following steps (expanding on [](#authentication)):
-
-~~~
-C: Request authentication exchange
-S: DID challenge
-C: DID response
-S: VC/VP challenge
-C: VC/VP response
-S: Outcome of authentication exchange
-~~~
-
-The steps VC/VP challenge and response steps may be repeated multiple times.
-
-## VC-VP Challenge
-
-The VC/VP challenge follows the following format:
-
-~~~
-"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm> ">"
-~~~
-
-Where:
-
-- `<nonce>` MUST be a unique string.
-- `<timestamp>` MUST be a UNIX timestamp.
-- `<vc.type>` MUST be a type of a Verifiable Credential as defined in [W3C Verifiable Credentials Data Model v2.0 - Types](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types).
-- `<realm>` MUST be a SASL realm.
-
-Example:
-
-~~~
-<7795631894096664932.1765144656954.DegreeCredential@java-sasl-xmpp-server>
-~~~
-
-## VC-VP Response
-
-The VC/VP response follows the following format:
-
-~~~
-<vp>
-~~~
-
-Where:
-
-- `<vp>` MUST be a Verifiable Presentation as defined in [W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations).
-
-Example:
-
-~~~
-{
-  "@context": [
-    "https://www.w3.org/ns/credentials/v2",
-    "https://www.w3.org/ns/credentials/examples/v2"
-  ],
-  "id": "urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5",
-  "type": ["VerifiablePresentation"],
-  "verifiableCredential": [{
-    "id": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D"
-    "type": ["DegreeCredential"]
-  }]
-}
-~~~
-
-## Verification
-
-TODO The signature in the initial response MUST cover the entire initial challenge, and is generated using the DID's associated private key.
-
-TODO The server MUST perform the following verification steps:
-
-- TODO
-- Verify "holder"
-
-# (Optional) SASL Exchange with DIDs and VCs/VPs
-
-This section illustrates the detailed steps of the SASL exchange with DIDs and VCs/VPs, building on [](#sasl-exchange-with-dids).
-
-The flow includes the DID challenge (see [](#did-challenge)), DID response (see [](#did-response)),
-VC/VP challenge (see [](#vc-vp-challenge)), and VC/VP response (see [](#vc-vp-response)). 
-
-~~~ plantuml-utxt
-title "The DID-CHALLENGE SASL mechanism with VCs"
-participant ProtocolClient as "Protocol Client"
-participant SASLClient as "SASL Client"
-participant SASLServer as "SASL Server"
-participant ProtocolServer as "Protocol Server"
-participant DIDResolver as "DID Resolver"
-ProtocolClient-->ProtocolServer: Network Connection
-ProtocolClient->>SASLClient: Start login
-SASLClient->>ProtocolClient: NameCallback for DID
-ProtocolClient->>SASLClient: DID
-note left of SASLClient: did%3Akey%3A<..did..>
-SASLClient->>ProtocolClient: JWKCallback for DID private key
-ProtocolClient->>SASLClient: DID private key
-note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
-SASLClient->>SASLServer: Start SASL authentication
-SASLServer->>SASLClient: List of authn mechanisms
-SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
-SASLServer->>SASLServer: Generate challenge
-note left of SASLServer: <1809528678543235072.1724868615672@hostname>
-SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
-SASLClient->>SASLClient: Create signature
-note right of SASLClient: <..signature..>
-SASLClient->>SASLServer: Response (DID, signature)
-note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
-SASLServer->>DIDResolver: Resolve DID
-DIDResolver->>SASLServer: DID document with DID public key
-SASLServer->>SASLServer: Verify signature
-note right of SASLServer: true
-SASLServer->>ProtocolServer: NameCallback with DID
-ProtocolServer->>SASLServer: (empty)
-SASLServer->>ProtocolServer: AuthorizeCallback
-ProtocolServer->>SASLServer: authorized=true with DID
-SASLServer->>SASLClient: Completed SASL authentication
-~~~
 
 # Implementations
 
