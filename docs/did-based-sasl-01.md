@@ -282,6 +282,7 @@ The server MUST perform the following verification steps, in addition to the ste
 - Verify that the VC/VP Challenge nonce has not been re-used.
 - Verify that the VC/VP Challenge timestamp is not too long in the past, e.g. 5 minutes.
 - Verify that the "holder" property of the VC/VP Response matches the DID.
+- Verify that the "type" property of the VC/VP Response matches the requested VC type in the VC/VP Challenge.
 
 # (Optional) SASL Exchange with DIDs and VCs/VPs
 

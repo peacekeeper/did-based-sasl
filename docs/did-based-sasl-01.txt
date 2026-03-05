@@ -47,8 +47,8 @@ Table of Contents
      7.4.  Step 4: Client Signature  . . . . . . . . . . . . . . . .  13
      7.5.  Step 5: Client -> Server Response . . . . . . . . . . . .  13
      7.6.  Step 6: Server NameCallback with DID  . . . . . . . . . .  13
-     7.7.  Step 7: Server Verification . . . . . . . . . . . . . . .  13
-     7.8.  Step 8: Server AuthorizeCallback with authorization ID  .  13
+     7.7.  Step 7: Server Verification . . . . . . . . . . . . . . .  14
+     7.8.  Step 8: Server AuthorizeCallback with authorization ID  .  14
    8.  Implementations . . . . . . . . . . . . . . . . . . . . . . .  14
 
 
@@ -456,6 +456,9 @@ Sabadello                     Informational                     [Page 8]
    *  Verify that the "holder" property of the VC/VP Response matches
       the DID.
 
+   *  Verify that the "type" property of the VC/VP Response matches the
+      requested VC type in the VC/VP Challenge.
+
 6.  (Optional) SASL Exchange with DIDs and VCs/VPs
 
    This section illustrates the detailed steps of the SASL exchange with
@@ -495,9 +498,6 @@ Sabadello                     Informational                     [Page 8]
       ║{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." } ░║ │                                                   │                                       │                        │
       ╚═════════════════════╤════════════════════════════════════╝ │                                                   │                                       │                        │
                             │                                      │                                                   │                                       │                        │
-          ╔══════╤══════════╪══════════════════════════════════════╪═══════════════╗                                   │                                       │                        │
-          ║ OPT  │  Authentication with VCs/VPs                    │               ║                                   │                                       │                        │
-          ╟──────┘          │                                      │               ║                                   │                                       │                        │
 
 
 
@@ -506,6 +506,9 @@ Sabadello                     Informational                     [Page 9]
                            did-challenge-sasl                 March 2026
 
 
+          ╔══════╤══════════╪══════════════════════════════════════╪═══════════════╗                                   │                                       │                        │
+          ║ OPT  │  Authentication with VCs/VPs                    │               ║                                   │                                       │                        │
+          ╟──────┘          │                                      │               ║                                   │                                       │                        │
           ║                 │VCCallback for Verifiable Credentials │               ║                                   │                                       │                        │
           ║                 │<─────────────────────────────────────│               ║                                   │                                       │                        │
           ║                 │                                      │               ║                                   │                                       │                        │
@@ -551,9 +554,6 @@ Sabadello                     Informational                     [Page 9]
                             │                                      │                                                   │                          Resolve DID  │                        │
                             │                                      │                                                   │───────────────────────────────────────────────────────────────>│
                             │                                      │                                                   │                                       │                        │
-                            │                                      │                                                   │               DID document with DID public key                 │
-                            │                                      │                                                   │<───────────────────────────────────────────────────────────────│
-                            │                                      │                                                   │                                       │                        │
 
 
 
@@ -562,6 +562,9 @@ Sabadello                     Informational                    [Page 10]
                            did-challenge-sasl                 March 2026
 
 
+                            │                                      │                                                   │               DID document with DID public key                 │
+                            │                                      │                                                   │<───────────────────────────────────────────────────────────────│
+                            │                                      │                                                   │                                       │                        │
                             │                                      │                                                   ────┐                                   │                        │
                             │                                      │                                                       │ Verify DID Response with signature│                        │
                             │                                      │                                                   <───┘                                   │                        │
@@ -607,9 +610,6 @@ Sabadello                     Informational                    [Page 10]
                             │                                      │                                                   │        NameCallback with DID          │                        │
                             │                                      │                                                   │──────────────────────────────────────>│                        │
                             │                                      │                                                   │                                       │                        │
-                            │                                      │                                                   │               (empty)                 │                        │
-                            │                                      │                                                   │<──────────────────────────────────────│                        │
-                            │                                      │                                                   │                                       │                        │
 
 
 
@@ -618,6 +618,9 @@ Sabadello                     Informational                    [Page 11]
                            did-challenge-sasl                 March 2026
 
 
+                            │                                      │                                                   │               (empty)                 │                        │
+                            │                                      │                                                   │<──────────────────────────────────────│                        │
+                            │                                      │                                                   │                                       │                        │
                             │                                      │                                                   │          AuthorizeCallback            │                        │
                             │                                      │                                                   │──────────────────────────────────────>│                        │
                             │                                      │                                                   │                                       │                        │
@@ -648,6 +651,29 @@ C> DID:  --- defaultName: null, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm
    When the client is initialized, it obtains a private key that will be
    used for signing challenges.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sabadello                     Informational                    [Page 12]
+
+                           did-challenge-sasl                 March 2026
+
+
 -- CLIENT CALLBACK: JWKCallback
 
 >C Client private key:  --- defaultText: (JWK), text: null
@@ -665,14 +691,6 @@ C> Private key:  --- defaultText: (JWK), text: {
   "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
   "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
 }
-
-
-
-
-Sabadello                     Informational                    [Page 12]
-
-                           did-challenge-sasl                 March 2026
-
 
 7.3.  Step 3: Server -> Client Challenge
 
@@ -702,6 +720,16 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPc
 
    The server obtains the DID from the client's response.
 
+
+
+
+
+
+Sabadello                     Informational                    [Page 13]
+
+                           did-challenge-sasl                 March 2026
+
+
 -- SERVER CALLBACK: NameCallback
 
 >S DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
@@ -721,14 +749,6 @@ Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3q
 
    The server determines the DID as the "authorized ID", concluding the
    authentication flow.
-
-
-
-
-Sabadello                     Informational                    [Page 13]
-
-                           did-challenge-sasl                 March 2026
-
 
 -- SERVER CALLBACK: AuthorizeCallback
 
@@ -758,6 +778,14 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
       https://github.com/peacekeeper/java-sasl-did-mechanism
       (https://github.com/peacekeeper/java-sasl-did-mechanism)
 
+
+
+
+Sabadello                     Informational                    [Page 14]
+
+                           did-challenge-sasl                 March 2026
+
+
    *  XMPP server (based on Tigase) using the DID-based SASL
       authentication mechanism: https://github.com/peacekeeper/java-
       sasl-xmpp-server (https://github.com/peacekeeper/java-sasl-xmpp-
@@ -778,14 +806,6 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
       sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
       xmpp-client-spark)
 
-
-
-
-Sabadello                     Informational                    [Page 14]
-
-                           did-challenge-sasl                 March 2026
-
-
    *  XMPP client application (based on Spark) using the DID-based SASL
       authentication mechanism: https://github.com/peacekeeper/java-
       sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
@@ -800,26 +820,6 @@ Author's Address
    Austria
    Phone: +43-664-3154848
    Email: markus@danubetech.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
