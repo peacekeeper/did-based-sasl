@@ -106,13 +106,13 @@ for understanding SASL and its applications:
 
 Markus Sabadello - https://github.com/peacekeeper/
 
-<img align="left" height="40" src="https://github.com/peacekeeper/did-based-sasl/blob/main/images/logo-ngi-assure.png?raw=true">
+<img align="left" height="40" src="https://github.com/peacekeeper/did-based-sasl/blob/main/docs/logo-ngi-assure.png?raw=true">
 
 This project has received financial support from NLnet and the NGI Assure fund. NGI Assure was established with
 financial support from the European Commission's Next Generation Internet programme, under the aegis of DG
 Communications Networks, Content and Technology.
 
-<img align="left" height="40" src="https://github.com/peacekeeper/did-based-sasl/blob/main/images/logo-ngi-zero.png?raw=true">
+<img align="left" height="40" src="https://github.com/peacekeeper/did-based-sasl/blob/main/docs/logo-ngi-zero.png?raw=true">
 
 This project has received financial support from NLnet and the NGI0 Commons fund. NGI0 Commons was established with
 financial support from the European Commission's Next Generation Internet programme, under the aegis of DG
