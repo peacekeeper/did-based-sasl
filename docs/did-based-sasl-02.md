@@ -158,7 +158,7 @@ realm is "java-sasl-xmpp-server".
 
 ## DID Response
 
-The DID Response follows the following format:
+The DID Response has the following format:
 
 ~~~
 <did> <signature>
@@ -166,13 +166,29 @@ The DID Response follows the following format:
 
 Where:
 
-- `<did>` MUST be a Decentralized Identifier (DID) as defined in [W3C DIDs v1.1 - DID Syntax](https://www.w3.org/TR/did-1.1/#did-syntax).
-- `<signature>` MUST be a base64-encoded signature of the challenge 
+- `<did>` is the client's Decentralized Identifier (DID), percent-encoded
+as defined in [](#authorization-identity-string). This is the
+SASL authorization identity string supplied by the client. The DID MUST
+be resolvable to a DID Document that contains at least one verification
+method with an "authentication" verification relationship
+(see [W3C DIDs v1.1 - Verification Relationships](https://www.w3.org/TR/did-1.1/#verification-relationships).
+- `<signature>` is the base64url encoding ([RFC4648](https://www.rfc-editor.org/rfc/rfc4648.html)) of the raw bytes of the digital
+signature, without padding characters ("="). The signature MUST be computed over
+the entire DID Challenge string (including the enclosing angle brackets) as
+specified in [](#did-challenge).
+
+The signing algorithm MUST correspond
+to the key type of the verification method in the DID document (e.g., Ed25519 for
+keys of type "Multikey" with a Multibase-encoded Ed25519 public key).
+
+The two fields MUST be separated by exactly one space character.
+Leading and trailing whitespace in the DID Response MUST NOT be
+present.
 
 Example:
 
 ~~~
-did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D frEko8nWU-rfArpMZsMVbXpg4xChaQIv_MCmIAmHD3OCWwYvL7CDOedMbezMs4pmGGuzpkRH2QX8UMa-RFToBg
 ~~~
 
 ## Verification
@@ -182,7 +198,7 @@ The signature in the initial response MUST cover the entire DID Challenge, and i
 The server MUST perform the following verification steps:
 
 - Resolve the DID to its DID document, according to the [W3C DID Resolution v1.0](https://www.w3.org/TR/did-resolution/).
-- Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to [W3C DIDs v1.1 - Authentication](https://www.w3.org/TR/did-1.1/#authentication).
+- Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to [W3C DIDs v1.1 - Verification Relationships](https://www.w3.org/TR/did-1.1/#verification-relationships).
 - Using the public keys from the DID document, verify the signature in the DID Response against the DID Challenge.
 - Verify that the DID Challenge nonce has not been re-used.
 - Verify that the DID Challenge timestamp is not too long in the past or in the future, e.g. 5 minutes.
@@ -217,7 +233,7 @@ SASLServer->>SASLClient: DID Challenge (nonce, timestamp, realm)
 SASLClient->>SASLClient: Generate DID Response with signature
 note right of SASLClient: <..signature..>
 SASLClient->>SASLServer: DID Response (DID, signature)
-note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
+note left of SASLServer: did%3Akey%3A<..did..> frEko8nWU<..signature..>
 SASLServer->>DIDResolver: Resolve DID
 DIDResolver->>SASLServer: DID document with DID public key
 SASLServer->>SASLServer: Verify DID Response with signature
@@ -419,14 +435,14 @@ contains a none, timestamp, and realm.
 The client signs the challenge using the DID's private key.
 
     -- CLIENT
-    Created signature for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+    Created signature for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: frEko8nWU-rfArpMZsMVbXpg4xChaQIv_MCmIAmHD3OCWwYvL7CDOedMbezMs4pmGGuzpkRH2QX8UMa-RFToBg
 
 ## Step 5: Client -> Server Response
 
 The client response to the server with the DID and the signed challenge.
 
     -- CLIENT -> SERVER: Response
-    did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+    did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D frEko8nWU-rfArpMZsMVbXpg4xChaQIv_MCmIAmHD3OCWwYvL7CDOedMbezMs4pmGGuzpkRH2QX8UMa-RFToBg
 
 ## Step 6: Server NameCallback with DID
 
@@ -444,7 +460,7 @@ The server verifies the signature in the client's response by resolving the clie
 contains public keys need for the verification.
 
     -- SERVER
-    Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: true
+    Verified signature frEko8nWU-rfArpMZsMVbXpg4xChaQIv_MCmIAmHD3OCWwYvL7CDOedMbezMs4pmGGuzpkRH2QX8UMa-RFToBg for challenge <4513455346757278126.1757192932938@java-sasl-xmpp-server>: true
 
 ## Step 8: Server AuthorizeCallback with authorization ID
 

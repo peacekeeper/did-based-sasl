@@ -1531,7 +1531,7 @@ realm is "java-sasl-xmpp-server".<a href="#section-3.3-7" class="pilcrow">¶</a>
         <h3 id="name-did-response">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-did-response" class="section-name selfRef">DID Response</a>
         </h3>
-<p id="section-3.4-1">The DID Response follows the following format:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">The DID Response has the following format:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.4-2">
 <pre>
 &lt;did&gt; &lt;signature&gt;
@@ -1540,17 +1540,31 @@ realm is "java-sasl-xmpp-server".<a href="#section-3.3-7" class="pilcrow">¶</a>
 <p id="section-3.4-3">Where:<a href="#section-3.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-4.1">
-            <p id="section-3.4-4.1.1"><code>&lt;did&gt;</code> MUST be a Decentralized Identifier (DID) as defined in <a href="https://www.w3.org/TR/did-1.1/#did-syntax">W3C DIDs v1.1 - DID Syntax</a>.<a href="#section-3.4-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-4.1.1"><code>&lt;did&gt;</code> is the client's Decentralized Identifier (DID), percent-encoded
+as defined in <a href="#authorization-identity-string" class="auto internal xref">Section 3.2</a>. This is the
+SASL authorization identity string supplied by the client. The DID MUST
+be resolvable to a DID Document that contains at least one verification
+method with an "authentication" verification relationship
+(see <a href="https://www.w3.org/TR/did-1.1/#verification-relationships">W3C DIDs v1.1 - Verification Relationships</a>.<a href="#section-3.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-4.2">
-            <p id="section-3.4-4.2.1"><code>&lt;signature&gt;</code> MUST be a base64-encoded signature of the challenge<a href="#section-3.4-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-4.2.1"><code>&lt;signature&gt;</code> is the base64url encoding (<a href="https://www.rfc-editor.org/rfc/rfc4648.html">RFC4648</a>) of the raw bytes of the digital
+signature, without padding characters ("="). The signature MUST be computed over
+the entire DID Challenge string (including the enclosing angle brackets) as
+specified in <a href="#did-challenge" class="auto internal xref">Section 3.3</a>.<a href="#section-3.4-4.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.4-5">Example:<a href="#section-3.4-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3.4-6">
+<p id="section-3.4-5">The signing algorithm MUST correspond
+to the key type of the verification method in the DID document (e.g., Ed25519 for
+keys of type "Multikey" with a Multibase-encoded Ed25519 public key).<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-6">The two fields MUST be separated by exactly one space character.
+Leading and trailing whitespace in the DID Response MUST NOT be
+present.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.4-7">Example:<a href="#section-3.4-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.4-8">
 <pre>
-did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
-</pre><a href="#section-3.4-6" class="pilcrow">¶</a>
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D frEko8nWU-rfArpMZsMVbXpg4xChaQIv_MCmIAmHD3OCWwYvL7CDOedMbezMs4pmGGuzpkRH2QX8UMa-RFToBg
+</pre><a href="#section-3.4-8" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1566,7 +1580,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
             <p id="section-3.5-3.1.1">Resolve the DID to its DID document, according to the <a href="https://www.w3.org/TR/did-resolution/">W3C DID Resolution v1.0</a>.<a href="#section-3.5-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.5-3.2">
-            <p id="section-3.5-3.2.1">Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to <a href="https://www.w3.org/TR/did-1.1/#authentication">W3C DIDs v1.1 - Authentication</a>.<a href="#section-3.5-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-3.2.1">Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to <a href="https://www.w3.org/TR/did-1.1/#verification-relationships">W3C DIDs v1.1 - Verification Relationships</a>.<a href="#section-3.5-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.5-3.3">
             <p id="section-3.5-3.3.1">Using the public keys from the DID document, verify the signature in the DID Response against the DID Challenge.<a href="#section-3.5-3.3.1" class="pilcrow">¶</a></p>
@@ -1689,7 +1703,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
               <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="680.777">DID Response (DID, signature)</text>
               <path d="M291,699.586 L291,726.586 L603,726.586 L603,709.586 L593,699.586 L291,699.586" fill="white" stroke="black" stroke-width="1.0"></path>
               <path d="M593,699.586 L593,709.586 L603,709.586 L593,699.586" fill="white" stroke="black" stroke-width="1.0"></path>
-              <text fill="black" font-family="sans-serif" font-size="13" x="297" y="718.4831">did%3Akey%3A&lt;..did..&gt; 2mJ4tBo6H&lt;..signature..&gt;</text>
+              <text fill="black" font-family="sans-serif" font-size="13" x="297" y="718.4831">did%3Akey%3A&lt;..did..&gt; frEko8nWU&lt;..signature..&gt;</text>
               <line x1="955" x2="945" y1="759.9981" y2="755.9981" stroke="black" stroke-width="1.0"></line>
               <line x1="955" x2="945" y1="759.9981" y2="763.9981" stroke="black" stroke-width="1.0"></line>
               <line x1="612.5" x2="956" y1="759.9981" y2="759.9981" stroke="black" stroke-width="1.0"></line>
@@ -1727,7 +1741,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
               <line x1="315.5" x2="325.5" y1="1036.6462" y2="1040.6462" stroke="black" stroke-width="1.0"></line>
               <line x1="315.5" x2="611.5" y1="1036.6462" y2="1036.6462" stroke="black" stroke-width="1.0"></line>
               <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="1030.8372">Completed SASL authentication</text>
-              <!--MD5=[089f576bbd5406c894fe43177a37eaad]
+              <!--MD5=[8d67b0742f61068e603f7dfaa3c9f387]
 @startuml
 
 title "The DID-CHALLENGE SASL mechanism"
@@ -1753,7 +1767,7 @@ SASLServer->>SASLClient: DID Challenge (nonce, timestamp, realm)
 SASLClient->>SASLClient: Generate DID Response with signature
 note right of SASLClient: <..signature..>
 SASLClient->>SASLServer: DID Response (DID, signature)
-note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
+note left of SASLServer: did%3Akey%3A<..did..> frEko8nWU<..signature..>
 SASLServer->>DIDResolver: Resolve DID
 DIDResolver->>SASLServer: DID document with DID public key
 SASLServer->>SASLServer: Verify DID Response with signature
@@ -2261,7 +2275,7 @@ contains a none, timestamp, and realm.<a href="#section-7.3-1" class="pilcrow">�
 <div class="alignLeft art-text artwork" id="section-7.4-2">
 <pre>
 -- CLIENT
-Created signature for challenge &lt;4513455346757278126.1757192932938@java-sasl-xmpp-server&gt;: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+Created signature for challenge &lt;4513455346757278126.1757192932938@java-sasl-xmpp-server&gt;: frEko8nWU-rfArpMZsMVbXpg4xChaQIv_MCmIAmHD3OCWwYvL7CDOedMbezMs4pmGGuzpkRH2QX8UMa-RFToBg
 </pre><a href="#section-7.4-2" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2275,7 +2289,7 @@ Created signature for challenge &lt;4513455346757278126.1757192932938@java-sasl-
 <div class="alignLeft art-text artwork" id="section-7.5-2">
 <pre>
 -- CLIENT -&gt; SERVER: Response
-did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D frEko8nWU-rfArpMZsMVbXpg4xChaQIv_MCmIAmHD3OCWwYvL7CDOedMbezMs4pmGGuzpkRH2QX8UMa-RFToBg
 </pre><a href="#section-7.5-2" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2307,7 +2321,7 @@ contains public keys need for the verification.<a href="#section-7.7-1" class="p
 <div class="alignLeft art-text artwork" id="section-7.7-2">
 <pre>
 -- SERVER
-Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge &lt;4513455346757278126.1757192932938@java-sasl-xmpp-server&gt;: true
+Verified signature frEko8nWU-rfArpMZsMVbXpg4xChaQIv_MCmIAmHD3OCWwYvL7CDOedMbezMs4pmGGuzpkRH2QX8UMa-RFToBg for challenge &lt;4513455346757278126.1757192932938@java-sasl-xmpp-server&gt;: true
 </pre><a href="#section-7.7-2" class="pilcrow">¶</a>
 </div>
 </section>
