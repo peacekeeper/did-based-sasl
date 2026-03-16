@@ -40,30 +40,55 @@ log in to your email account, IRC server, XMPP server, etc. using a DID, which c
 
 # Introduction
 
-Many Internet protocols require authentication, e.g. when we check our email account with a username
-and password, when we authenticate to SSH hosts with public keys, or when we log in to websites
-using OpenID Connect.
+Many Internet protocols require authentication. Common approaches include username/password
+schemes (as used in IMAP or XMPP), static public key authentication (as used in SSH), and
+federated identity protocols (as used in OpenID Connect). Each of these approaches has
+well-known limitations: passwords can be stolen or guessed, static public keys provide no
+mechanism for revocation, and federated schemes introduce a dependency on a central identity
+provider.
 
-[Decentralized Identifiers (DIDs)](https://www.w3.org/TR/did-core/) are identifiers that have associated private keys
-and can be used for authentication purposes. DIDs can function as a replacement for usernames/passwords or static public keys,
-since you can "authenticate" by proving control of your DID. Unlike other identifiers such as usernames
-or domain names, DIDs do not require a central authority for creating and using them.
+[Decentralized Identifiers](https://www.w3.org/TR/did-1.1/) are a class of globally unique identifier designed
+to be created and controlled directly by their subjects, without requiring a central registration
+authority. A DID resolves to a DID Document - a machine-readable document that contains
+cryptographic key material and other metadata about the DID subject. DID Documents are anchored
+in a Verifiable Data Registry: a system - such as a distributed ledger, decentralized file
+system, or DNS zone - that provides a trustworthy, tamper-evident record of DID state. The
+controller of a DID can prove that control by signing data with the private key corresponding
+to a public key published in the DID Document, without needing permission from any third party.
 
-The [Simple Authentication and Security Layer (SASL)](https://www.rfc-editor.org/rfc/rfc4422.html) is an extensible
-framework for authentication in Internet protocols. It makes it possible to "plug in" authentication mechanisms into
-existing protocols, by decoupling the authentication mechanisms from the application protocols.
+The [Simple Authentication and Security Layer](https://www.rfc-editor.org/rfc/rfc4422.html)
+is an extensible framework that
+decouples authentication mechanisms from the application protocols that use them. By defining
+a SASL mechanism, a new authentication approach can be made available to any SASL-enabled
+protocol - including IMAP, SMTP, LDAP, XMPP, and others - without modifying those protocols
+individually.
 
-This specification introduces a DID-based SASL mechanism. For example, this can make it possible to
-log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security.
-In this specification, the SASL client has the role of a DID controller, and the SASL server has the role of a DID Resolver.
+This specification defines "DID-CHALLENGE", a SASL mechanism that allows a client to
+authenticate using a DID. The SASL client takes the role of a DID controller; the SASL
+server takes the role of a DID Resolver and verifier. Authentication proceeds by the server
+issuing a challenge (a nonce, timestamp, and realm), the client signing that challenge with
+its DID's private key, and the server verifying the signature against the public key material
+retrieved from the client's DID Document. Because authentication is based on key ownership
+rather than a shared secret, a compromise of the server's credential store does not yield
+material that could be used to impersonate clients.
 
-This specification also introduces optional support for [Verifiable Credentials (VCs)](https://www.w3.org/TR/vc-data-model-2.0/).
-VCs express claims about a subject, such as name, date of birth, citizenship, employment by a company, membership in a
-club, or any other semantic statement. VCs are typically exchanged between Issuers, Holders, and Verifiers. In this
-specification, the SASL client has the role of a VC Holder, and the SASL server has the role of a VC Verifier.
+This specification also defines an optional extension that adds support for Verifiable
+Credentials (VCs) and Verifiable Presentations (VPs). VCs are signed
+statements issued by a trusted third party (an Issuer) about a subject - for example,
+attesting to a person's name, age, professional qualification, or membership in an
+organisation. After completing the initial DID-based authentication exchange, the server
+may issue one or more VC/VP Challenges requesting that the client present credentials of
+a specified type. The client responds with a Verifiable Presentation: a signed envelope
+containing the requested credentials and binding them to the authenticated DID. This
+enables the server to make fine-grained, attribute-based access-control decisions beyond
+simple identity verification.
 
-Unlike many other SASL mechanisms, this one is based on private/public key pairs and cryptographic signatures, rather than
-digests or plain password exchange.
+Readers seeking to implement
+this mechanism should be familiar with the SASL framework ([RFC4422](https://www.rfc-editor.org/rfc/rfc4422.html)),
+the [W3C DIDs v1.1 - DID Syntax](https://www.w3.org/TR/did-1.1/#did-syntax) specification, and the
+[W3C DID Resolution v1.0](https://www.w3.org/TR/did-resolution/) specification. Familiarity
+with the [W3C Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types) specification
+is required for implementations that use the optional VC/VP extension.
 
 # SASL mechanism name
 
