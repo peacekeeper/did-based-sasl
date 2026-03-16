@@ -174,8 +174,8 @@ Sabadello                     Informational                     [Page 3]
 
    In the "DID-CHALLENGE" mechanism, the authorization identity string
    (https://www.rfc-editor.org/rfc/rfc4422#section-3.4.1) is a DID as
-   defined by W3C DID Core - DID Syntax (https://www.w3.org/TR/did-
-   1.0/#did-syntax), and percent-encoded as defined by RFC3986
+   defined by W3C DIDs v1.1 - DID Syntax (https://www.w3.org/TR/did-
+   1.1/#did-syntax), and percent-encoded as defined by RFC3986 -
    Section 2.1 (https://www.rfc-editor.org/rfc/rfc3986#section-2.1).
 
    Example authorization identity string:
@@ -209,14 +209,14 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
    Where:
 
    *  <did> MUST be a Decentralized Identifier (DID) as defined in W3C
-      DID Core - DID Syntax (https://www.w3.org/TR/did-1.0/#did-syntax).
+      DIDs v1.1 - DID Syntax (https://www.w3.org/TR/did-1.1/#did-
+      syntax).
 
    *  <signature> MUST be a base64-encoded signature of the challenge
 
    Example:
 
 did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
-
 
 
 
@@ -234,12 +234,12 @@ Sabadello                     Informational                     [Page 4]
    The server MUST perform the following verification steps:
 
    *  Resolve the DID to its DID document, according to the W3C DID
-      Resolution specification (https://www.w3.org/TR/did-resolution/).
+      Resolution v1.0 (https://www.w3.org/TR/did-resolution/).
 
    *  Retrieve the public keys from the DID document which have an
-      "authentication" verification relationship, according to W3C DID
-      Core - Authentication (https://www.w3.org/TR/did-
-      1.0/#authentication).
+      "authentication" verification relationship, according to W3C DIDs
+      v1.1 - Authentication (https://www.w3.org/TR/did-
+      1.1/#authentication).
 
    *  Using the public keys from the DID document, verify the signature
       in the DID Response against the DID Challenge.
@@ -472,8 +472,8 @@ Sabadello                     Informational                     [Page 8]
    to the steps in Section 3.5.
 
    *  Retrieve the public keys from the DID document which have an
-      "assertionMethod" verification relationship, according to W3C DID
-      Core - Assertion (https://www.w3.org/TR/did-1.0/#assertion).
+      "assertionMethod" verification relationship, according to W3C DIDs
+      v1.1 - Assertion (https://www.w3.org/TR/did-1.1/#assertion).
 
    *  Using the public keys from the DID document, verify the proof in
       the VC/VP Response against the VC/VP Challenge.
@@ -791,10 +791,12 @@ Sabadello                     Informational                    [Page 14]
    This section addresses the security properties of the DID-CHALLENGE
    SASL mechanism and the threats it is, and is not, designed to
    counter.  Implementers SHOULD also consult the security
-   considerations of the SASL framework [RFC4422], the W3C Decentralized
-   Identifiers specification [DID-1.1], and, when the optional VC/VP
-   extension is used, the W3C Verifiable Credentials Data Model [VC-
-   DATA-MODEL-2.0].
+   considerations of the SASL framework (RFC4422 (https://www.rfc-
+   editor.org/rfc/rfc4422.html)), the W3C Decentralized Identifiers v1.1
+   (https://www.w3.org/TR/did-1.1/) specification, and, when the
+   optional VC/VP extension is used, the W3C Verifiable Credentials Data
+   Model 2.0 (https://www.w3.org/TR/2025/REC-vc-data-model-
+   2.0-20250515/#types) specification.
 
 8.1.  Mechanism Strength
 
@@ -809,9 +811,9 @@ Sabadello                     Informational                    [Page 14]
    holding simultaneously: (a) the signature algorithm is
    computationally infeasible to forge; (b) the client's private key has
    not been compromised; (c) the DID resolver consulted by the server
-   returns an authentic DID document (see Section 9.5); and (d) the
+   returns an authentic DID document (see Section 8.6; and (d) the
    authentication exchange is protected from observation and tampering
-   by a lower-layer security protocol (see Section 9.2).  If any of
+   by a lower-layer security protocol (see Section 8.2).  If any of
    these properties fails to hold, the security guarantees of the
    mechanism are reduced or eliminated entirely.
 
@@ -826,12 +828,10 @@ Sabadello                     Informational                    [Page 14]
    server-chosen challenge string.
 
    The DID-CHALLENGE mechanism MUST NOT be used over an unprotected
-   channel.  Implementations MUST employ TLS [RFC8446] or an equivalent
-   protocol providing both confidentiality and integrity before
-   initiating a DID-CHALLENGE exchange.
-
-
-
+   channel.  Implementations MUST employ TLS (RFC8446 (https://www.rfc-
+   editor.org/rfc/rfc8446.html)) or an equivalent protocol providing
+   both confidentiality and integrity before initiating a DID-CHALLENGE
+   exchange.
 
 
 
@@ -842,7 +842,7 @@ Sabadello                     Informational                    [Page 15]
                            did-challenge-sasl                 March 2026
 
 
-   When the optional VC/VP extension (Section 5) is used, this
+   When the optional VC/VP extension (see Section 5) is used, this
    requirement is especially critical.  Verifiable Presentations may
    contain sensitive personal attributes — such as name, date of birth,
    or professional credentials — that are transmitted in the clear at
@@ -879,15 +879,15 @@ Sabadello                     Informational                    [Page 15]
    authenticate to the real server.  Running the exchange over TLS
    substantially raises the bar for this attack.  To eliminate it
    entirely, implementations SHOULD incorporate a TLS channel binding
-   value [RFC5929] into the signed material, so that a signature
-   produced within one TLS session cannot be transferred to another.
+   value (see RFC5929 (https://www.rfc-editor.org/rfc/rfc5929.html))
+   into the signed material, so that a signature produced within one TLS
+   session cannot be transferred to another.
 
    The realm field in the challenge binds the signature to a specific
    service context.  Clients MUST verify that the realm in the received
    challenge matches the service they intend to authenticate to before
    computing the DID Response, and MUST abort the exchange on a
    mismatch.
-
 
 
 
@@ -920,10 +920,12 @@ Sabadello                     Informational                    [Page 16]
    obtained by resolving the client's DID.  A malicious or compromised
    DID resolver that returns a fraudulent DID document could substitute
    attacker-controlled key material, allowing impersonation of an
-   arbitrary DID.  As discussed in [DID-1.1] Section 8.1, there is no
-   universal authority that mandates a correct resolver implementation
-   for a given DID method; server implementers MUST select DID resolver
-   software they have independently verified and trust.
+   arbitrary DID.  As discussed in W3C DIDs v1.1 - Choosing DID
+   Resolvers (https://www.w3.org/TR/did-1.1/#choosing-did-resolvers),
+   there is no universal authority that mandates a correct resolver
+   implementation for a given DID method; server implementers MUST
+   select DID resolver software they have independently verified and
+   trust.
 
    The network path between the server and its DID resolver SHOULD be
    protected by TLS.  Where the DID method supports it, the integrity of
@@ -947,8 +949,6 @@ Sabadello                     Informational                    [Page 16]
 
 
 
-
-
 Sabadello                     Informational                    [Page 17]
 
                            did-challenge-sasl                 March 2026
@@ -966,7 +966,8 @@ Sabadello                     Informational                    [Page 17]
 
    Servers SHOULD maintain an explicit list of accepted DID methods and
    SHOULD prefer those whose specifications have undergone independent
-   security review, as required by [DID-1.1] Section 7.3.
+   security review, as required by W3C DIDs v1.1 - Security Requirements
+   (https://www.w3.org/TR/did-1.1/#security-requirements).
 
 8.8.  Non-Repudiation
 
@@ -976,7 +977,8 @@ Sabadello                     Informational                    [Page 17]
    controller and has not been compromised, this signature constitutes
    evidence that the DID controller authenticated to the specified
    server at approximately the time encoded in the challenge.  This
-   property, discussed in [DID-1.1] Section 8.2, supports non-
+   property, discussed in W3C DIDs v1.1 - Non-Repudiation
+   (https://www.w3.org/TR/did-1.1/#non-repudiation), supports non-
    repudiation of authentication events.  Deployments that require non-
    repudiation for compliance or forensic purposes SHOULD log and
    archive authentication exchanges accordingly.
@@ -999,8 +1001,6 @@ Sabadello                     Informational                    [Page 17]
    authenticate as the corresponding DID until the DID document is
    updated to revoke the associated verification method — and, for DID
    methods that do not support revocation, indefinitely.
-
-
 
 
 
@@ -1037,7 +1037,7 @@ Sabadello                     Informational                    [Page 18]
    credential types strictly necessary for the access-control decision
    being made, to minimise unnecessary disclosure of personal
    information, particularly given that VPs are transmitted in the clear
-   at the SASL layer (see Section 9.2).
+   at the SASL layer (see Section 8.2).
 
 9.  Implementations
 

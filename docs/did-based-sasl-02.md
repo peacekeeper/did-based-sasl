@@ -99,8 +99,8 @@ During the exchange, the authorization identity is integrity-protected by a cryp
 ## Authorization Identity String
 
 In the "DID-CHALLENGE" mechanism, the [authorization identity string](https://www.rfc-editor.org/rfc/rfc4422#section-3.4.1)
-is a DID as defined by [W3C DID Core - DID Syntax](https://www.w3.org/TR/did-1.0/#did-syntax), and percent-encoded as defined by
-[RFC3986 Section 2.1](https://www.rfc-editor.org/rfc/rfc3986#section-2.1).
+is a DID as defined by [W3C DIDs v1.1 - DID Syntax](https://www.w3.org/TR/did-1.1/#did-syntax), and percent-encoded as defined by
+[RFC3986 - Section 2.1](https://www.rfc-editor.org/rfc/rfc3986#section-2.1).
 
 Example authorization identity string:
 
@@ -138,7 +138,7 @@ The DID Response follows the following format:
 
 Where:
 
-- `<did>` MUST be a Decentralized Identifier (DID) as defined in [W3C DID Core - DID Syntax](https://www.w3.org/TR/did-1.0/#did-syntax).
+- `<did>` MUST be a Decentralized Identifier (DID) as defined in [W3C DIDs v1.1 - DID Syntax](https://www.w3.org/TR/did-1.1/#did-syntax).
 - `<signature>` MUST be a base64-encoded signature of the challenge 
 
 Example:
@@ -153,8 +153,8 @@ The signature in the initial response MUST cover the entire DID Challenge, and i
 
 The server MUST perform the following verification steps:
 
-- Resolve the DID to its DID document, according to the [W3C DID Resolution specification](https://www.w3.org/TR/did-resolution/).
-- Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to [W3C DID Core - Authentication](https://www.w3.org/TR/did-1.0/#authentication).
+- Resolve the DID to its DID document, according to the [W3C DID Resolution v1.0](https://www.w3.org/TR/did-resolution/).
+- Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to [W3C DIDs v1.1 - Authentication](https://www.w3.org/TR/did-1.1/#authentication).
 - Using the public keys from the DID document, verify the signature in the DID Response against the DID Challenge.
 - Verify that the DID Challenge nonce has not been re-used.
 - Verify that the DID Challenge timestamp is not too long in the past or in the future, e.g. 5 minutes.
@@ -277,7 +277,7 @@ The signature in the Verifiable Presentation MUST be generated using the DID's a
 
 The server MUST perform the following verification steps, in addition to the steps in [](#verification).
 
-- Retrieve the public keys from the DID document which have an "assertionMethod" verification relationship, according to [W3C DID Core - Assertion](https://www.w3.org/TR/did-1.0/#assertion).
+- Retrieve the public keys from the DID document which have an "assertionMethod" verification relationship, according to [W3C DIDs v1.1 - Assertion](https://www.w3.org/TR/did-1.1/#assertion).
 - Using the public keys from the DID document, verify the proof in the VC/VP Response against the VC/VP Challenge.
 - Verify that the VC/VP Challenge nonce has not been re-used.
 - Verify that the VC/VP Challenge timestamp is not too long in the past or in the future, e.g. 5 minutes.
@@ -433,17 +433,18 @@ The server determines the DID as the "authorized ID", concluding the authenticat
 
 This section addresses the security properties of the DID-CHALLENGE
 SASL mechanism and the threats it is, and is not, designed to
-counter.  Implementers SHOULD also consult the security
-considerations of the SASL framework [RFC4422], the W3C
-Decentralized Identifiers specification [DID-1.1], and, when the
-optional VC/VP extension is used, the W3C Verifiable Credentials
-Data Model [VC-DATA-MODEL-2.0].
+counter. Implementers SHOULD also consult the security
+considerations of the SASL framework ([RFC4422](https://www.rfc-editor.org/rfc/rfc4422.html)), the
+[W3C Decentralized Identifiers v1.1](https://www.w3.org/TR/did-1.1/)
+specification, and, when the
+optional VC/VP extension is used, the [W3C Verifiable Credentials
+Data Model 2.0](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types) specification.
 
 ## Mechanism Strength
 
 The DID-CHALLENGE mechanism authenticates clients by asymmetric
 cryptography rather than by transmitting a password or a password-
-derived value.  This eliminates an entire class of server-side risks
+derived value. This eliminates an entire class of server-side risks
 present in password-based SASL mechanisms such as PLAIN or DIGEST-
 MD5: a compromise of the server's credential store yields no
 material that can be used to impersonate clients.
@@ -452,9 +453,9 @@ The security of the mechanism depends on the following properties
 holding simultaneously: (a) the signature algorithm is
 computationally infeasible to forge; (b) the client's private key
 has not been compromised; (c) the DID resolver consulted by the
-server returns an authentic DID document (see [](#name-server-spoofing-and-mutual-); and
+server returns an authentic DID document (see [](#choosing-and-trusting-did-resolvers); and
 (d) the authentication exchange is protected from observation and
-tampering by a lower-layer security protocol (see [](#name-requirement-for-a-confident)).
+tampering by a lower-layer security protocol (see [](#requirement-for-a-confidential-channel)).
 If any of these properties fails to hold, the security guarantees
 of the mechanism are reduced or eliminated entirely.
 
@@ -462,19 +463,19 @@ of the mechanism are reduced or eliminated entirely.
 
 The DID-CHALLENGE mechanism does not itself provide a security
 layer (confidentiality or integrity protection of the application-
-layer data stream after authentication).  The client transmits its
+layer data stream after authentication). The client transmits its
 DID and a cryptographic signature in the clear at the SASL layer.
 An eavesdropper learns the client's DID, which may be linkable to
 the client's real-world identity, and obtains a valid signature
 over a server-chosen challenge string.
 
 The DID-CHALLENGE mechanism MUST NOT be used over an unprotected
-channel.  Implementations MUST employ TLS [RFC8446] or an
+channel. Implementations MUST employ TLS ([RFC8446](https://www.rfc-editor.org/rfc/rfc8446.html)) or an
 equivalent protocol providing both confidentiality and integrity
 before initiating a DID-CHALLENGE exchange.
 
-When the optional VC/VP extension (see [](#name-optional-authentication-wit)) is used, this
-requirement is especially critical.  Verifiable Presentations may
+When the optional VC/VP extension (see [](#optional-authentication-with-vcsvps)) is used, this
+requirement is especially critical. Verifiable Presentations may
 contain sensitive personal attributes — such as name, date of
 birth, or professional credentials — that are transmitted in the
 clear at the SASL layer and MUST be protected by the underlying
@@ -483,23 +484,23 @@ confidentiality layer.
 ## Replay Attacks
 
 The DID Challenge includes a nonce and a timestamp to prevent
-replay attacks.  The nonce MUST be generated by a cryptographically
+replay attacks. The nonce MUST be generated by a cryptographically
 strong pseudo-random number generator and MUST be unique per
-challenge.  The server MUST maintain a record of all nonces issued
+challenge. The server MUST maintain a record of all nonces issued
 within the active timestamp window and MUST reject any DID Response
-whose nonce has already been accepted.  A server that reuses nonces
+whose nonce has already been accepted. A server that reuses nonces
 or fails to track them renders the replay defence ineffective.
 
 The timestamp provides a complementary time-bounded validity window.
 The server MUST reject any DID Response whose challenge timestamp
 lies outside a configured acceptance window, with a RECOMMENDED
-default of no more than 5 minutes.  Server clocks SHOULD be
+default of no more than 5 minutes. Server clocks SHOULD be
 synchronized via NTP or an equivalent mechanism, since excessive
 clock skew will cause legitimate authentications to be rejected or,
 if compensated by widening the window, increase replay exposure.
 
 Both controls apply equally to the VC/VP Challenge and VC/VP
-Response defined in [](#name-optional-authentication-wit).  Servers MUST track VC/VP nonces
+Response defined in [](#optional-authentication-with-vcsvps). Servers MUST track VC/VP nonces
 independently and apply the same timestamp validation.
 
 ## Man-in-the-Middle Attacks and Channel Binding
@@ -507,14 +508,15 @@ independently and apply the same timestamp validation.
 Because the client signs a server-supplied challenge, a man-in-the-
 middle adversary who can intercept and substitute the challenge
 could induce the client to produce a signature the adversary then
-uses to authenticate to the real server.  Running the exchange over
-TLS substantially raises the bar for this attack.  To eliminate it
+uses to authenticate to the real server. Running the exchange over
+TLS substantially raises the bar for this attack. To eliminate it
 entirely, implementations SHOULD incorporate a TLS channel binding
-value [RFC5929] into the signed material, so that a signature
+value (see [RFC5929](https://www.rfc-editor.org/rfc/rfc5929.html))
+into the signed material, so that a signature
 produced within one TLS session cannot be transferred to another.
 
 The realm field in the challenge binds the signature to a specific
-service context.  Clients MUST verify that the realm in the
+service context. Clients MUST verify that the realm in the
 received challenge matches the service they intend to authenticate
 to before computing the DID Response, and MUST abort the exchange
 on a mismatch.
@@ -524,13 +526,13 @@ on a mismatch.
 The DID-CHALLENGE mechanism provides unilateral authentication: the
 client proves its identity to the server, but the server does not
 prove its identity to the client beyond what is provided by the
-underlying transport.  A malicious server can issue a legitimate-
+underlying transport. A malicious server can issue a legitimate-
 looking challenge and collect a valid DID Response.
 
 Clients MUST validate the server's TLS certificate against a
 trusted certification authority or equivalent trust anchor before
-initiating a DID-CHALLENGE exchange.  Clients MUST NOT proceed if
-certificate validation fails.  Deployments with stronger mutual-
+initiating a DID-CHALLENGE exchange. Clients MUST NOT proceed if
+certificate validation fails. Deployments with stronger mutual-
 authentication requirements MAY combine DID-CHALLENGE with a DID-
 based server-authentication step at the application layer, though
 this is outside the scope of this specification.
@@ -538,19 +540,20 @@ this is outside the scope of this specification.
 ## Choosing and Trusting DID Resolvers
 
 The server verifies the client's signature using public key
-material obtained by resolving the client's DID.  A malicious or
+material obtained by resolving the client's DID. A malicious or
 compromised DID resolver that returns a fraudulent DID document
 could substitute attacker-controlled key material, allowing
-impersonation of an arbitrary DID.  As discussed in [DID-1.1]
-Section 8.1, there is no universal authority that mandates a
+impersonation of an arbitrary DID. As discussed in
+[W3C DIDs v1.1 - Choosing DID Resolvers](https://www.w3.org/TR/did-1.1/#choosing-did-resolvers),
+there is no universal authority that mandates a
 correct resolver implementation for a given DID method; server
 implementers MUST select DID resolver software they have
 independently verified and trust.
 
 The network path between the server and its DID resolver SHOULD be
-protected by TLS.  Where the DID method supports it, the integrity
+protected by TLS. Where the DID method supports it, the integrity
 of the retrieved DID document SHOULD be verified using content
-integrity mechanisms before its key material is used.  Servers
+integrity mechanisms before its key material is used. Servers
 SHOULD restrict the set of accepted DID methods to those whose
 resolver implementations and underlying registries have undergone
 independent security review.
@@ -559,7 +562,7 @@ independent security review.
 
 A DID controller who suspects key compromise SHOULD immediately
 update the DID document to revoke or rotate the affected
-verification method.  There is an inherent window of exposure
+verification method. There is an inherent window of exposure
 between the moment of compromise and the moment the revocation
 propagates to the server's resolver; its duration depends on
 registry propagation speed and the server's cache refresh policy.
@@ -571,15 +574,16 @@ DID methods differ significantly in their security properties.
 Methods such as "did:key" encode the public key directly in the
 identifier and support neither revocation nor rotation; a
 compromised private key cannot be remediated and the DID must be
-abandoned entirely.  Methods anchored in distributed ledgers or
+abandoned entirely. Methods anchored in distributed ledgers or
 similar registries support revocation but introduce availability
-and integrity dependencies on that infrastructure.  Methods based
+and integrity dependencies on that infrastructure. Methods based
 on DNS (such as "did:web") inherit the DNS attack surface,
 including susceptibility to hijacking.
 
 Servers SHOULD maintain an explicit list of accepted DID methods
 and SHOULD prefer those whose specifications have undergone
-independent security review, as required by [DID-1.1] Section 7.3.
+independent security review, as required by
+[W3C DIDs v1.1 - Security Requirements](https://www.w3.org/TR/did-1.1/#security-requirements).
 
 ## Non-Repudiation
 
@@ -588,9 +592,10 @@ encodes a unique nonce, a timestamp, and the server's realm.
 Provided the client's private key is used exclusively by the DID
 controller and has not been compromised, this signature constitutes
 evidence that the DID controller authenticated to the specified
-server at approximately the time encoded in the challenge.  This
-property, discussed in [DID-1.1] Section 8.2, supports non-
-repudiation of authentication events.  Deployments that require
+server at approximately the time encoded in the challenge. This
+property, discussed in
+[W3C DIDs v1.1 - Non-Repudiation](https://www.w3.org/TR/did-1.1/#non-repudiation), supports non-
+repudiation of authentication events. Deployments that require
 non-repudiation for compliance or forensic purposes SHOULD log and
 archive authentication exchanges accordingly.
 
@@ -600,7 +605,7 @@ Successful completion of the DID-CHALLENGE exchange proves that the
 client controls a private key corresponding to a verification method
 listed under the "authentication" relationship in its DID document.
 This proves control of the DID; it does not by itself confer any
-authorization to access resources on the server.  Servers MUST
+authorization to access resources on the server. Servers MUST
 maintain and enforce an authorization policy that maps authenticated
 DIDs to permitted operations, independently of the authentication
 outcome.
@@ -608,7 +613,7 @@ outcome.
 ## Private Key Protection
 
 The security of DID-CHALLENGE rests entirely on the secrecy of the
-client's private key.  An adversary who obtains the private key can
+client's private key. An adversary who obtains the private key can
 authenticate as the corresponding DID until the DID document is
 updated to revoke the associated verification method — and, for DID
 methods that do not support revocation, indefinitely.
@@ -617,8 +622,8 @@ Client implementations MUST protect private keys in a manner
 commensurate with the sensitivity of the resources being accessed.
 Suitable measures include hardware security modules (HSMs),
 operating-system-provided secure key storage, or encrypted software
-key stores protected by a strong passphrase.  Private keys MUST NOT
-be stored in plaintext.  Implementers MUST ensure that the
+key stores protected by a strong passphrase. Private keys MUST NOT
+be stored in plaintext. Implementers MUST ensure that the
 JWKCallback interface does not expose the private key to
 unauthorized processes or log files.
 
@@ -634,13 +639,13 @@ credential type matches the type requested in the VC/VP Challenge.
 
 Servers MUST implement credential status checking to detect revoked
 credentials, and MUST maintain an explicit issuer trust policy,
-rejecting credentials from issuers not covered by that policy.  The
+rejecting credentials from issuers not covered by that policy. The
 trustworthiness of a credential issuer cannot be inferred from the
-credential itself.  Finally, servers SHOULD request only the
+credential itself. Finally, servers SHOULD request only the
 credential types strictly necessary for the access-control decision
 being made, to minimise unnecessary disclosure of personal
 information, particularly given that VPs are transmitted in the
-clear at the SASL layer (see [](#name-requirement-for-a-confident)).
+clear at the SASL layer (see [](#requirement-for-a-confidential-channel)).
 
 # Implementations
 

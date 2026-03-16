@@ -127,8 +127,8 @@ and the TLS protocol.</t>
 <section anchor="authorization-identity-string"><name>Authorization Identity String</name>
 
 <t>In the "DID-CHALLENGE" mechanism, the <eref target="https://www.rfc-editor.org/rfc/rfc4422#section-3.4.1">authorization identity string</eref>
-is a DID as defined by <eref target="https://www.w3.org/TR/did-1.0/#did-syntax">W3C DID Core - DID Syntax</eref>, and percent-encoded as defined by
-<eref target="https://www.rfc-editor.org/rfc/rfc3986#section-2.1">RFC3986 Section 2.1</eref>.</t>
+is a DID as defined by <eref target="https://www.w3.org/TR/did-1.1/#did-syntax">W3C DIDs v1.1 - DID Syntax</eref>, and percent-encoded as defined by
+<eref target="https://www.rfc-editor.org/rfc/rfc3986#section-2.1">RFC3986 - Section 2.1</eref>.</t>
 
 <t>Example authorization identity string:</t>
 
@@ -171,7 +171,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 <t>Where:</t>
 
 <t><list style="symbols">
-  <t><spanx style="verb">&lt;did&gt;</spanx> MUST be a Decentralized Identifier (DID) as defined in <eref target="https://www.w3.org/TR/did-1.0/#did-syntax">W3C DID Core - DID Syntax</eref>.</t>
+  <t><spanx style="verb">&lt;did&gt;</spanx> MUST be a Decentralized Identifier (DID) as defined in <eref target="https://www.w3.org/TR/did-1.1/#did-syntax">W3C DIDs v1.1 - DID Syntax</eref>.</t>
   <t><spanx style="verb">&lt;signature&gt;</spanx> MUST be a base64-encoded signature of the challenge</t>
 </list></t>
 
@@ -189,8 +189,8 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 <t>The server MUST perform the following verification steps:</t>
 
 <t><list style="symbols">
-  <t>Resolve the DID to its DID document, according to the <eref target="https://www.w3.org/TR/did-resolution/">W3C DID Resolution specification</eref>.</t>
-  <t>Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to <eref target="https://www.w3.org/TR/did-1.0/#authentication">W3C DID Core - Authentication</eref>.</t>
+  <t>Resolve the DID to its DID document, according to the <eref target="https://www.w3.org/TR/did-resolution/">W3C DID Resolution v1.0</eref>.</t>
+  <t>Retrieve the public keys from the DID document which have an "authentication" verification relationship, according to <eref target="https://www.w3.org/TR/did-1.1/#authentication">W3C DIDs v1.1 - Authentication</eref>.</t>
   <t>Using the public keys from the DID document, verify the signature in the DID Response against the DID Challenge.</t>
   <t>Verify that the DID Challenge nonce has not been re-used.</t>
   <t>Verify that the DID Challenge timestamp is not too long in the past or in the future, e.g. 5 minutes.</t>
@@ -569,7 +569,7 @@ S: Outcome of authentication exchange
 <t>The server MUST perform the following verification steps, in addition to the steps in <xref target="verification"></xref>.</t>
 
 <t><list style="symbols">
-  <t>Retrieve the public keys from the DID document which have an "assertionMethod" verification relationship, according to <eref target="https://www.w3.org/TR/did-1.0/#assertion">W3C DID Core - Assertion</eref>.</t>
+  <t>Retrieve the public keys from the DID document which have an "assertionMethod" verification relationship, according to <eref target="https://www.w3.org/TR/did-1.1/#assertion">W3C DIDs v1.1 - Assertion</eref>.</t>
   <t>Using the public keys from the DID document, verify the proof in the VC/VP Response against the VC/VP Challenge.</t>
   <t>Verify that the VC/VP Challenge nonce has not been re-used.</t>
   <t>Verify that the VC/VP Challenge timestamp is not too long in the past or in the future, e.g. 5 minutes.</t>
@@ -1106,17 +1106,18 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 <t>This section addresses the security properties of the DID-CHALLENGE
 SASL mechanism and the threats it is, and is not, designed to
-counter.  Implementers SHOULD also consult the security
-considerations of the SASL framework [RFC4422], the W3C
-Decentralized Identifiers specification [DID-1.1], and, when the
-optional VC/VP extension is used, the W3C Verifiable Credentials
-Data Model [VC-DATA-MODEL-2.0].</t>
+counter. Implementers SHOULD also consult the security
+considerations of the SASL framework (<eref target="https://www.rfc-editor.org/rfc/rfc4422.html">RFC4422</eref>), the
+<eref target="https://www.w3.org/TR/did-1.1/">W3C Decentralized Identifiers v1.1</eref>
+specification, and, when the
+optional VC/VP extension is used, the <eref target="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types">W3C Verifiable Credentials
+Data Model 2.0</eref> specification.</t>
 
 <section anchor="mechanism-strength"><name>Mechanism Strength</name>
 
 <t>The DID-CHALLENGE mechanism authenticates clients by asymmetric
 cryptography rather than by transmitting a password or a password-
-derived value.  This eliminates an entire class of server-side risks
+derived value. This eliminates an entire class of server-side risks
 present in password-based SASL mechanisms such as PLAIN or DIGEST-
 MD5: a compromise of the server's credential store yields no
 material that can be used to impersonate clients.</t>
@@ -1125,9 +1126,9 @@ material that can be used to impersonate clients.</t>
 holding simultaneously: (a) the signature algorithm is
 computationally infeasible to forge; (b) the client's private key
 has not been compromised; (c) the DID resolver consulted by the
-server returns an authentic DID document (see <xref target="name-server-spoofing-and-mutual-"></xref>; and
+server returns an authentic DID document (see <xref target="choosing-and-trusting-did-resolvers"></xref>; and
 (d) the authentication exchange is protected from observation and
-tampering by a lower-layer security protocol (see <xref target="name-requirement-for-a-confident"></xref>).
+tampering by a lower-layer security protocol (see <xref target="requirement-for-a-confidential-channel"></xref>).
 If any of these properties fails to hold, the security guarantees
 of the mechanism are reduced or eliminated entirely.</t>
 
@@ -1136,19 +1137,19 @@ of the mechanism are reduced or eliminated entirely.</t>
 
 <t>The DID-CHALLENGE mechanism does not itself provide a security
 layer (confidentiality or integrity protection of the application-
-layer data stream after authentication).  The client transmits its
+layer data stream after authentication). The client transmits its
 DID and a cryptographic signature in the clear at the SASL layer.
 An eavesdropper learns the client's DID, which may be linkable to
 the client's real-world identity, and obtains a valid signature
 over a server-chosen challenge string.</t>
 
 <t>The DID-CHALLENGE mechanism MUST NOT be used over an unprotected
-channel.  Implementations MUST employ TLS [RFC8446] or an
+channel. Implementations MUST employ TLS (<eref target="https://www.rfc-editor.org/rfc/rfc8446.html">RFC8446</eref>) or an
 equivalent protocol providing both confidentiality and integrity
 before initiating a DID-CHALLENGE exchange.</t>
 
-<t>When the optional VC/VP extension (see <xref target="name-optional-authentication-wit"></xref>) is used, this
-requirement is especially critical.  Verifiable Presentations may
+<t>When the optional VC/VP extension (see <xref target="optional-authentication-with-vcsvps"></xref>) is used, this
+requirement is especially critical. Verifiable Presentations may
 contain sensitive personal attributes — such as name, date of
 birth, or professional credentials — that are transmitted in the
 clear at the SASL layer and MUST be protected by the underlying
@@ -1158,23 +1159,23 @@ confidentiality layer.</t>
 <section anchor="replay-attacks"><name>Replay Attacks</name>
 
 <t>The DID Challenge includes a nonce and a timestamp to prevent
-replay attacks.  The nonce MUST be generated by a cryptographically
+replay attacks. The nonce MUST be generated by a cryptographically
 strong pseudo-random number generator and MUST be unique per
-challenge.  The server MUST maintain a record of all nonces issued
+challenge. The server MUST maintain a record of all nonces issued
 within the active timestamp window and MUST reject any DID Response
-whose nonce has already been accepted.  A server that reuses nonces
+whose nonce has already been accepted. A server that reuses nonces
 or fails to track them renders the replay defence ineffective.</t>
 
 <t>The timestamp provides a complementary time-bounded validity window.
 The server MUST reject any DID Response whose challenge timestamp
 lies outside a configured acceptance window, with a RECOMMENDED
-default of no more than 5 minutes.  Server clocks SHOULD be
+default of no more than 5 minutes. Server clocks SHOULD be
 synchronized via NTP or an equivalent mechanism, since excessive
 clock skew will cause legitimate authentications to be rejected or,
 if compensated by widening the window, increase replay exposure.</t>
 
 <t>Both controls apply equally to the VC/VP Challenge and VC/VP
-Response defined in <xref target="name-optional-authentication-wit"></xref>.  Servers MUST track VC/VP nonces
+Response defined in <xref target="optional-authentication-with-vcsvps"></xref>. Servers MUST track VC/VP nonces
 independently and apply the same timestamp validation.</t>
 
 </section>
@@ -1183,14 +1184,15 @@ independently and apply the same timestamp validation.</t>
 <t>Because the client signs a server-supplied challenge, a man-in-the-
 middle adversary who can intercept and substitute the challenge
 could induce the client to produce a signature the adversary then
-uses to authenticate to the real server.  Running the exchange over
-TLS substantially raises the bar for this attack.  To eliminate it
+uses to authenticate to the real server. Running the exchange over
+TLS substantially raises the bar for this attack. To eliminate it
 entirely, implementations SHOULD incorporate a TLS channel binding
-value [RFC5929] into the signed material, so that a signature
+value (see <eref target="https://www.rfc-editor.org/rfc/rfc5929.html">RFC5929</eref>)
+into the signed material, so that a signature
 produced within one TLS session cannot be transferred to another.</t>
 
 <t>The realm field in the challenge binds the signature to a specific
-service context.  Clients MUST verify that the realm in the
+service context. Clients MUST verify that the realm in the
 received challenge matches the service they intend to authenticate
 to before computing the DID Response, and MUST abort the exchange
 on a mismatch.</t>
@@ -1201,13 +1203,13 @@ on a mismatch.</t>
 <t>The DID-CHALLENGE mechanism provides unilateral authentication: the
 client proves its identity to the server, but the server does not
 prove its identity to the client beyond what is provided by the
-underlying transport.  A malicious server can issue a legitimate-
+underlying transport. A malicious server can issue a legitimate-
 looking challenge and collect a valid DID Response.</t>
 
 <t>Clients MUST validate the server's TLS certificate against a
 trusted certification authority or equivalent trust anchor before
-initiating a DID-CHALLENGE exchange.  Clients MUST NOT proceed if
-certificate validation fails.  Deployments with stronger mutual-
+initiating a DID-CHALLENGE exchange. Clients MUST NOT proceed if
+certificate validation fails. Deployments with stronger mutual-
 authentication requirements MAY combine DID-CHALLENGE with a DID-
 based server-authentication step at the application layer, though
 this is outside the scope of this specification.</t>
@@ -1216,19 +1218,20 @@ this is outside the scope of this specification.</t>
 <section anchor="choosing-and-trusting-did-resolvers"><name>Choosing and Trusting DID Resolvers</name>
 
 <t>The server verifies the client's signature using public key
-material obtained by resolving the client's DID.  A malicious or
+material obtained by resolving the client's DID. A malicious or
 compromised DID resolver that returns a fraudulent DID document
 could substitute attacker-controlled key material, allowing
-impersonation of an arbitrary DID.  As discussed in [DID-1.1]
-Section 8.1, there is no universal authority that mandates a
+impersonation of an arbitrary DID. As discussed in
+<eref target="https://www.w3.org/TR/did-1.1/#choosing-did-resolvers">W3C DIDs v1.1 - Choosing DID Resolvers</eref>,
+there is no universal authority that mandates a
 correct resolver implementation for a given DID method; server
 implementers MUST select DID resolver software they have
 independently verified and trust.</t>
 
 <t>The network path between the server and its DID resolver SHOULD be
-protected by TLS.  Where the DID method supports it, the integrity
+protected by TLS. Where the DID method supports it, the integrity
 of the retrieved DID document SHOULD be verified using content
-integrity mechanisms before its key material is used.  Servers
+integrity mechanisms before its key material is used. Servers
 SHOULD restrict the set of accepted DID methods to those whose
 resolver implementations and underlying registries have undergone
 independent security review.</t>
@@ -1238,7 +1241,7 @@ independent security review.</t>
 
 <t>A DID controller who suspects key compromise SHOULD immediately
 update the DID document to revoke or rotate the affected
-verification method.  There is an inherent window of exposure
+verification method. There is an inherent window of exposure
 between the moment of compromise and the moment the revocation
 propagates to the server's resolver; its duration depends on
 registry propagation speed and the server's cache refresh policy.
@@ -1250,15 +1253,16 @@ rather than silently falling back to stale cached data.</t>
 Methods such as "did:key" encode the public key directly in the
 identifier and support neither revocation nor rotation; a
 compromised private key cannot be remediated and the DID must be
-abandoned entirely.  Methods anchored in distributed ledgers or
+abandoned entirely. Methods anchored in distributed ledgers or
 similar registries support revocation but introduce availability
-and integrity dependencies on that infrastructure.  Methods based
+and integrity dependencies on that infrastructure. Methods based
 on DNS (such as "did:web") inherit the DNS attack surface,
 including susceptibility to hijacking.</t>
 
 <t>Servers SHOULD maintain an explicit list of accepted DID methods
 and SHOULD prefer those whose specifications have undergone
-independent security review, as required by [DID-1.1] Section 7.3.</t>
+independent security review, as required by
+<eref target="https://www.w3.org/TR/did-1.1/#security-requirements">W3C DIDs v1.1 - Security Requirements</eref>.</t>
 
 </section>
 <section anchor="non-repudiation"><name>Non-Repudiation</name>
@@ -1268,9 +1272,10 @@ encodes a unique nonce, a timestamp, and the server's realm.
 Provided the client's private key is used exclusively by the DID
 controller and has not been compromised, this signature constitutes
 evidence that the DID controller authenticated to the specified
-server at approximately the time encoded in the challenge.  This
-property, discussed in [DID-1.1] Section 8.2, supports non-
-repudiation of authentication events.  Deployments that require
+server at approximately the time encoded in the challenge. This
+property, discussed in
+<eref target="https://www.w3.org/TR/did-1.1/#non-repudiation">W3C DIDs v1.1 - Non-Repudiation</eref>, supports non-
+repudiation of authentication events. Deployments that require
 non-repudiation for compliance or forensic purposes SHOULD log and
 archive authentication exchanges accordingly.</t>
 
@@ -1281,7 +1286,7 @@ archive authentication exchanges accordingly.</t>
 client controls a private key corresponding to a verification method
 listed under the "authentication" relationship in its DID document.
 This proves control of the DID; it does not by itself confer any
-authorization to access resources on the server.  Servers MUST
+authorization to access resources on the server. Servers MUST
 maintain and enforce an authorization policy that maps authenticated
 DIDs to permitted operations, independently of the authentication
 outcome.</t>
@@ -1290,7 +1295,7 @@ outcome.</t>
 <section anchor="private-key-protection"><name>Private Key Protection</name>
 
 <t>The security of DID-CHALLENGE rests entirely on the secrecy of the
-client's private key.  An adversary who obtains the private key can
+client's private key. An adversary who obtains the private key can
 authenticate as the corresponding DID until the DID document is
 updated to revoke the associated verification method — and, for DID
 methods that do not support revocation, indefinitely.</t>
@@ -1299,8 +1304,8 @@ methods that do not support revocation, indefinitely.</t>
 commensurate with the sensitivity of the resources being accessed.
 Suitable measures include hardware security modules (HSMs),
 operating-system-provided secure key storage, or encrypted software
-key stores protected by a strong passphrase.  Private keys MUST NOT
-be stored in plaintext.  Implementers MUST ensure that the
+key stores protected by a strong passphrase. Private keys MUST NOT
+be stored in plaintext. Implementers MUST ensure that the
 JWKCallback interface does not expose the private key to
 unauthorized processes or log files.</t>
 
@@ -1317,13 +1322,13 @@ credential type matches the type requested in the VC/VP Challenge.</t>
 
 <t>Servers MUST implement credential status checking to detect revoked
 credentials, and MUST maintain an explicit issuer trust policy,
-rejecting credentials from issuers not covered by that policy.  The
+rejecting credentials from issuers not covered by that policy. The
 trustworthiness of a credential issuer cannot be inferred from the
-credential itself.  Finally, servers SHOULD request only the
+credential itself. Finally, servers SHOULD request only the
 credential types strictly necessary for the access-control decision
 being made, to minimise unnecessary disclosure of personal
 information, particularly given that VPs are transmitted in the
-clear at the SASL layer (see <xref target="name-requirement-for-a-confident"></xref>).</t>
+clear at the SASL layer (see <xref target="requirement-for-a-confidential-channel"></xref>).</t>
 
 </section>
 </section>
@@ -1360,200 +1365,201 @@ clear at the SASL layer (see <xref target="name-requirement-for-a-confident"></x
   </back>
 
 <!-- ##markdown-source:
-H4sIAAAAAAAAA+0923IbR3bv/RVdcKWWSDCgSII32FEtDdISLZGiSYqyrVJt
-BjMNYMTBDDw9Awp2eSsfkfd8TP4kX5JzTl+mewBQoqn17lacyu4SQF/O/dbd
-R0EQsCiPk2zc51U5Cg4YK5MyFX1+PRH8+PQ4GDw/evny5PzZCb86unrJz0Q0
-CbNETlk4HBZi3udxEgfwXZqKbCwCGcqUxXmUhVNYJC7CURksjwiebLEoLMU4
-LxZ9nmSjnMXwsc+3n2zvBU92gq09lsyKPs/yTDAWFiLs8ysRVUVSLtgdADvI
-p9M840dVORFZmcBiCXy8BuiyPM3HC34uPpT8mchEQT8xJsswi/8SprBiny+E
-ZLOkz9+WedThMi/KQowk/LWYqj8iWB8Wlu9gd9gjL/qM8wD+wwFc2ednXX4V
-DsNYpGlO3yqEz8LitpKNn/ICAD4Os2ooCEL+bDp8Tr9I2FaUNG0MSJYig2/C
-//lvwfefbG5t7tOgCHDu8zeJyNTHPIaNjoKtJ7tP9BdVViIdjyqYnYT05WxC
-eP5bbyfY2+sFO1u7vYPeAf0kpmGS9vmUQP1zTHCVAFYXcGYsCAIeDhGMqGTs
-epJILmciSkaGxglslsdVJCQPlUxMjUzwYShFzGHQsYiAekWYJj/DF6cx8miU
-iELyDRAq2e6y11ma3Ao+zWXJc2Bi0VgLeFDi5oAGh/+xK8+KZA6isjmrhmkS
-8Vux4LMwgYWBuzwqFrMyHxfhbAK/yWSchWVVCFgLpAD3KGFxFidjIUtYuuCz
-NExgzVDKu7yIufiAu49FF0UfliwEjwUuA3uXOR/iRwexDp8BSokEvpUdf3OQ
-9gWfiwKwDoep6CB4DCDJ0zl+5klNki5j3wAo4kM4neFIQjsKM+AQECgp+SyX
-MsFJZc5AtoEDCMwirwrFSx5GJAMdfno54FIUsG+Hf392cWE/iDLq8kqCngPT
-ALcOvwMgJ7RNMp0V+VzwIbABxoTDJAWJI3pKrXJdJRfTJI5T0Mcv+KkWAqVa
-Z2G2wK9EkQkAt8hBq/JU8kL8VCVAw9DTUoCmO+4CACLjd4JHExHd8iVk+F0C
-4IQAEKwKusUQHsOojp3tLI304VdXz/kkR+7S/FpKQAaAyGZaTcY7MZRJCeZA
-UefVTGSnx2BeskxEJeD99mOi/G5jUpYz2d/cvLu7697tdEHdN68vN8nq5YXY
-bJMcOQxHKSz5JASaAz55lADssRFsgpWQRd6AxFUo+COA3acioFaAYAipZRVH
-j6qMOALLAuUKAdIdCTRjNN9QUm4aMpIKgF2ENT1KMSBFJFDCaNmWS+QWHy6Q
-xXOkVpSjHKQ8HylxBEi6XGu2UmoXbVmBxAFoFhAG28f5FFWQPncUKnEOdr+s
-pYdrBnBliVE4EZ8IvEJJEg3EUtyDLaddtFqCv71KUJ2aHgLHGkfCX4YLAHED
-DU+DjcUoCkSclHlB7ISP+J9eb3u7OymnaRtNElAGfAyYbNRNNioAAyDq7Spe
-AYLL6tHlpyXpuGwoOW/N0grls9Vcp7aOaIZzJj6A8UHE7aIdZA8YqbyapZoi
-9ywyKvKpGjKD4UawLIAft/8YISjT7FvvLv/HN2mnmYLLQ69D5CBkojRB1ZmE
-kr4DORco6LSZkfwUIcFl7SwF3ppZl+QARLGasmEqc5e8+Qy/BrmX1WwGIQpJ
-1tsb61T4oBCkXjCRb9wM1tuieRRAfBUGU4gd0mC7+2QTPDBMAA7NwCkBb8AP
-gjyEw7wqAVZZDd+D+etYlUX17HCM0RCZYVKUkw4GJmATMzlJZsAO4HS+IGMD
-EhhiADUDt9ABmZgOQfthEHI5ZFFaDckWo9NQRkICz1E+yRaRwepyhA7tZrmY
-aW9qnHMMVrG8E2DIT6WsYOkOf56nMf2BrFAEQsfKNYvZg1l8M9Brfip3YYLZ
-F5hrgpsaxX+k4AYdeCNwIw9LdhP/QpRKHf+v0m6EueUlBy1a1Le1RsaF8kkQ
-SEVFMhSKcgmaw1D9YtgZekwhS+3QnJwmuA6G0xu7O4YH4PiCkpeG4T/R2Css
-184nw663DEZA+tJbG+caOqINwOBPGnKNwB7kd2iQICIELWTsr3/9Kxv0Qe1/
-qoApTUNsFmJXfbIOA5Mj4RxtLmawBw14VZWgUkra1iyDuxGEHjZROCNjgUAW
-YSZHoijIaCpn+rO26mRIwEZiCpGNwZ5IAU703cYX3rjAjAvUuHZbE0UzCfZD
-1w1mBbiugmaKFWJwMTH4U2XP0BapUCzJYkKDjDgYGzB7clRBQKGwhcWPpDXZ
-PEV/LZX+1jhq6yjVsihY48JYe/oK+DRKtKGEHzraa9TS7egSM+p+/fLKekIA
-47gqjDs19O5Y57qCjImsIQlwHUUPZRpXK7IS3SNvvVOz3hWRmymndY/8KqDe
-3svcTw11vtCqG+x0e92tNku0x0eHEItRkimE3r7ZGSj5hWiXB/Tn1SIrww/3
-hcZb4IS+wD8kDW0rQwv5FAZ7gcgwzY39ndjby28GO4cHexjBEWLb3a1PQQbn
-WGRgDgrtiYpN7lcDrcIA5r/sHIE1hv/+ee/sdiQuXk8+vLzZi852e9H4x97w
-2TQ7ia/Ppztvjke9sLib7N5e7sTPd7eOee9ysH/5vvfN4LXY3Tl6s3h58v6H
-o/HsMp6F5d334cl57/a6l82OXi4qeRcmZW+6c5TsvriYvTn6Wt5UP/24uB59
-8+z22Ys3CyGGh9/Nv38zPvluMlHqDhLjmw6mCzf1V9ouyYaNgmBiGpYaw9ZX
-Lf5VlkPU/5S3uvB3mUA8XgKJ4POf4TPE2ukU/n7aUvu+AYcjYHLA/0PP+w9+
-9vrqGjMWSNqyBCyeJmKXBtULugNfn59+z+1PaqTayh1FboC+rhmnAf9qf/9w
-d29n6+Cw9+Rwb2+vd7gDDN7f293q9fZ29w53e39+H85DVXX6MJ3NAmWpnnrk
-s4bWUs988ynE+wrk4yn/yiry02US4QgXo3VJJeWUbVfswYN/HgVTxK2BdMFB
-M7jXs1pnBxnPZqt3vEn/f2zVUCFZHY4IB7Uk04FIgn4BxEsznKgS5SrkAGsP
-nCkaGqVsFZjDsaovCif/xJF/kmsSe99Z0k5g8VCYGvI1dwC30URg8gezD7rX
-BBwf/hnnUTWlOhSmTkVM4OTKGxj5oemVWtONiO8To8LO2SQRuhSg1ELD4BQN
-6lzShUbnZKrW4VcSYMWWj2chUvpDJRQeGk0V8IO7j6qBvy3h8doy7KNIdBSY
-C/phSYA8axGOIeSGSK9sGmHc8sasEq4YwMmKUmaBEdQQA+JCBFj9+fhca0FN
-AFbmOU/zbGyAhCSgxJRAfxxViIEuxO3yaZJVpZB1YmCCZVVEw6JMI5hP0hSL
-zSDWyjLGooSsHU0HyqoxG7SWk3ag7I9AwgEMyAJjPddHxcad3qlBu00q59Ha
-G2nUFwYSCF0yT5gCZWU1TYOq/FCqow3eWnO0YWOoFpuFBQhLAglsyS90EDjQ
-aQmkPuYrrr7zx+Nazlhaet24K2UI7Dj1efX+zli7/6rxgJkpM9Bgt+7QYj42
-QfDUX77PzyEZwyqWroCi4WzMefq0RrEPgSnsjfXUJGP19zDInwULQ2I5AHYO
-w0jVyACw+5fGASDMgqdiVKJMuT+6juerbhc+drtP74fg2zcvmgC4xvmjwHiD
-1wL2C2/dlotWn7devbhodXgrKub46STe3t3dOsRvPuDnbhf/jPWf/Fcf9lo6
-DIlJQHxDxupRDWhfJrI0qaJb8btnE5GqFKUxpZlqLO9pVtCHbQ2FXiaUGf/V
-1sGTw93tg739g93ezvbO7pN9DN22ewd7B3tbu3v72+tCt7VoN0wJmdRObR07
-KohsL1PBLODhYC0NWUFr+BVGRTKeLPEeBLFO55ri6OLuGzKqXtqJ7fUkWyn0
-fHv6ba/8Ot97vmp7SyfHLvRtIIEq5vywAsrak2tX4PjL9bKg3dXDqGgml0Ul
-/KWXjJRrSwxgzB/VgGhDTGflon3/uib5tovfv6bJHUX87whzDclaAR3kGDuX
-pqLWUGcVtvKNV7rw224WsWiDm4HcvLloemSVL9CphK0b6+MJ+FU75GbZoFHW
-U8FaGMfSKznfV3FmdcWVBlyAI4YBKo6DIRd41vuRkhzf0HgBWmbj9sNqbcDe
-D+D9KFyElU3dyon52p+3HKeA9Yaor35rzU6h0VhW1bO9dfk0XGDSVoiZoPRi
-WqVlgpUMMnOK2DeDwIOOdmiu/diyAH6eR91yMRO/f5HAbOyOwy90NX6VxK7K
-qteI9jGWDc/wsITPt7tPIOG4hrXlujxj+8n27ublySBYOmcJ8Kcnu1u7m18g
-dLL9NylxdI/FuBCixuBjNQ8lH37VoyFmn1L3mM9WlDrmPvPW2IZHMWOdvXkU
-f+rLGsHMXbS9xJBfGAd5xxNAMLAQv72lazWtFXtncjOqMdmcb7c6nzpWn53S
-JJjzDie2EgoXqyLrV1US93cO9w92er1RcLB7uBf0op0wCOGr4GAUhcNw5/DJ
-TrRLO7ZQ+BDSVk06l3IttXxNgpr+OOsXBbTaHYKOPvj+/kOrPS21iIWkKbOt
-dzDg13fs14dUb9ZJl5G/37FA06HjTX3IYUovyqonyiO5c1CqHl1MkQAnLnYm
-IA6JH1FNMQt9vJBiRj6qhjIrcjDThoW+3XErKA2PtaoO0nRqD6uiNGd/rjrK
-8k6tCR0ntxB3kKhyYQKZJe9eRpO6MLJyKVKhhyxUqIBHYCyhvKRHe4fAfvS5
-phako5JVUehvqAutXrfDh1WSuvEceTMzKcBJeLFUth9ZV+p8UlGpw5qiYgeC
-T5nP/BVXRG2N4fXKXf6ISpVNCP4oWf1Rsvo7lKwg07w3RUWPfy9+NwMPvdUR
-IC1zL6b3zLsH6W5XXTPC//2ViSz+owT3RwnujxKcLcF9qnbfL4rNSslKpfx0
-gfzkXHcldLXdaXjzZTnVFQYrsEu2bKXQNty+uoSO4W6N9zqxnc9QYFZuY3na
-CCpuLtofoWdz2ftE5aGwe8JizOf/05qtuU5UXzOEBPYKgl6+1dex1OpwAmsn
-KhjX9x7p5hjdSVBPTBKg97DEpEjfvlIPUdY8C4BoGJkVBHzw8vTk/JoPwGt8
-fTR44TOABuH/0R9PBwZEWL+PswMszoRVWp7Ts6asStOOfuKEf9OssaBfN9o8
-eMofcw+EVhs8/ZTNH7WNZcm2ZUkzvrrQ4dILsKwP44wTaKlU7Q5yIZdRDO0u
-PZowVkfewywHMLaCT85uPsmuxQcQ2Q2YDnlISR9chuHPp9msKmGAYtwvVhRa
-t48r8Hzx4IpQx9nbiT/rb5txaP0LxaMnw5u9YHIzPU6Od45fXL8ey9H21fv3
-2av98klZ3p1Nrsrvdr9dDL6Z3LlzCcv5s/fPT3/8+ccPVzuXvWke3Dw5/cvV
-/vbrl98f/xRun57/dHtUVvOfvn19fqAqV78aMb14AO0Ndf9+tF1F2XV0/e1U
-/c00tTq509epIQqllvLGAYa5Y0w6aCoMjYMVKgMMF6bwZ54HSaHOhsJa+7p0
-JGU/Mqznal3GV6deLIBLmOK81tirk8ubk0sClnS33whxvurtbu30dnd3env7
-u/vb+wdb23sQyezubx1uH+7A/x+sC1wsSXrWTF3ZkI0Ioe0RGhTZuJ/XLHP6
-tU3P2ih5LtQpUl1ZpadVdr3fjEaf9/IP2eT4/dd70Y/nL34YvhxeRNNZ+GKc
-TOPzg4Phi97uyfws+flsr9z6/uTbg7Ovf8gW07NkMEuqnZ9uTt5/92w7LG+K
-YXh0Gb2YPb9Mzor58ZF4URNo1xII2KClxz/U0JSyl/tMWVaNJd9vSkXm4rd+
-7hk5RTHfSONexPx+vRmOeNxVyL85sfasgq2OxFwVM27N0MaWdBU9/yQtRZcU
-4p54Q/mwq3V+/jH0WwpO6FUphSePWRY85OeIba7WxjafA+fPExPtW/FYceyi
-flDHC9ruLh3FLIkGmmH14tmYJDtEh7Fh44iAzjdqQ+weKmRCh7u4jnvO0RRA
-+qRQ8Mza30rBPp+9pDTK8uPA8mMpwdFPo/2HIr4Cx5CvFFO6EGLtm/qzVSdA
-MKmFnQ6oaL7msSj603t0fDn5chWdegl466EWPE7mPbQ/33IixrVUqpFIi1bc
-56Mw1QYe1PifDqPHreVTggTU8tcHO360HaqfZQ/wrk+sG3c0T5jCOMYXq8YK
-mTn6NAytk/N40dZMWePcxDj7coLxDz3ATqS91p/lYIycxg+M3iKLosv5KWb5
-aK3wQfvV81evXx6rd7t4QQnMugcVizxMvOOv+r04vmrC51bv1NutNzsDtr7n
-gP9i+C0iudXdekeg664IsAizV8BUTae+CJbQ8/vYbrWudO5cunh7MwiOj66P
-grNXxycv8dbEO3XLyPaCwddpYP3KiX0/45xYOUR32ghI7QwkPYmTi+kUj8Ij
-5ryNW7jvWnEYPV+cJqV+LmgftmIRxH4KGNA7mQPZ5mFaQZTPSXxEmoA5pI3x
-3b561BGlMAm5ot97Iq94kchbyfQVEO48oF35FLbuanDx8uj0nFNV59nJ1XXA
-zo4hPlUPoSF8SqR9TaN2AzdY3/fgssSj+EUi0hjlj00B1AJ/oFqC2woC33xM
-se9IjugYMtqLC1of9FY18WMxgxwInxw3bjLUmsPwjJqu1CV4qSzMRF7JFJLc
-jbDd8PlhOsZGDBN8YcoQw0pdvKCH2kk2EqFtZgD+cSy+5BvDth8DuCdT3nl9
-TbAYpkVt68EKc0aodU09P0Rx116vEABcRhy2suZX0O0xLIZOgWH7LM9HgHcA
-OhRMq7IK06D9JXVs2Yjbq7yiPbtOJK8fd1KUnA9xVdtsgmECKejtKL39BKLD
-jvSQ1TNe6nDUB083wEDAA6BiEAb2JSu+uz0dqSf0xGkpXBM4CpNUIvGRox3f
-Uo6rEPSoFNh+oykk+OAeZLKKBGmVVZpYa0y6UJp/WUOmapBos+0bW8yEs0yk
-91uDOBeK6UkpRTqq3wnX5lORaaPxflfdvzCvfDX5nUuuTi+LQC9Bz4Cx2VII
-OI5K0ayatslM2HTRGBr0C5KZ5HDtw906AhYhrFzWRp5277IjkJhwLmQMHAIW
-cRxnMncnJDYdLPQNzzTJbkPdI6MRYIOAgkVKY/teVbmuuhoJti9xol9Gz9ns
-u/ZokktUNBu1mjuY9zKMbkOdv7q2lkgtmvEqszrAIsV611Nq50fTVZcIelyN
-bu+g19t7p3pBMBQpAFtVN7U+KJkg5cFOHk1BIHdtJIENxSgvzIO+0vYFcXBx
-niLZ2u5aT+nrohkW+IKD91Dabdergj109BZ/EeSzyTJGACh2s+jy9Xemgfsm
-BcKylYQZc8G1wU9BvIBXQ7xmxP/3P/9rdYMOpht0YA+IIh9BuKRQdO4X0mTy
-LdRkw3hWdRsTTeoaYSaam9t13rt2HFdl4HzTBb5Ub/JKq4KyHjP4xI/KEhIG
-uerFsr3HE+oLXUr/6utZ1FdAzGF5VqjVQrWaVmQ1a/kW4PL7e+QLA/nHS14z
-Kao4D4AYMVjyrMLGJWZy7qOuLy8DW5hTUeTNy4PY24g4ie2YIgpWwGqnqQIQ
-7At2MIkZJnTaiGBPjLl7Ew2cdJzf1ZsXAluzkOn3LqXfoVI799/CFOxEvFA+
-NYwiMQMCAIhHXkONQlSS7DCCg/2YrOvADnC3CNIUBiFfzV0yIncsRgJ3ghRz
-NBIEszYfNeTaoksdBGlrUCxoSDDMUVpiZapQQhSi3aULmGsQ5grhaPnyHksp
-DahKqfwJieIYzGCs6RAi5Gq7jukzdnkyeHV2dnJ+fHLMdIkGeZXlfIpWhWLQ
-+oYfN8l5lOYgdSYTGEIossiiCUgTRe7zJOTn1xfKwnHHwjn9GlSvLTBNqKZz
-VDxYkctbcaeOkKIQOAQuYwyGAKPChuuS+jxQUYn8doclI6I4WA8j9XeoiybH
-N6jDziAj0jJVfJjlUnWi+FrbW2xyJMmlLhB+smK6iLr2rQKzLHJveH+KJbV0
-1e5CyaDaSIsogE6RLMxMlQdQwFGMg71ravkjyTJFIsxXwixIsgBGBmfUyc6Y
-IFpGBy3864SOCoAEQpHeOQFUFXfrR/GtSpq4xWLww9j1x2zDVMc8SFoRJxR9
-EFrVoQozSJRFdTxRDSW48aoUfjkfE0/08hmGZC4gqq8KfRs6gQgZELsXkpeR
-emOtrdEoT+kyZh6EC1D+ssqshNgAF308Q3dNIIZkzlPMzBKTgg/BTajCHPYH
-IYKiIczr6BGiKGbixw5PGnGBVh2QxbyY5XSJIqQAQYcSfKgZQvkchQ27h9uH
-76gDmluxNykT9vPUrs2JgDS5Yq5tLbZeIryUd0SmqAyk7pKjkq0wow5O2rrR
-KRAfYZ5mwz6rAQhpszpKZU6TtVOikkT0nAkPCIFQA50Gk7zPG1d91W7aI4MD
-EZTY1hu6l3zN0vD3gsQri5t8Z2QqKEpSOZtzVmTtaqd2NeEQn4C58sAwqwEr
-KGlnpVbaEl7pLEpNpyxqRUOo9eGl9RbgWlNkpW74V8/v68BEn4CDaFKAXjdt
-8U538AZx6Xy2CQdTveFWzdRrD8UiByTukA0qw0PIbLZZRzlKVvC9GjnWKRic
-KIGk2WxJmo4uHjM/a8EhK8nzW+8qgGrwhf3k0NPp8N3lCpDalxRl24RfUCC1
-wRxwpPTcXKYPWVlUdAG8/pUSVNtQEbO92j3RaIAJEoVCSwz7lLi6Ic6YLADx
-IqzdJyPmQlbbZhVxwNRjYTrI6eadKioDMuqcnDWycCfOhg2PfkChBhVsiph2
-8Pgl0/2elPluLIdX1E3A6/ZDpMgVQ/u8Gk8YmbmkDi+I/lE+09WdZlM/pSKD
-SZ5LoxvXSFzdgMpec5brT1ps3lcbFXXK69wCtOUilQIqWV1/+NKQ1rxgTtHF
-r7XoKFEXVrBsWcVVqu8K2cKKdlSOH1OeAJNN0ykxprsxtZUOdQWK1eUsncVj
-/aYYJqBcxcKAK3mcyKiSUocTpvLJTC+og+4WVToKoUq4aEfIE7p9QwkbcNCx
-qgQC2GDmo7JG1/dOurgxhoUywndKL22+1HxiiVsNJpGXdIfXJ6HMR+VdWGjT
-jM93GlHM3BxXUVkaxUN7m0zfbJ+FIMKmTZ5j0igB1g1g7HZ1LOrlZ2AbgI70
-Us/afIVO3UEtKVWxqE6qdU2l0A+VYr+cZreqUVCiSf4NxKKu0zgVU5Oow4au
-RJgsug4CmV4fUMPisLHm6lq1zmgcPFTaQlkB5QZsDVdVvOdY8QJMM+4AIkGP
-q+inMbYed/hUV9Ag8UzEndLsF4DApZjnprXkZV7qv0y/EvU4C++vmzIrO2q0
-EKWoUFZoODRNnKKxiY+mUxHjtRdIV6uZNf0eOwB9gC3H5rsFLxASHRJSigZ5
-pvdATBFNJa1KaSguxQ9015jSTqC0yQqYK4DTnHbMRy6o5lRF/6gEx9AGpXEG
-DqkU0nfU6siYGPUlCUVcqQMTp2bNNIvUQQ+uopsYGaXxyuphRDuPYNkJn+Vg
-5hZd5iUW6JkwHMXQGnOUBOnKKQyEub6Uq3MhI4tYRCz1yXXdG4mcGBXG/epz
-6P7I3PMMmaRK+UdgB6nCRel2jj1QIWPQcGDhErsPOjIeJ8DNgpwB8ZIWUSFi
-Uqw6EOuyMz3VFIvMNbQWVx2/1NO2uudonKBRtMuyuomzzlZUb4BMJIRPzWMw
-u1rw4MOXZF9rt+LekKyjbfTfsXqHaRhJ2GIAAiYsHGIxJnMr0JwbfFSAohxC
-TBqMhbEYQq14jKymS5dTiCYLV8UN+A7YGCnaxrs8nAO/dM9g5tUYubEGEVUY
-MuVPkgy8IixeRXTrv4aPog0MmY/Pr/iGR/07MWy1lbYluqMTjFFOEyAsRmEk
-II+3R/NgHdDeJbqTMZb2k/cwVpVtjWxrGa2rTnhUgZEM7JGa9ygrDCdhqSfP
-QHFISK0d9SOah9jIDuKrwzTVK9K4bdvCcb+7oyzpeZ4Fl2JWoTC4yUJd8KH+
-k+tq8LrC7ZSDgDVMybesuw3oe/5h83ZfwxzRVb8LE/evO7cyHgsD4LTC6g3o
-jC6F4pUqx8LjHutOuXQz4BoXPN9SYZRkAkHIIsG91l/uyk6CF1vLqjgG0mci
-hRJj2iL/QBmIrpcgDbhp+tfMZvXJKTPvTDtrAjBeB2DbnTqUyPD0paj5uaoJ
-xpxOLv3IX8ebJDIMF3HXoLs2WEpMqISXU+UBa+SRbYdvxBi7iqPZDotoggXV
-NSd4sn4ZbQ63Gk9e5gCh15QV1K1uVKsKm+7x0+rUyOSrhosmja1LbL59xLgU
-xd482Q75Ct/NUKeFDmXq2z018C3vFTiyrdkusKtuV2jonH7+GhX0yPVRHci2
-Pq3DmiqJ9YL5F5EQVqIOeceqiIQ9c7aVJtcVM8dYoZEHhlK9v3G/SXlxE7/P
-pC/2jJ4PY1EMbz3RMQYKrcK8w/1o2xwT+rWJuuMwiIDzDIAeHupXpUtH7D6v
-C2q8bfxUjXUE3tRsy1bZEcxvskaR0L2C2fCczKvl6XtdvsQgiysYkS4HiaDS
-Kn6MnXiRCFJ3RFgha3RgRJdMzMsVG3QjT/S/2bDsWzteiGXLGEshueq1oGjt
-/VsY1FYBc7ZMUJoKc2RFZUJ7fdcckzkXH2rhGwpKvEkmsQvAVZWUdOw2FSGG
-tdKcNoF9LmLK0yyLpznmupJvPL86k+0O00KVjQO5AM2bBrY0RFMUh/AqR4il
-YKypZOSvcIBOApkZIqR/fhZycwoFjJhNIKJAE3zhUsKErhCJqyXIElObd11N
-PF1KSIlatfdg7osXKkJjpFFrOAX7YknqypxVmXNzkKo6dAsLkERTO4JwVpp6
-oH8H5ZV/wnpiTlg/5RDWu67kHAqxupu4yZ8X/dpFwhq6x4TUtTQ0LnehNFXz
-mJl/OQKxUxWiVR01mubTjQSYq1Zfepsvd3twKrXM99hkZGmyCPGfr7BntH/S
-x4OFe9NAMsJHz8hy9w4RxhfAP4q1qG5HzS9Qv+MvdZBjnE89idpBuHVk+qLu
-GLG2U4SXT1lt9u80AdBSXcXWbgzvpUalgcqBQzpl55XhqyaFqkwqb9Bh6tCL
-Cg7O0Tbdw1HjlVBTN19Tvw3NdJX5qsroHRitCV6XlaqBlIOF3rjOWPB6Ex0O
-mFvxLjmVe4Slv0lINjtaam1coikL3kEFYU1eSK5qHfBrJlDH0CGYi8/KipmS
-Gv47LwlpkrJx0zDGZys5nlImlJBXWb0GRm8pJfKIorlPwPAfX8OeTmSqVVOG
-ChIm2F5VvYhgNxfyofcEHnSVCf9FKd8f6KYe9pYaRIG5xL7uiQ5TUD7mYUH1
-SwRb6sKh7pvU8C99xv7V+9clYjHN6R9bIxeHURykMhB/9vlb0wJnDFahGuK/
-irY5A9UUtwKCiGKzvr6tlgpwqbpxzkNmtQ1Q9tb244HSte0HAuXMskCl4MFT
-3nqO/44df4PXjVo+hA8BixZ7KFT1JATKlxD7j+q41zLX/UtHD4EUG7/YiQ8A
-1puH8Dr/WhHfsP/Ey3Uyhj/b/kOtz42D87DgARg4syz8jrr8XZDQ2lLShg/F
-xZv8EZSuphAR/Y4YSdzvNyJEc5v44L8ZBjbRwQjM4u+KEe73WzEiWBsYuYdw
-/9Ro/R8Okys8ZnUAAA==
+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
+o/U/vKm0hBd3AAA=
 
 -->
 
