@@ -1435,7 +1435,10 @@ the "DID-CHALLENGE" mechanism.<a href="#section-3-1" class="pilcrow">¶</a></p>
         <h3 id="name-the-authentication-exchange">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-the-authentication-exchange" class="section-name selfRef">The Authentication Exchange</a>
         </h3>
-<p id="section-3.1-1">The "DID-CHALLENGE" mechanism is a server-first mechanism.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">The "DID-CHALLENGE" mechanism is a server-first mechanism: the
+server sends the first piece of authentication data (see <a href="#did-challenge" class="auto internal xref">Section 3.3</a>)
+without waiting for any initial client message beyond
+the mechanism selection.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">The exchange consists of the following steps:<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3.1-3">
 <pre>
@@ -1445,11 +1448,20 @@ C: DID Response
 S: Outcome of authentication exchange
 </pre><a href="#section-3.1-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3.1-4">The mechanism is capable of transferring authorization identity strings (see <a href="#authorization-identity-string" class="auto internal xref">Section 3.2</a>).<a href="#section-3.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.1-5">The server is not expected to provide additional data when indicating a successful outcome.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.1-6">As security layers, the mechanism supports data integrity and data confidentiality, using DID-based signatures,
-and the TLS protocol.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
-<p id="section-3.1-7">During the exchange, the authorization identity is integrity-protected by a cryptographic signature.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">The mechanism is capable of transferring an authorization identity string (see <a href="#authorization-identity-string" class="auto internal xref">Section 3.2</a>),
+which the client MUST include in the DID Response (see <a href="#did-response" class="auto internal xref">Section 3.4</a>).<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">The server is not expected to provide additional data when indicating a successful outcome.
+On failure, the server MUST terminate the exchange and SHOULD provide an appropriate error
+indication to the client in accordance with the enclosing protocol's SASL profile.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">As security layers, the mechanism provides authentication and integrity protection of
+the authorization identity during the exchange, by means of a
+cryptographic signature over the server-generated challenge (see
+<a href="#authorization-identity-string" class="auto internal xref">Section 3.2</a>). It does not provide a general-purpose security
+layer over the application data stream after authentication
+completes; confidentiality and integrity of post-authentication
+traffic MUST be provided by the underlying transport, such as (<a href="https://www.rfc-editor.org/rfc/rfc8446.html">RFC8446</a>).<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1-7">The use of TLS is therefore strongly RECOMMENDED whenever this
+mechanism is employed (see <a href="#requirement-for-a-confidential-channel" class="auto internal xref">Section 8.2</a>).<a href="#section-3.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authorization-identity-string">

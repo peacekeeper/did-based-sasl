@@ -138,7 +138,10 @@ Sabadello                     Informational                     [Page 2]
 
 3.1.  The Authentication Exchange
 
-   The "DID-CHALLENGE" mechanism is a server-first mechanism.
+   The "DID-CHALLENGE" mechanism is a server-first mechanism: the server
+   sends the first piece of authentication data (see Section 3.3)
+   without waiting for any initial client message beyond the mechanism
+   selection.
 
    The exchange consists of the following steps:
 
@@ -147,21 +150,18 @@ Sabadello                     Informational                     [Page 2]
    C: DID Response
    S: Outcome of authentication exchange
 
-   The mechanism is capable of transferring authorization identity
-   strings (see Section 3.2).
+   The mechanism is capable of transferring an authorization identity
+   string (see Section 3.2), which the client MUST include in the DID
+   Response (see Section 3.4).
 
    The server is not expected to provide additional data when indicating
-   a successful outcome.
+   a successful outcome.  On failure, the server MUST terminate the
+   exchange and SHOULD provide an appropriate error indication to the
+   client in accordance with the enclosing protocol's SASL profile.
 
-   As security layers, the mechanism supports data integrity and data
-   confidentiality, using DID-based signatures, and the TLS protocol.
-
-   During the exchange, the authorization identity is integrity-
-   protected by a cryptographic signature.
-
-
-
-
+   As security layers, the mechanism provides authentication and
+   integrity protection of the authorization identity during the
+   exchange, by means of a cryptographic signature over the server-
 
 
 
@@ -169,6 +169,15 @@ Sabadello                     Informational                     [Page 3]
 
                            did-challenge-sasl                 March 2026
 
+
+   generated challenge (see Section 3.2).  It does not provide a
+   general-purpose security layer over the application data stream after
+   authentication completes; confidentiality and integrity of post-
+   authentication traffic MUST be provided by the underlying transport,
+   such as (RFC8446 (https://www.rfc-editor.org/rfc/rfc8446.html)).
+
+   The use of TLS is therefore strongly RECOMMENDED whenever this
+   mechanism is employed (see Section 8.2).
 
 3.2.  Authorization Identity String
 
@@ -208,6 +217,15 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
 
    Where:
 
+
+
+
+
+Sabadello                     Informational                     [Page 4]
+
+                           did-challenge-sasl                 March 2026
+
+
    *  <did> MUST be a Decentralized Identifier (DID) as defined in W3C
       DIDs v1.1 - DID Syntax (https://www.w3.org/TR/did-1.1/#did-
       syntax).
@@ -217,14 +235,6 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEj
    Example:
 
 did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
-
-
-
-
-Sabadello                     Informational                     [Page 4]
-
-                           did-challenge-sasl                 March 2026
-
 
 3.5.  Verification
 
@@ -264,6 +274,14 @@ Sabadello                     Informational                     [Page 4]
                              │                                │              Network Connection         │                                       │                        │
                              │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ >│                        │
                              │                                │                                         │                                       │                        │
+
+
+
+Sabadello                     Informational                     [Page 5]
+
+                           did-challenge-sasl                 March 2026
+
+
                              │          Start login           │                                         │                                       │                        │
                              │───────────────────────────────>│                                         │                                       │                        │
                              │                                │                                         │                                       │                        │
@@ -274,14 +292,6 @@ Sabadello                     Informational                     [Page 4]
                              │───────────────────────────────>│                                         │                                       │                        │
                              │                                │                                         │                                       │                        │
                              │      ╔═══════════════════════╗ │                                         │                                       │                        │
-
-
-
-Sabadello                     Informational                     [Page 5]
-
-                           did-challenge-sasl                 March 2026
-
-
                              │      ║did%3Akey%3A<..did..> ░║ │                                         │                                       │                        │
                              │      ╚═══════════════════════╝ │                                         │                                       │                        │
                              │JWKCallback for DID private key │                                         │                                       │                        │
@@ -320,6 +330,14 @@ Sabadello                     Informational                     [Page 5]
                              │                                │ ║<..signature..> ░║                     │                                       │                        │
                              │                                │ ╚═════════════════╝                     │                                       │                        │
                              │                                │     DID Response (DID, signature)       │                                       │                        │
+
+
+
+Sabadello                     Informational                     [Page 6]
+
+                           did-challenge-sasl                 March 2026
+
+
                              │                                │────────────────────────────────────────>│                                       │                        │
                              │                                │                                         │                                       │                        │
                              │                       ╔════════╧═══════════════════════════════════════╗ │                                       │                        │
@@ -330,14 +348,6 @@ Sabadello                     Informational                     [Page 5]
                              │                                │                                         │                                       │                        │
                              │                                │                                         │               DID document with DID public key                 │
                              │                                │                                         │<───────────────────────────────────────────────────────────────│
-
-
-
-Sabadello                     Informational                     [Page 6]
-
-                           did-challenge-sasl                 March 2026
-
-
                              │                                │                                         │                                       │                        │
                              │                                │                                         ────┐                                   │                        │
                              │                                │                                             │ Verify DID Response with signature│                        │
@@ -375,6 +385,15 @@ Sabadello                     Informational                     [Page 6]
    The exchange consists of the following steps (expanding on
    Section 3):
 
+
+
+
+
+Sabadello                     Informational                     [Page 7]
+
+                           did-challenge-sasl                 March 2026
+
+
    C: Request authentication exchange
    S: DID Challenge
    C: DID Response
@@ -384,15 +403,6 @@ Sabadello                     Informational                     [Page 6]
 
    The steps VC/VP Challenge and VC/VP Response may be repeated multiple
    times.
-
-
-
-
-
-Sabadello                     Informational                     [Page 7]
-
-                           did-challenge-sasl                 March 2026
-
 
 5.2.  VC-VP Challenge
 
@@ -431,16 +441,6 @@ Sabadello                     Informational                     [Page 7]
       20250515/#verifiable-presentations).
 
    Example:
-
-
-
-
-
-
-
-
-
-
 
 
 

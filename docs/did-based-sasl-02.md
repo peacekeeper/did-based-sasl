@@ -76,7 +76,10 @@ the "DID-CHALLENGE" mechanism.
 
 ## The Authentication Exchange
 
-The "DID-CHALLENGE" mechanism is a server-first mechanism.
+The "DID-CHALLENGE" mechanism is a server-first mechanism: the
+server sends the first piece of authentication data (see [](#did-challenge))
+without waiting for any initial client message beyond
+the mechanism selection.
 
 The exchange consists of the following steps:
 
@@ -87,14 +90,23 @@ C: DID Response
 S: Outcome of authentication exchange
 ~~~
 
-The mechanism is capable of transferring authorization identity strings (see [](#authorization-identity-string)).
+The mechanism is capable of transferring an authorization identity string (see [](#authorization-identity-string)),
+which the client MUST include in the DID Response (see [](#did-response)).
 
 The server is not expected to provide additional data when indicating a successful outcome.
+On failure, the server MUST terminate the exchange and SHOULD provide an appropriate error
+indication to the client in accordance with the enclosing protocol's SASL profile.
 
-As security layers, the mechanism supports data integrity and data confidentiality, using DID-based signatures,
-and the TLS protocol.
+As security layers, the mechanism provides authentication and integrity protection of
+the authorization identity during the exchange, by means of a
+cryptographic signature over the server-generated challenge (see
+[](#authorization-identity-string)). It does not provide a general-purpose security
+layer over the application data stream after authentication
+completes; confidentiality and integrity of post-authentication
+traffic MUST be provided by the underlying transport, such as ([RFC8446](https://www.rfc-editor.org/rfc/rfc8446.html)).
 
-During the exchange, the authorization identity is integrity-protected by a cryptographic signature.
+The use of TLS is therefore strongly RECOMMENDED whenever this
+mechanism is employed (see [](#requirement-for-a-confidential-channel)).
 
 ## Authorization Identity String
 
