@@ -117,7 +117,7 @@ is a DID as defined by [W3C DIDs v1.1 - DID Syntax](https://www.w3.org/TR/did-1.
 Example authorization identity string:
 
 ~~~
-did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 ~~~
 
 ## DID Challenge
