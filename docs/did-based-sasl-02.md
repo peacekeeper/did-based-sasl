@@ -28,13 +28,17 @@ author:
 
 --- abstract
 
-This specification introduces a SASL mechanism based on Decentralized Identifiers (DIDs).
-Unlike most other SASL mechanisms, this one is based on private/public key pairs and cryptographic signatures, rather than
-digests or plain password exchange. DIDs are designed to be decentralized, persistent, cryptographically verifiable, and
-resolvable identifiers.
+This specification defines "DID-CHALLENGE", a mechanism for the Simple Authentication and
+Security Layer (SASL) based on Decentralized Identifiers (DIDs). The mechanism follows a
+server-first challenge/response pattern in which the client authenticates by producing a
+cryptographic signature over a server-generated challenge, using the private key associated
+with its DID. Unlike password-based SASL mechanisms, no shared secret is transmitted or
+stored on the server; authentication is grounded entirely in asymmetric cryptography and
+the verifiable binding between a DID and its associated key material.
 
-For example, this can make it possible to
-log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security.
+An optional extension adds support for Verifiable Credentials (VCs) and Verifiable
+Presentations (VPs), enabling attribute-based access control in addition to identity
+authentication.
 
 --- middle
 
