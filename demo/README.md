@@ -5,7 +5,7 @@
 This page shows an end-to-end demonstration of the DID-based SASL mechanism, integrated with
 an XMPP server and multiple XMPP clients.
 
-This demonstration uses the components listed [./](here), which contain further documentation.
+This demonstration uses the components listed [here](./), which contain further documentation.
 
 The demonstration is based on the work in this specification:
 
