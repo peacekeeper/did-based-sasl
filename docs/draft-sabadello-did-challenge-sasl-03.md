@@ -410,17 +410,17 @@ Example:
 
 ## Server Verification
 
-The signature in the Verifiable Presentation MUST be generated using the DID's associated private key.
-
-The server MUST perform the following verification steps, in addition to the steps in [](#verification).
+Upon receiving the VC/VP Response, the server MUST perform the verification steps listed below, in the order given.
+If any step fails, the server MUST immediately treat the exchange as an authentication failure, MUST NOT proceed
+to subsequent steps, and MUST terminate the authentication exchange with an appropriate error indication.
 
 - Parse the VC-VP Response. Verify that the VC-VP Response
 conforms to the grammar defined in [](#vc-vp-response). A response
 that does not conform MUST cause the server to abort the authentication
 exchange.
-- Verify the `nonce` and the `timestamp` following the same rules as in [](#did-response).
-- Verify that the "holder" property of the `VP` field matches the DID.
-- Verify that the "type" property of the `VP` field matches the requested `vc-type` field in the [](#vc-vp-response].
+- Verify the `nonce` and the `timestamp` following the same rules as in [](#server-verification).
+- Verify that the "holder" property of the `VP` field matches the `did` in [](#did-challenge).
+- Verify that the "type" property of the `VP` field matches the requested `vc-type` field in the [](#vc-vp-response).
 - Resolve the DID. Resolve the "holder" property of the `VP` field to a DID document
 using a trust valided DID resolver, in accordance with the [W3C DID Resolution v1.0](https://www.w3.org/TR/did-resolution/)
 specification. If resolution

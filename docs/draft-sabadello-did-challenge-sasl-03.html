@@ -1316,7 +1316,7 @@ authentication.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-vc-vp-response" class="internal xref">VC-VP Response</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
-                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-verification" class="internal xref">Verification</a></p>
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-server-verification-2" class="internal xref">Server Verification</a></p>
 </li>
             </ul>
 </li>
@@ -1648,7 +1648,7 @@ error indication.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 <li class="normal" id="section-3.6-2.1">
             <p id="section-3.6-2.1.1">Parse the DID Response. Verify that the DID Response
 conforms to the grammar defined in <a href="#did-response" class="auto internal xref">Section 3.4</a>. A response
-that does not conform MUST cause the client to abort the authentication
+that does not conform MUST cause the server to abort the authentication
 exchange.<a href="#section-3.6-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.6-2.2">
@@ -1945,22 +1945,22 @@ S: Outcome of authentication exchange
 <p id="section-5.2-1">The VC/VP Challenge follows the following format:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.2-2">
 <pre>
-"&lt;" &lt;nonce&gt; "." &lt;timestamp&gt; "." &lt;vc.type&gt; "@" &lt;realm&gt; "&gt;"
+"&lt;" nonce "." timestamp "." vc-type "@" realm "&gt;"
 </pre><a href="#section-5.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-5.2-3">Where:<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2-4.1">
-            <p id="section-5.2-4.1.1"><code>&lt;nonce&gt;</code> MUST be a unique string.<a href="#section-5.2-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-4.1.1">For <code>nonce</code>, the same rules apply as in <a href="#did-challenge" class="auto internal xref">Section 3.3</a>.<a href="#section-5.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-4.2">
-            <p id="section-5.2-4.2.1"><code>&lt;timestamp&gt;</code> MUST be a UNIX timestamp.<a href="#section-5.2-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-4.2.1">For <code>timestamp</code>, the same rules apply as in <a href="#did-challenge" class="auto internal xref">Section 3.3</a>.<a href="#section-5.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-4.3">
-            <p id="section-5.2-4.3.1"><code>&lt;vc.type&gt;</code> MUST be a type of a Verifiable Credential as defined in <a href="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types">W3C Verifiable Credentials Data Model v2.0 - Types</a>.<a href="#section-5.2-4.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-4.3.1">For <code>realm</code>, the same rules apply as in <a href="#did-challenge" class="auto internal xref">Section 3.3</a>.<a href="#section-5.2-4.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-4.4">
-            <p id="section-5.2-4.4.1"><code>&lt;realm&gt;</code> MUST be a SASL realm.<a href="#section-5.2-4.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-4.4.1"><code>vc-type</code> MUST be a type of a Verifiable Credential as defined in <a href="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types">W3C Verifiable Credentials Data Model v2.0 - Types</a>.<a href="#section-5.2-4.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-5.2-5">Example:<a href="#section-5.2-5" class="pilcrow">¶</a></p>
@@ -1979,13 +1979,13 @@ S: Outcome of authentication exchange
 <p id="section-5.3-1">The VC/VP Response follows the following format:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.3-2">
 <pre>
-&lt;vp&gt;
+vp
 </pre><a href="#section-5.3-2" class="pilcrow">¶</a>
 </div>
 <p id="section-5.3-3">Where:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-4.1">
-            <p id="section-5.3-4.1.1"><code>&lt;vp&gt;</code> MUST be a Verifiable Presentation as defined in <a href="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations">W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations</a>.<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-4.1.1"><code>vp</code> MUST be a Verifiable Presentation as defined in <a href="https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations">W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations</a>.<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-5.3-5">Example:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
@@ -2007,31 +2007,51 @@ S: Outcome of authentication exchange
 </div>
 </section>
 </div>
-<div id="verification">
+<div id="server-verification-1">
 <section id="section-5.4">
-        <h3 id="name-verification">
-<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-verification" class="section-name selfRef">Verification</a>
+        <h3 id="name-server-verification-2">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-server-verification-2" class="section-name selfRef">Server Verification</a>
         </h3>
-<p id="section-5.4-1">The signature in the Verifiable Presentation MUST be generated using the DID's associated private key.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
-<p id="section-5.4-2">The server MUST perform the following verification steps, in addition to the steps in <a href="#verification" class="auto internal xref">Section 5.4</a>.<a href="#section-5.4-2" class="pilcrow">¶</a></p>
+<p id="section-5.4-1">Upon receiving the VC/VP Response, the server MUST perform the verification steps listed below, in the order given.
+If any step fails, the server MUST immediately treat the exchange as an authentication failure, MUST NOT proceed
+to subsequent steps, and MUST terminate the authentication exchange with an appropriate error indication.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.4-3.1">
-            <p id="section-5.4-3.1.1">Retrieve the public keys from the DID document which have an "assertionMethod" verification relationship, according to <a href="https://www.w3.org/TR/did-1.1/#assertion">W3C DIDs v1.1 - Assertion</a>.<a href="#section-5.4-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.4-2.1">
+            <p id="section-5.4-2.1.1">Parse the VC-VP Response. Verify that the VC-VP Response
+conforms to the grammar defined in <a href="#vc-vp-response" class="auto internal xref">Section 5.3</a>. A response
+that does not conform MUST cause the server to abort the authentication
+exchange.<a href="#section-5.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.4-3.2">
-            <p id="section-5.4-3.2.1">Using the public keys from the DID document, verify the proof in the VC/VP Response against the VC/VP Challenge.<a href="#section-5.4-3.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.4-2.2">
+            <p id="section-5.4-2.2.1">Verify the <code>nonce</code> and the <code>timestamp</code> following the same rules as in <a href="#server-verification" class="auto internal xref">Section 3.6</a>.<a href="#section-5.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.4-3.3">
-            <p id="section-5.4-3.3.1">Verify that the VC/VP Challenge nonce has not been re-used.<a href="#section-5.4-3.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.4-2.3">
+            <p id="section-5.4-2.3.1">Verify that the "holder" property of the <code>VP</code> field matches the <code>did</code> in <a href="#did-challenge" class="auto internal xref">Section 3.3</a>.<a href="#section-5.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.4-3.4">
-            <p id="section-5.4-3.4.1">Verify that the VC/VP Challenge timestamp is not too long in the past or in the future, e.g. 5 minutes.<a href="#section-5.4-3.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.4-2.4">
+            <p id="section-5.4-2.4.1">Verify that the "type" property of the <code>VP</code> field matches the requested <code>vc-type</code> field in the <a href="#vc-vp-response" class="auto internal xref">Section 5.3</a>.<a href="#section-5.4-2.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.4-3.5">
-            <p id="section-5.4-3.5.1">Verify that the "holder" property of the VC/VP Response matches the DID.<a href="#section-5.4-3.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.4-2.5">
+            <p id="section-5.4-2.5.1">Resolve the DID. Resolve the "holder" property of the <code>VP</code> field to a DID document
+using a trust valided DID resolver, in accordance with the <a href="https://www.w3.org/TR/did-resolution/">W3C DID Resolution v1.0</a>
+specification. If resolution
+fails for any reason, or if the DID is deactivated, the
+server MUST treat this as an authentication failure.<a href="#section-5.4-2.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.4-3.6">
-            <p id="section-5.4-3.6.1">Verify that the "type" property of the VC/VP Response matches the requested VC type in the VC/VP Challenge.<a href="#section-5.4-3.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.4-2.6">
+            <p id="section-5.4-2.6.1">Retrieve assertion verification methods. From the
+resolved DID Document, retrieve all verification methods that
+have an "assertionMethod" verification relationship, in
+accordance with the <a href="https://www.w3.org/TR/did-1.1/#verification-relationships">W3C DIDs v1.1 - Verification Relationships</a>
+specification. If no
+such verification methods are present, the server MUST treat
+this as an authentication failure.<a href="#section-5.4-2.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.4-2.7">
+            <p id="section-5.4-2.7.1">Verify the signature. Decode and verify the "proof" property of the <code>VP</code> field
+in accordance with the <a href="https://www.w3.org/TR/vc-data-model/">W3C Verifiable Credentials Data Model v2.0</a> specification.
+If the signature cannot be verified, the server MUST
+treat this as an authentication failure.<a href="#section-5.4-2.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
