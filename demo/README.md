@@ -7,9 +7,7 @@ an XMPP server and multiple XMPP clients.
 
 This demonstration uses the components listed [here](./), which contain further documentation.
 
-The demonstration is based on the work in this specification:
-
-https://peacekeeper.github.io/did-based-sasl/draft-sabadello-did-challenge-sasl-00.html
+This demonstration is based on the work in this specification: https://peacekeeper.github.io/did-based-sasl/draft-sabadello-did-challenge-sasl-00.html
 
 ### Step 1
 
