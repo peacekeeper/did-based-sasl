@@ -4,9 +4,10 @@ coding: utf-8
 title: The DID-CHALLENGE SASL Mechanism
 abbrev: did-challenge-sasl
 docname: draft-sabadello-did-challenge-sasl-03
-category: info
+category: std
+submissionType: IETF
+ipr: trust200902
 date: 2026-05-11
-ipr: none
 
 area: Security
 wg: Common Authentication Technology Next Generation
