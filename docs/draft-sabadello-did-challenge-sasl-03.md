@@ -249,7 +249,7 @@ error indication.
 
 - Parse the DID Response. Verify that the DID Response
 conforms to the grammar defined in [](#did-response). A response
-that does not conform MUST cause the client to abort the authentication
+that does not conform MUST cause the server to abort the authentication
 exchange.
 - Extract the `did` and `signature` fields.
 - Verify the `nonce`. Verify that the nonce embedded in the DID
@@ -363,15 +363,15 @@ The steps VC/VP Challenge and VC/VP Response may be repeated multiple times.
 The VC/VP Challenge follows the following format:
 
 ~~~
-"<" <nonce> "." <timestamp> "." <vc.type> "@" <realm> ">"
+"<" nonce "." timestamp "." vc-type "@" realm ">"
 ~~~
 
 Where:
 
-- `<nonce>` MUST be a unique string.
-- `<timestamp>` MUST be a UNIX timestamp.
-- `<vc.type>` MUST be a type of a Verifiable Credential as defined in [W3C Verifiable Credentials Data Model v2.0 - Types](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types).
-- `<realm>` MUST be a SASL realm.
+- For `nonce`, the same rules apply as in [](#did-challenge).
+- For `timestamp`, the same rules apply as in [](#did-challenge).
+- For `realm`, the same rules apply as in [](#did-challenge).
+- `vc-type` MUST be a type of a Verifiable Credential as defined in [W3C Verifiable Credentials Data Model v2.0 - Types](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#types).
 
 Example:
 
@@ -384,12 +384,12 @@ Example:
 The VC/VP Response follows the following format:
 
 ~~~
-<vp>
+vp
 ~~~
 
 Where:
 
-- `<vp>` MUST be a Verifiable Presentation as defined in [W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations).
+- `vp` MUST be a Verifiable Presentation as defined in [W3C Verifiable Credentials Data Model v2.0 - Verifiable Presentations](https://www.w3.org/TR/2025/REC-vc-data-model-2.0-20250515/#verifiable-presentations).
 
 Example:
 
@@ -408,18 +408,36 @@ Example:
 }
 ~~~
 
-## Verification
+## Server Verification
 
 The signature in the Verifiable Presentation MUST be generated using the DID's associated private key.
 
 The server MUST perform the following verification steps, in addition to the steps in [](#verification).
 
-- Retrieve the public keys from the DID document which have an "assertionMethod" verification relationship, according to [W3C DIDs v1.1 - Assertion](https://www.w3.org/TR/did-1.1/#assertion).
-- Using the public keys from the DID document, verify the proof in the VC/VP Response against the VC/VP Challenge.
-- Verify that the VC/VP Challenge nonce has not been re-used.
-- Verify that the VC/VP Challenge timestamp is not too long in the past or in the future, e.g. 5 minutes.
-- Verify that the "holder" property of the VC/VP Response matches the DID.
-- Verify that the "type" property of the VC/VP Response matches the requested VC type in the VC/VP Challenge.
+- Parse the VC-VP Response. Verify that the VC-VP Response
+conforms to the grammar defined in [](#vc-vp-response). A response
+that does not conform MUST cause the server to abort the authentication
+exchange.
+- Verify the `nonce` and the `timestamp` following the same rules as in [](#did-response).
+- Verify that the "holder" property of the `VP` field matches the DID.
+- Verify that the "type" property of the `VP` field matches the requested `vc-type` field in the [](#vc-vp-response].
+- Resolve the DID. Resolve the "holder" property of the `VP` field to a DID document
+using a trust valided DID resolver, in accordance with the [W3C DID Resolution v1.0](https://www.w3.org/TR/did-resolution/)
+specification. If resolution
+fails for any reason, or if the DID is deactivated, the
+server MUST treat this as an authentication failure.
+- Retrieve assertion verification methods. From the
+resolved DID Document, retrieve all verification methods that
+have an "assertionMethod" verification relationship, in
+accordance with the [W3C DIDs v1.1 - Verification Relationships](https://www.w3.org/TR/did-1.1/#verification-relationships)
+specification. If no
+such verification methods are present, the server MUST treat
+this as an authentication failure.
+- Verify the signature. Decode and verify the "proof" property of the `VP` field
+in accordance with the [W3C Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/vc-data-model/) specification.
+If the signature cannot be verified, the server MUST
+treat this as an authentication failure.
+
 
 # (Optional) SASL Exchange with DIDs and VCs/VPs
 
