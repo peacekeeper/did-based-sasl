@@ -28,6 +28,8 @@ Rendered specification:
 
 https://peacekeeper.github.io/did-based-sasl/
 
+https://datatracker.ietf.org/doc/draft-sabadello-did-challenge-sasl/
+
 How to build the specification:
 
 ```shell
