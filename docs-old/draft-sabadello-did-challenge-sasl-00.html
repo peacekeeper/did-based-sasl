@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>The DID-CHALLENGE SASL Mechanism</title>
+<meta content="Markus Sabadello" name="author">
+<meta content="
+       This specification introduces a SASL mechanism based on Decentralized Identifiers (DIDs).
+Unlike most other SASL mechanisms, this one is based on private/public key pairs and cryptographic signatures, rather than
+digests or plain password exchange. DIDs are designed to be decentralized, persistent, cryptographically verifiable, and
+resolvable identifiers. 
+       For example, this can make it possible to
+log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security. 
+    " name="description">
+<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="draft-did-challenge-sasl-00" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.30.2
+    Python 3.13.9
+    ConfigArgParse 1.7
+    google-i18n-address 2.4.0
+    intervaltree 3.0.2
+    Jinja2 3.1.6
+    lxml 6.0.2
+    platformdirs 4.4.0
+    pycountry 24.6.1
+    pypdf 5.4.0
+    PyYAML 6.0.2
+    requests 2.32.5
+    setuptools 78.1.1
+    wcwidth 0.2.14
+    weasyprint 62.3
+-->
+<link href="draft-sabadello-did-challenge-sasl-00.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">/*
+
+  NOTE: Changes at the bottom of this file overrides some earlier settings.
+
+  Once the style has stabilized and has been adopted as an official RFC style,
+  this can be consolidated so that style settings occur only in one place, but
+  for now the contents of this file consists first of the initial CSS work as
+  provided to the RFC Formatter (xml2rfc) work, followed by itemized and
+  commented changes found necessary during the development of the v3
+  formatters.
+
+*/
+
+/* fonts */
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans'); /* Sans-serif */
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif'); /* Serif (print) */
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono'); /* Monospace */
+
+:root {
+  --font-sans: 'Noto Sans', Arial, Helvetica, sans-serif;
+  --font-serif: 'Noto Serif', 'Times', 'Times New Roman', serif;
+  --font-mono: 'Roboto Mono', Courier, 'Courier New', monospace;
+}
+
+@viewport {
+  zoom: 1.0;
+}
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+/* general and mobile first */
+html {
+}
+body {
+  max-width: 90%;
+  margin: 1.5em auto;
+  color: #222;
+  background-color: #fff;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  overflow-wrap: break-word;
+}
+.ears {
+  display: none;
+}
+
+/* headings */
+#title, h1, h2, h3, h4, h5, h6 {
+  margin: 1em 0 0.5em;
+  font-weight: bold;
+  line-height: 1.3;
+}
+#title {
+  clear: both;
+  border-bottom: 1px solid #ddd;
+  margin: 0 0 0.5em 0;
+  padding: 1em 0 0.5em;
+}
+.author {
+  padding-bottom: 4px;
+}
+h1 {
+  font-size: 26px;
+  margin: 1em 0;
+}
+h2 {
+  font-size: 22px;
+  margin-top: -20px;  /* provide offset for in-page anchors */
+  padding-top: 33px;
+}
+h3 {
+  font-size: 18px;
+  margin-top: -36px;  /* provide offset for in-page anchors */
+  padding-top: 42px;
+}
+h4 {
+  font-size: 16px;
+  margin-top: -36px;  /* provide offset for in-page anchors */
+  padding-top: 42px;
+}
+h5, h6 {
+  font-size: 14px;
+}
+#n-copyright-notice {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+/* general structure */
+p {
+  padding: 0;
+  margin: 0 0 1em 0;
+  text-align: left;
+}
+div, span {
+  position: relative;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 1em 1em 0;
+  margin-bottom: 1.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+@media print {
+  svg {
+    max-height: 850px;
+    max-width: 660px;
+  }
+}
+svg[font-family~="serif" i], svg [font-family~="serif" i] {
+  font-family: var(--font-serif);
+}
+svg[font-family~="sans-serif" i], svg [font-family~="sans-serif" i] {
+  font-family: var(--font-sans);
+}
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 1em 1em 0;
+  margin-bottom: 1.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  display: table;
+  border: none;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 1em 2em;
+}
+ol ol, ul ul, ol ul, ul ol {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+ul.ulBare, li.ulBare {
+  margin-left: 0em !important;
+}
+ul.compact, .ulCompact,
+ol.compact, .olCompact {
+  line-height: 100%;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+/* 
+dl.nohang > dt {
+  float: none;
+}
+*/
+dl > dd {
+  margin-bottom: .8em;
+  min-height: 1.3em;
+}
+dl.compact > dd, .dlCompact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+
+/* links */
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #22e; /* Arlen: WCAG 2019 */
+}
+a[href]:hover {
+  background-color: #f2f2f2;
+}
+figcaption a[href],
+a[href].selfRef {
+  color: #222;
+}
+/* XXX probably not this:
+a.selfRef:hover {
+  background-color: transparent;
+  cursor: default;
+} */
+
+/* Figures */
+tt, code, pre {
+  background-color: #f9f9f9;
+  font-family: var(--font-mono);
+}
+pre {
+  border: 1px solid #eee;
+  margin: 0;
+  padding: 1em;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption {
+  font-style: italic;
+  margin: 0 0 1em 0;
+}
+@media screen {
+  pre {
+    overflow-x: auto;
+    max-width: 100%;
+    max-width: calc(100% - 22px);
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 1.2em 2em;
+}
+blockquote {
+  background-color: #f9f9f9;
+  color: #111; /* Arlen: WCAG 2019 */
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin: 1em 0;
+}
+blockquote > *:last-child {
+  margin-bottom: 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+.xref {
+  overflow-wrap: normal;
+}
+
+/* tables */
+table {
+  width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  border: 1px solid #eee;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5em 0.75em;
+}
+th {
+  text-align: left;
+  background-color: #e9e9e9;
+}
+tr:nth-child(2n+1) > td {
+  background-color: #f5f5f5;
+}
+table caption {
+  font-style: italic;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+table p {
+  /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
+     be allowed within tables more generally, it would be far better to select on a class. */
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  color: #666; /* Arlen: AHDJ 2019 */
+  text-decoration: none;
+  visibility: hidden;
+  user-select: none;
+  -ms-user-select: none;
+  -o-user-select:none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+@media screen {
+  aside:hover > a.pilcrow,
+  p:hover > a.pilcrow,
+  blockquote:hover > a.pilcrow,
+  div:hover > a.pilcrow,
+  li:hover > a.pilcrow,
+  pre:hover > a.pilcrow {
+    visibility: visible;
+  }
+  a.pilcrow:hover {
+    background-color: transparent;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+.bcp14 {
+  font-variant: small-caps;
+}
+
+.role {
+  font-variant: all-small-caps;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: 0.9em;
+}
+#identifiers dt {
+  width: 3em;
+  clear: left;
+}
+#identifiers dd {
+  float: left;
+  margin-bottom: 0;
+}
+/* Fix PDF info block run off issue */
+@media print {
+  #identifiers dd {
+    max-width: 100%;
+  }
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #666; /* Arlen: WCAG 2019 */
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc  {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+nav.toc ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+nav.toc li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 7em;
+}
+.references dd {
+  margin-left: 8em;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.refSubseries {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+.index ul {
+  margin: 0 0 0 1em;
+  padding: 0;
+  list-style: none;
+}
+.index ul ul {
+  margin: 0;
+}
+.index li {
+  margin: 0;
+  text-indent: -2em;
+  padding-left: 2em;
+  padding-bottom: 5px;
+}
+.indexIndex {
+  margin: 0.5em 0 1em;
+}
+.index a {
+  font-weight: 700;
+}
+/* make the index two-column on all but the smallest screens */
+@media (min-width: 600px) {
+  .index ul {
+    -moz-column-count: 2;
+    -moz-column-gap: 20px;
+  }
+  .index ul ul {
+    -moz-column-count: 1;
+    -moz-column-gap: 0;
+  }
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  font-family: var(--font-sans);
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+
+/* temporary notes */
+.rfcEditorRemove::before {
+  position: absolute;
+  top: 0.2em;
+  right: 0.2em;
+  padding: 0.2em;
+  content: "The RFC Editor will remove this note";
+  color: #9e2a00; /* Arlen: WCAG 2019 */
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+}
+.rfcEditorRemove {
+  position: relative;
+  padding-top: 1.8em;
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+  border-radius: 3px;
+}
+.cref {
+  background-color: #ffd; /* Arlen: WCAG 2019 */
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 1023px) {
+  body {
+    padding-top: 2em;
+  }
+  #title {
+    padding: 1em 0;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  h2 {
+    font-size: 20px;
+    margin-top: -18px;  /* provide offset for in-page anchors */
+    padding-top: 38px;
+  }
+  #identifiers dd {
+    max-width: 60%;
+  }
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    background-color: inherit;
+    border-bottom: 1px solid #ccc;
+  }
+  #toc h2 {
+    margin: -1px 0 0 0;
+    padding: 4px 0 4px 6px;
+    padding-right: 1em;
+    min-width: 190px;
+    font-size: 1.1em;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 6px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 1024px) {
+  body {
+    max-width: 724px;
+    margin: 42px auto;
+    padding-left: 1.5em;
+    padding-right: 29em;
+  }
+  #toc {
+    position: fixed;
+    top: 42px;
+    right: 42px;
+    width: 25%;
+    margin: 0;
+    padding: 0 1em;
+    z-index: 1;
+  }
+  #toc h2 {
+    border-top: none;
+    border-bottom: 1px solid #ddd;
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 0;
+    overflow: auto;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  .breakable pre {
+    break-inside: auto;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+/* This is commented out here, as the string-set: doesn't
+   pass W3C validation currently */
+/*
+.ears thead .left {
+  string-set: ears-top-left content();
+}
+
+.ears thead .center {
+  string-set: ears-top-center content();
+}
+
+.ears thead .right {
+  string-set: ears-top-right content();
+}
+
+.ears tfoot .left {
+  string-set: ears-bottom-left content();
+}
+
+.ears tfoot .center {
+  string-set: ears-bottom-center content();
+}
+
+.ears tfoot .right {
+  string-set: ears-bottom-right content();
+}
+*/
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+  /* The following is commented out here, but set appropriately by in code, as
+     the content depends on the document */
+  /*
+  @top-left {
+    content: 'Internet-Draft';
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-left {
+    content: string(ears-top-left);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-center {
+    content: string(ears-top-center);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @top-right {
+    content: string(ears-top-right);
+    vertical-align: bottom;
+    border-bottom: solid 1px #ccc;
+  }
+  @bottom-left {
+    content: string(ears-bottom-left);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-center {
+    content: string(ears-bottom-center);
+    vertical-align: top;
+    border-top: solid 1px #ccc;
+  }
+  @bottom-right {
+      content: '[Page ' counter(page) ']';
+      vertical-align: top;
+      border-top: solid 1px #ccc;
+  }
+  */
+
+}
+
+/* Changes introduced to fix issues found during implementation */
+/* Make sure links are clickable even if overlapped by following H* */
+a {
+  z-index: 2;
+}
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Leave room in document info to show Internet-Draft on one line */
+#identifiers dt {
+  width: 8em;
+}
+
+/* Don't waste quite as much whitespace between label and value in doc info */
+#identifiers dd {
+  margin-left: 1em;
+}
+
+/* Give floating toc a background color (needed when it's a div inside section */
+#toc {
+  background-color: white;
+}
+
+/* Make the collapsed ToC header render white on gray also when it's a link */
+@media screen and (max-width: 1023px) {
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+}
+
+/* Give the bottom of the ToC some whitespace */
+@media screen and (min-width: 1024px) {
+  #toc {
+    padding: 0 0 1em 1em;
+  }
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* prevent monospace from becoming overly large */
+tt, code, pre {
+  font-size: 95%;
+}
+
+/* Fix the height/width aspect for ascii art*/
+.sourcecode pre,
+.art-text pre {
+  line-height: 1.12;
+}
+
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin-right: 0.5em;
+}
+
+/* Fix the dl styling to match the RFC 7992 attributes */
+dl > dt,
+dl.dlParallel > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+
+/* Provide styling for table cell text alignment */
+table td.text-left,
+table th.text-left {
+  text-align: left;
+}
+table td.text-center,
+table th.text-center {
+  text-align: center;
+}
+table td.text-right,
+table th.text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 30em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Provide table alignment support.  We can't use the alignX classes above
+   since they do unwanted things with caption and other styling. */
+table.right {
+ margin-left: auto;
+ margin-right: 0;
+}
+table.center {
+ margin-left: auto;
+ margin-right: auto;
+}
+table.left {
+ margin-left: 0;
+ margin-right: auto;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+caption a[href] {
+  color: #222;
+}
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+/* Tweak the bcp14 keyword presentation */
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+/* Tweak the invisible space above H* in order not to overlay links in text above */
+ h2 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 31px;
+ }
+ h3 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 24px;
+ }
+ h4 {
+  margin-top: -18px;  /* provide offset for in-page anchors */
+  padding-top: 24px;
+ }
+/* Float artwork pilcrow to the right */
+@media screen {
+  .artwork a.pilcrow {
+    display: block;
+    line-height: 0.7;
+    margin-top: 0.15em;
+  }
+}
+/* Make pilcrows on dd visible */
+@media screen {
+  dd:hover > a.pilcrow {
+    visibility: visible;
+  }
+}
+/* Make the placement of figcaption match that of a table's caption
+   by removing the figure's added bottom margin */
+.alignLeft.art-text,
+.alignCenter.art-text,
+.alignRight.art-text {
+   margin-bottom: 0;
+}
+.alignLeft,
+.alignCenter,
+.alignRight {
+  margin: 1em 0 0 0;
+}
+/* In print, the pilcrow won't show on hover, so prevent it from taking up space,
+   possibly even requiring a new line */
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+/* Styling for the external metadata */
+div#external-metadata {
+  background-color: #eee;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  display: none;
+}
+div#internal-metadata {
+  padding: 0.5em;                       /* to match the external-metadata padding */
+}
+/* Styling for title RFC Number */
+h1#rfcnum {
+  clear: both;
+  margin: 0 0 -1em;
+  padding: 1em 0 0 0;
+}
+/* Make .olPercent look the same as <ol><li> */
+dl.olPercent > dd {
+  margin-bottom: 0.25em;
+  min-height: initial;
+}
+/* Give aside some styling to set it apart */
+aside {
+  border-left: 1px solid #ddd;
+  margin: 1em 0 1em 2em;
+  padding: 0.2em 2em;
+}
+aside > dl,
+aside > ol,
+aside > ul,
+aside > table,
+aside > p {
+  margin-bottom: 0.5em;
+}
+/* Additional page break settings */
+@media print {
+  figcaption, table caption {
+    page-break-before: avoid;
+  }
+}
+/* Font size adjustments for print */
+@media print {
+  body  { font-size: 10pt;      line-height: normal; max-width: 96%; }
+  h1    { font-size: 1.72em;    padding-top: 1.5em; } /* 1*1.2*1.2*1.2 */
+  h2    { font-size: 1.44em;    padding-top: 1.5em; } /* 1*1.2*1.2 */
+  h3    { font-size: 1.2em;     padding-top: 1.5em; } /* 1*1.2 */
+  h4    { font-size: 1em;       padding-top: 1.5em; }
+  h5, h6 { font-size: 1em;      margin: initial; padding: 0.5em 0 0.3em; }
+}
+/* Sourcecode margin in print, when there's no pilcrow */
+@media print {
+  .artwork,
+  .artwork > pre,
+  .sourcecode {
+    margin-bottom: 1em;
+  }
+}
+/* Avoid narrow tables forcing too narrow table captions, which may render badly */
+table {
+  min-width: 20em;
+}
+/* ol type a */
+ol.type-a { list-style-type: lower-alpha; }
+ol.type-A { list-style-type: upper-alpha; }
+ol.type-i { list-style-type: lower-roman; }
+ol.type-I { list-style-type: upper-roman; }
+/* Apply the print table and row borders in general, on request from the RPC,
+and increase the contrast between border and odd row background slightly */
+table {
+  border: 1px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+}
+tr {
+  break-inside: avoid;
+}
+tr:nth-child(2n+1) > td {
+  background-color: #f8f8f8;
+}
+/* Use style rules to govern display of the TOC. */
+@media screen and (max-width: 1023px) {
+  #toc nav { display: none; }
+  #toc.active nav { display: block; }
+}
+/* Add support for keepWithNext */
+.keepWithNext {
+  break-after: avoid-page;
+  break-after: avoid-page;
+}
+/* Add support for keepWithPrevious */
+.keepWithPrevious {
+  break-before: avoid-page;
+}
+/* Change the approach to avoiding breaks inside artwork etc. */
+figure, pre, table, .artwork, .sourcecode  {
+  break-before: auto;
+  break-after: auto;
+}
+/* Avoid breaks between <dt> and <dd> */
+dl {
+  break-before: auto;
+  break-inside: auto;
+}
+dt {
+  break-before: auto;
+  break-after: avoid-page;
+}
+dd {
+  break-before: avoid-page;
+  break-after: auto;
+  orphans: 3;
+  widows: 3
+}
+span.break, dd.break {
+  margin-bottom: 0;
+  min-height: 0;
+  break-before: auto;
+  break-inside: auto;
+  break-after: auto;
+}
+/* Undo break-before ToC */
+@media print {
+  #toc {
+    break-before: auto;
+  }
+}
+/* Text in compact lists should not get extra bottom margin space,
+   since that would makes the list not compact */
+ul.compact p, .ulCompact p,
+ol.compact p, .olCompact p {
+ margin: 0;
+}
+/* But the list as a whole needs the extra space at the end */
+section ul.compact,
+section .ulCompact,
+section ol.compact,
+section .olCompact {
+  margin-bottom: 1em;                    /* same as p not within ul.compact etc. */
+}
+/* The tt and code background above interferes with for instance table cell
+   backgrounds.  Changed to something a bit more selective. */
+tt, code {
+  background-color: transparent;
+}
+p tt, p code, li tt, li code, dt tt, dt code {
+  background-color: #f8f8f8;
+}
+/* Tweak the pre margin -- 0px doesn't come out well */
+pre {
+   margin-top: 0.5px;
+}
+/* Tweak the compact list text */
+ul.compact, .ulCompact,
+ol.compact, .olCompact,
+dl.compact, .dlCompact {
+  line-height: normal;
+}
+/* Don't add top margin for nested lists */
+li > ul, li > ol, li > dl,
+dd > ul, dd > ol, dd > dl,
+dl > dd > dl {
+  margin-top: initial;
+}
+/* Elements that should not be rendered on the same line as a <dt> */
+/* This should match the element list in writer.text.TextWriter.render_dl() */
+dd > div.artwork:first-child,
+dd > aside:first-child,
+dd > blockquote:first-child,
+dd > figure:first-child,
+dd > ol:first-child,
+dd > div.sourcecode:first-child,
+dd > table:first-child,
+dd > ul:first-child {
+  clear: left;
+}
+/* fix for weird browser behaviour when <dd/> is empty */
+dt+dd:empty::before{
+  content: "\00a0";
+}
+/* Make paragraph spacing inside <li> smaller than in body text, to fit better within the list */
+li > p {
+  margin-bottom: 0.5em
+}
+/* Don't let p margin spill out from inside list items */
+li > p:last-of-type:only-child {
+  margin-bottom: 0;
+}
+</style>
+<link href="rfc-local.css" rel="stylesheet" type="text/css">
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left"></td>
+<td class="center">did-challenge-sasl</td>
+<td class="right">December 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Sabadello</td>
+<td class="center">Informational</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Common Authentication Technology Next Generation</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-12-07" class="published">7 December 2025</time>
+    </dd>
+<dt class="label-authors">Author:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">M. Sabadello</div>
+<div class="org">Danube Tech GmbH</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">The DID-CHALLENGE SASL Mechanism</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This specification introduces a SASL mechanism based on Decentralized Identifiers (DIDs).
+Unlike most other SASL mechanisms, this one is based on private/public key pairs and cryptographic signatures, rather than
+digests or plain password exchange. DIDs are designed to be decentralized, persistent, cryptographically verifiable, and
+resolvable identifiers.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">For example, this can make it possible to
+log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+</section>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-sasl-mechanism-name" class="internal xref">SASL mechanism name</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-authentication" class="internal xref">Authentication</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-the-authentication-exchange" class="internal xref">The Authentication Exchange</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-authorization-identity-stri" class="internal xref">Authorization Identity String</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-initial-challenge" class="internal xref">Initial challenge</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-initial-response" class="internal xref">Initial response</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-verification" class="internal xref">Verification</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-sasl-exchange" class="internal xref">SASL Exchange</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-step-1-client-namecallback-" class="internal xref">Step 1: Client NameCallback for DID</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-step-2-client-jwkcallback-f" class="internal xref">Step 2: Client JWKCallback for Private Key</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-step-3-server-client-challe" class="internal xref">Step 3: Server -&gt; Client Challenge</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-step-4-client-signature" class="internal xref">Step 4: Client Signature</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-step-5-client-server-respon" class="internal xref">Step 5: Client -&gt; Server Response</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.6">
+                <p id="section-toc.1-1.4.2.6.1"><a href="#section-4.6" class="auto internal xref">4.6</a>.  <a href="#name-step-6-server-namecallback-" class="internal xref">Step 6: Server NameCallback with DID</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.7">
+                <p id="section-toc.1-1.4.2.7.1"><a href="#section-4.7" class="auto internal xref">4.7</a>.  <a href="#name-step-7-server-verification" class="internal xref">Step 7: Server Verification</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.8">
+                <p id="section-toc.1-1.4.2.8.1"><a href="#section-4.8" class="auto internal xref">4.8</a>.  <a href="#name-step-8-server-authorizecall" class="internal xref">Step 8: Server AuthorizeCallback with authorization ID</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-implementations" class="internal xref">Implementations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Many Internet protocols require authentication, e.g. when we check our email account with a username
+and password, when we authenticate to SSH hosts with public keys, or when we log in to websites
+using OpenID Connect.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2"><a href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DIDs)</a> are identifiers that have
+associated private keys
+and can be used for authentication purposes. DIDs are in practice mostly used for exchanging
+<a href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials (VCs)</a> between Issuers, Holders, and Verifiers.
+On a more general level however, DIDs can also be used as a replacement for usernames/passwords or static public keys,
+since you can "authenticate" by proving control of your DID. Unlike other identifiers such as usernames
+or domain names, DIDs do not require a central authority for creating and using them.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">The <a href="https://www.rfc-editor.org/rfc/rfc4422.html">Simple Authentication and Security Layer (SASL)</a> is an extensible
+framework for authentication in Internet protocols. It makes it possible to "plug in" authentication mechanisms into
+existing protocols, by decoupling the authentication mechanisms from the application protocols.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This specification introduces a DID-based SASL mechanism. For example, this can make it possible to
+log in to your email account, IRC server, XMPP server, etc. using a DID, which can improve both usability and security.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">Unlike most other SASL mechanisms, this one is based on private/public key pairs and cryptographic signatures, rather than
+digests or plain password exchange.<a href="#section-1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sasl-mechanism-name">
+<section id="section-2">
+      <h2 id="name-sasl-mechanism-name">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-sasl-mechanism-name" class="section-name selfRef">SASL mechanism name</a>
+      </h2>
+<p id="section-2-1">The name of the DID-based SASL mechanism is "DID-CHALLENGE".<a href="#section-2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authentication">
+<section id="section-3">
+      <h2 id="name-authentication">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-authentication" class="section-name selfRef">Authentication</a>
+      </h2>
+<p id="section-3-1">This section describes the interaction between a SASL client and SASL server that use
+the "DID-CHALLENGE" mechanism.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div id="the-authentication-exchange">
+<section id="section-3.1">
+        <h3 id="name-the-authentication-exchange">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-the-authentication-exchange" class="section-name selfRef">The Authentication Exchange</a>
+        </h3>
+<p id="section-3.1-1">The "DID-CHALLENGE" mechanism is a server-first mechanism.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The high-level exchange looks like this:<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-3">
+<pre>
+C: Request authentication exchange
+S: Initial challenge
+C: Initial response
+S: Outcome of authentication exchange
+</pre><a href="#section-3.1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-4">The mechanism is capable of transferring authorization identity strings (see next section).<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">The server is not expected to provide additional data when indicating a successful outcome.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1-6">As security layers, the mechanism supports data integrity and data confidentiality, using DID-based signatures,
+and the TLS protocol.<a href="#section-3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1-7">During the exchange, the authorization identity is integrity-protected by a cryptographic signature.<a href="#section-3.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authorization-identity-string">
+<section id="section-3.2">
+        <h3 id="name-authorization-identity-stri">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-authorization-identity-stri" class="section-name selfRef">Authorization Identity String</a>
+        </h3>
+<p id="section-3.2-1">In the "DID-CHALLENGE" mechanism, the <a href="https://www.rfc-editor.org/rfc/rfc4422#section-3.4.1">authorization identity string</a>
+is a DID as defined by <a href="https://www.w3.org/TR/did-1.0/#did-syntax">W3C DID Core - DID Syntax</a>, and percent-encoded as defined by
+<a href="https://www.rfc-editor.org/rfc/rfc3986#section-2.1">RFC3986 Section 2.1</a>.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">Example authorization identity string:<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.2-3">
+<pre>
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
+</pre><a href="#section-3.2-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="initial-challenge">
+<section id="section-3.3">
+        <h3 id="name-initial-challenge">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-initial-challenge" class="section-name selfRef">Initial challenge</a>
+        </h3>
+<p id="section-3.3-1">The initial challenge follows the following format:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-2">
+<pre>
+"&lt;" &lt;nonce&gt; "." &lt;timestamp&gt; "@" &lt;realm&gt;
+</pre><a href="#section-3.3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3-3">Example:<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3-4">
+<pre>
+&lt;7795631894096664932.1765144656954@java-sasl-xmpp-server&gt;
+</pre><a href="#section-3.3-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="initial-response">
+<section id="section-3.4">
+        <h3 id="name-initial-response">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-initial-response" class="section-name selfRef">Initial response</a>
+        </h3>
+<p id="section-3.4-1">The initial response follows the following format:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.4-2">
+<pre>
+&lt;did&gt; &lt;signature&gt;
+</pre><a href="#section-3.4-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.4-3">Example:<a href="#section-3.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.4-4">
+<pre>
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4RC7Rj4FCUe53AWyLEjYAgpRdpatwXaEN4kT4npALyuswait4m3Ai5KPpWABsVuqZyTfFGkGKWyeeb9QvXWgEQhh
+</pre><a href="#section-3.4-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="verification">
+<section id="section-3.5">
+        <h3 id="name-verification">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-verification" class="section-name selfRef">Verification</a>
+        </h3>
+<p id="section-3.5-1">The signature in the initial response MUST cover the entire initial challenge, and is generated using the DID's associated private key.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-2">The server MUST perform the following verification steps:<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.5-3.1">
+            <p id="section-3.5-3.1.1">Resolve the DID to its DID document, according to the <a href="https://www.w3.org/TR/did-resolution/">W3C DID Resolution specification</a>.<a href="#section-3.5-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.5-3.2">
+            <p id="section-3.5-3.2.1">Using the DID's public key, verify the signature in the initial response against the initial challenge.<a href="#section-3.5-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.5-3.3">
+            <p id="section-3.5-3.3.1">Verify that the challenge's nonce has not been re-used.<a href="#section-3.5-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.5-3.4">
+            <p id="section-3.5-3.4.1">Verify that the challenge's timestamp is not too long in the past, e.g. 5 minutes.<a href="#section-3.5-3.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="sasl-exchange">
+<section id="section-4">
+      <h2 id="name-sasl-exchange">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-sasl-exchange" class="section-name selfRef">SASL Exchange</a>
+      </h2>
+<div id="section-4-1">
+        <div class="alignLeft art-svg artwork" id="section-4-1.1">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1097px" preserveAspectRatio="none" version="1.1" viewBox="0 0 968 1097" width="968px">
+            <g>
+              <text fill="black" font-family="sans-serif" font-size="18" x="315" y="29.2419">"The DID-CHALLENGE SASL mechanism"</text>
+              <line x1="104" x2="104" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"></line>
+              <line x1="315" x2="315" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"></line>
+              <line x1="612" x2="612" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"></line>
+              <line x1="787" x2="787" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"></line>
+              <line x1="909" x2="909" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"></line>
+              <rect fill="white" height="33.0679" width="111" x="47" y="41.5158" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="54" y="63.4818">Protocol Client</text>
+              <rect fill="white" height="33.0679" width="111" x="47" y="1053.6462" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="54" y="1075.6121">Protocol Client</text>
+              <rect fill="white" height="33.0679" width="89" x="269" y="41.5158" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="276" y="63.4818">SASL Client</text>
+              <rect fill="white" height="33.0679" width="89" x="269" y="1053.6462" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="276" y="1075.6121">SASL Client</text>
+              <rect fill="white" height="33.0679" width="93" x="564" y="41.5158" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="571" y="63.4818">SASL Server</text>
+              <rect fill="white" height="33.0679" width="93" x="564" y="1053.6462" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="571" y="1075.6121">SASL Server</text>
+              <rect fill="white" height="33.0679" width="115" x="728" y="41.5158" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="735" y="63.4818">Protocol Server</text>
+              <rect fill="white" height="33.0679" width="115" x="728" y="1053.6462" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="735" y="1075.6121">Protocol Server</text>
+              <rect fill="white" height="33.0679" width="100" x="857" y="41.5158" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="864" y="63.4818">DID Resolver</text>
+              <rect fill="white" height="33.0679" width="100" x="857" y="1053.6462" stroke="black" stroke-width="1.5"></rect>
+              <text fill="black" font-family="sans-serif" font-size="14" x="864" y="1075.6121">DID Resolver</text>
+              <polygon fill="black" points="775.5,109.2898,785.5,113.2898,775.5,117.2898,779.5,113.2898" stroke="black" stroke-width="1.0"></polygon>
+              <line x1="104.5" x2="781.5" y1="113.2898" y2="113.2898" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="107.4808">Network Connection</text>
+              <line x1="313.5" x2="303.5" y1="144.9958" y2="140.9958" stroke="black" stroke-width="1.0"></line>
+              <line x1="313.5" x2="303.5" y1="144.9958" y2="148.9958" stroke="black" stroke-width="1.0"></line>
+              <line x1="104.5" x2="314.5" y1="144.9958" y2="144.9958" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="139.1868">Start login</text>
+              <line x1="104.5" x2="114.5" y1="176.7018" y2="172.7018" stroke="black" stroke-width="1.0"></line>
+              <line x1="104.5" x2="114.5" y1="176.7018" y2="180.7018" stroke="black" stroke-width="1.0"></line>
+              <line x1="104.5" x2="314.5" y1="176.7018" y2="176.7018" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="121.5" y="170.8928">NameCallback for DID</text>
+              <line x1="313.5" x2="303.5" y1="208.4078" y2="204.4078" stroke="black" stroke-width="1.0"></line>
+              <line x1="313.5" x2="303.5" y1="208.4078" y2="212.4078" stroke="black" stroke-width="1.0"></line>
+              <line x1="104.5" x2="314.5" y1="208.4078" y2="208.4078" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="202.5988">DID</text>
+              <path d="M148,221.4078 L148,248.4078 L306,248.4078 L306,231.4078 L296,221.4078 L148,221.4078" fill="white" stroke="black" stroke-width="1.0"></path>
+              <path d="M296,221.4078 L296,231.4078 L306,231.4078 L296,221.4078" fill="white" stroke="black" stroke-width="1.0"></path>
+              <text fill="black" font-family="sans-serif" font-size="13" x="154" y="240.3048">did%3Akey%3A&lt;..did..&gt;</text>
+              <line x1="104.5" x2="114.5" y1="281.8199" y2="277.8199" stroke="black" stroke-width="1.0"></line>
+              <line x1="104.5" x2="114.5" y1="281.8199" y2="285.8199" stroke="black" stroke-width="1.0"></line>
+              <line x1="104.5" x2="314.5" y1="281.8199" y2="281.8199" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="121.5" y="276.0109">JWKCallback for DID private key</text>
+              <line x1="313.5" x2="303.5" y1="313.5259" y2="309.5259" stroke="black" stroke-width="1.0"></line>
+              <line x1="313.5" x2="303.5" y1="313.5259" y2="317.5259" stroke="black" stroke-width="1.0"></line>
+              <line x1="104.5" x2="314.5" y1="313.5259" y2="313.5259" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="111.5" y="307.7169">DID private key</text>
+              <path d="M8,326.5259 L8,353.5259 L307,353.5259 L307,336.5259 L297,326.5259 L8,326.5259" fill="white" stroke="black" stroke-width="1.0"></path>
+              <path d="M297,326.5259 L297,336.5259 L307,336.5259 L297,326.5259" fill="white" stroke="black" stroke-width="1.0"></path>
+              <text fill="black" font-family="sans-serif" font-size="13" x="14" y="345.4229">{ "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }</text>
+              <line x1="610.5" x2="600.5" y1="386.9379" y2="382.9379" stroke="black" stroke-width="1.0"></line>
+              <line x1="610.5" x2="600.5" y1="386.9379" y2="390.9379" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="611.5" y1="386.9379" y2="386.9379" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="381.1289">Start SASL authentication</text>
+              <line x1="315.5" x2="325.5" y1="418.6439" y2="414.6439" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="325.5" y1="418.6439" y2="422.6439" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="611.5" y1="418.6439" y2="418.6439" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="412.8349">List of authn mechanisms</text>
+              <line x1="610.5" x2="600.5" y1="450.3499" y2="446.3499" stroke="black" stroke-width="1.0"></line>
+              <line x1="610.5" x2="600.5" y1="450.3499" y2="454.3499" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="611.5" y1="450.3499" y2="450.3499" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="444.5409">Selected authn mechanism "DID-CHALLENGE"</text>
+              <line x1="612.5" x2="654.5" y1="482.056" y2="482.056" stroke="black" stroke-width="1.0"></line>
+              <line x1="654.5" x2="654.5" y1="482.056" y2="495.056" stroke="black" stroke-width="1.0"></line>
+              <line x1="613.5" x2="654.5" y1="495.056" y2="495.056" stroke="black" stroke-width="1.0"></line>
+              <line x1="613.5" x2="623.5" y1="495.056" y2="491.056" stroke="black" stroke-width="1.0"></line>
+              <line x1="613.5" x2="623.5" y1="495.056" y2="499.056" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="476.247">Generate challenge</text>
+              <path d="M268,508.056 L268,535.056 L603,535.056 L603,518.056 L593,508.056 L268,508.056" fill="white" stroke="black" stroke-width="1.0"></path>
+              <path d="M593,508.056 L593,518.056 L603,518.056 L593,508.056" fill="white" stroke="black" stroke-width="1.0"></path>
+              <text fill="black" font-family="sans-serif" font-size="13" x="274" y="526.953">&lt;1809528678543235072.1724868615672@hostname&gt;</text>
+              <line x1="315.5" x2="325.5" y1="568.468" y2="564.468" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="325.5" y1="568.468" y2="572.468" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="611.5" y1="568.468" y2="568.468" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="562.659">Challenge (nonce, timestamp, hostname)</text>
+              <line x1="315.5" x2="357.5" y1="600.174" y2="600.174" stroke="black" stroke-width="1.0"></line>
+              <line x1="357.5" x2="357.5" y1="600.174" y2="613.174" stroke="black" stroke-width="1.0"></line>
+              <line x1="316.5" x2="357.5" y1="613.174" y2="613.174" stroke="black" stroke-width="1.0"></line>
+              <line x1="316.5" x2="326.5" y1="613.174" y2="609.174" stroke="black" stroke-width="1.0"></line>
+              <line x1="316.5" x2="326.5" y1="613.174" y2="617.174" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="594.365">Create signature</text>
+              <path d="M320,626.174 L320,653.174 L424,653.174 L424,636.174 L414,626.174 L320,626.174" fill="white" stroke="black" stroke-width="1.0"></path>
+              <path d="M414,626.174 L414,636.174 L424,636.174 L414,626.174" fill="white" stroke="black" stroke-width="1.0"></path>
+              <text fill="black" font-family="sans-serif" font-size="13" x="326" y="645.071">&lt;..signature..&gt;</text>
+              <line x1="610.5" x2="600.5" y1="686.586" y2="682.586" stroke="black" stroke-width="1.0"></line>
+              <line x1="610.5" x2="600.5" y1="686.586" y2="690.586" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="611.5" y1="686.586" y2="686.586" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="322.5" y="680.777">Response (DID, signature)</text>
+              <path d="M291,699.586 L291,726.586 L603,726.586 L603,709.586 L593,699.586 L291,699.586" fill="white" stroke="black" stroke-width="1.0"></path>
+              <path d="M593,699.586 L593,709.586 L603,709.586 L593,699.586" fill="white" stroke="black" stroke-width="1.0"></path>
+              <text fill="black" font-family="sans-serif" font-size="13" x="297" y="718.4831">did%3Akey%3A&lt;..did..&gt; 2mJ4tBo6H&lt;..signature..&gt;</text>
+              <line x1="907" x2="897" y1="759.9981" y2="755.9981" stroke="black" stroke-width="1.0"></line>
+              <line x1="907" x2="897" y1="759.9981" y2="763.9981" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="908" y1="759.9981" y2="759.9981" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="754.1891">Resolve DID</text>
+              <line x1="612.5" x2="622.5" y1="791.7041" y2="787.7041" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="622.5" y1="791.7041" y2="795.7041" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="908" y1="791.7041" y2="791.7041" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="785.8951">DID document with DID public key</text>
+              <line x1="612.5" x2="654.5" y1="823.4101" y2="823.4101" stroke="black" stroke-width="1.0"></line>
+              <line x1="654.5" x2="654.5" y1="823.4101" y2="836.4101" stroke="black" stroke-width="1.0"></line>
+              <line x1="613.5" x2="654.5" y1="836.4101" y2="836.4101" stroke="black" stroke-width="1.0"></line>
+              <line x1="613.5" x2="623.5" y1="836.4101" y2="832.4101" stroke="black" stroke-width="1.0"></line>
+              <line x1="613.5" x2="623.5" y1="836.4101" y2="840.4101" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="817.6011">Verify signature</text>
+              <path d="M617,849.4101 L617,876.4101 L663,876.4101 L663,859.4101 L653,849.4101 L617,849.4101" fill="white" stroke="black" stroke-width="1.0"></path>
+              <path d="M653,849.4101 L653,859.4101 L663,859.4101 L653,849.4101" fill="white" stroke="black" stroke-width="1.0"></path>
+              <text fill="black" font-family="sans-serif" font-size="13" x="623" y="868.3071">true</text>
+              <line x1="785.5" x2="775.5" y1="909.8221" y2="905.8221" stroke="black" stroke-width="1.0"></line>
+              <line x1="785.5" x2="775.5" y1="909.8221" y2="913.8221" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="786.5" y1="909.8221" y2="909.8221" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="904.0131">NameCallback with DID</text>
+              <line x1="612.5" x2="622.5" y1="941.5282" y2="937.5282" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="622.5" y1="941.5282" y2="945.5282" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="786.5" y1="941.5282" y2="941.5282" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="935.7192">(empty)</text>
+              <line x1="785.5" x2="775.5" y1="973.2342" y2="969.2342" stroke="black" stroke-width="1.0"></line>
+              <line x1="785.5" x2="775.5" y1="973.2342" y2="977.2342" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="786.5" y1="973.2342" y2="973.2342" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="619.5" y="967.4252">AuthorizeCallback</text>
+              <line x1="612.5" x2="622.5" y1="1004.9402" y2="1000.9402" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="622.5" y1="1004.9402" y2="1008.9402" stroke="black" stroke-width="1.0"></line>
+              <line x1="612.5" x2="786.5" y1="1004.9402" y2="1004.9402" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="629.5" y="999.1312">authorized=true with DID</text>
+              <line x1="315.5" x2="325.5" y1="1036.6462" y2="1032.6462" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="325.5" y1="1036.6462" y2="1040.6462" stroke="black" stroke-width="1.0"></line>
+              <line x1="315.5" x2="611.5" y1="1036.6462" y2="1036.6462" stroke="black" stroke-width="1.0"></line>
+              <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="1030.8372">Completed SASL authentication</text>
+              <!--MD5=[c4a4921d27c645823a4af41a3c6feca2]
+@startuml
+
+title "The DID-CHALLENGE SASL mechanism"
+participant ProtocolClient as "Protocol Client"
+participant SASLClient as "SASL Client"
+participant SASLServer as "SASL Server"
+participant ProtocolServer as "Protocol Server"
+participant DIDResolver as "DID Resolver"
+ProtocolClient- ->ProtocolServer: Network Connection
+ProtocolClient->>SASLClient: Start login
+SASLClient->>ProtocolClient: NameCallback for DID
+ProtocolClient->>SASLClient: DID
+note left of SASLClient: did%3Akey%3A<..did..>
+SASLClient->>ProtocolClient: JWKCallback for DID private key
+ProtocolClient->>SASLClient: DID private key
+note left of SASLClient: { "kty": "OKP", "crv": "Ed25519", "x": "..", "d": ".." }
+SASLClient->>SASLServer: Start SASL authentication
+SASLServer->>SASLClient: List of authn mechanisms
+SASLClient->>SASLServer: Selected authn mechanism "DID-CHALLENGE"
+SASLServer->>SASLServer: Generate challenge
+note left of SASLServer: <1809528678543235072.1724868615672@hostname>
+SASLServer->>SASLClient: Challenge (nonce, timestamp, hostname)
+SASLClient->>SASLClient: Create signature
+note right of SASLClient: <..signature..>
+SASLClient->>SASLServer: Response (DID, signature)
+note left of SASLServer: did%3Akey%3A<..did..> 2mJ4tBo6H<..signature..>
+SASLServer->>DIDResolver: Resolve DID
+DIDResolver->>SASLServer: DID document with DID public key
+SASLServer->>SASLServer: Verify signature
+note right of SASLServer: true
+SASLServer->>ProtocolServer: NameCallback with DID
+ProtocolServer->>SASLServer: (empty)
+SASLServer->>ProtocolServer: AuthorizeCallback
+ProtocolServer->>SASLServer: authorized=true with DID
+SASLServer->>SASLClient: Completed SASL authentication
+
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 18:22:07 CST 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 21.0.9+10-Debian-1
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+          </svg><a href="#section-4-1.1" class="pilcrow">¶</a>
+</div>
+</div>
+<div id="step-1-client-namecallback-for-did">
+<section id="section-4.1">
+        <h3 id="name-step-1-client-namecallback-">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-step-1-client-namecallback-" class="section-name selfRef">Step 1: Client NameCallback for DID</a>
+        </h3>
+<p id="section-4.1-1">When the client is initialized, it obtains a DID to be used for authentication.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-2">
+<pre>
+-- CLIENT CALLBACK: NameCallback
+
+&gt;C Client DID:  --- defaultName: null, name: null
+getName() -&gt; did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+C&gt; DID:  --- defaultName: null, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+</pre><a href="#section-4.1-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="step-2-client-jwkcallback-for-private-key">
+<section id="section-4.2">
+        <h3 id="name-step-2-client-jwkcallback-f">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-step-2-client-jwkcallback-f" class="section-name selfRef">Step 2: Client JWKCallback for Private Key</a>
+        </h3>
+<p id="section-4.2-1">When the client is initialized, it obtains a private key that will be used for
+signing challenges.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-2">
+<pre>
+-- CLIENT CALLBACK: JWKCallback
+
+&gt;C Client private key:  --- defaultText: (JWK), text: null
+getTextInputJWK() -&gt; {
+    "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+    "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+C&gt; Private key:  --- defaultText: (JWK), text: {
+  "kid": "did:key:z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D#z6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D",
+  "kty": "OKP",
+  "crv": "Ed25519",
+  "x": "EbV6-hVmDiD3DKTUgsf2SjjnO7t0ttwMhStQ5JyCFhw",
+  "d": "vGjHIZzZxS3R4mo-V0I_S72ULXDqa2INqkAtuvqJUN8"
+}
+</pre><a href="#section-4.2-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="step-3-server-client-challenge">
+<section id="section-4.3">
+        <h3 id="name-step-3-server-client-challe">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-step-3-server-client-challe" class="section-name selfRef">Step 3: Server -&gt; Client Challenge</a>
+        </h3>
+<p id="section-4.3-1">The server initiates the authentication flow by generating and sending a challenge. The challenge
+contains a none, timestamp, and realm.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.3-2">
+<pre>
+-- SERVER -&gt; CLIENT: Challenge
+&lt;4513455346757278126.1757192932938@java-sasl-xmpp-server&gt;
+</pre><a href="#section-4.3-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="step-4-client-signature">
+<section id="section-4.4">
+        <h3 id="name-step-4-client-signature">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-step-4-client-signature" class="section-name selfRef">Step 4: Client Signature</a>
+        </h3>
+<p id="section-4.4-1">The client signs the challenge using the DID's private key.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-2">
+<pre>
+-- CLIENT
+Created signature for challenge &lt;4513455346757278126.1757192932938@java-sasl-xmpp-server&gt;: 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+</pre><a href="#section-4.4-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="step-5-client-server-response">
+<section id="section-4.5">
+        <h3 id="name-step-5-client-server-respon">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-step-5-client-server-respon" class="section-name selfRef">Step 5: Client -&gt; Server Response</a>
+        </h3>
+<p id="section-4.5-1">The client response to the server with the DID and the signed challenge.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.5-2">
+<pre>
+-- CLIENT -&gt; SERVER: Response
+did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK
+</pre><a href="#section-4.5-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="step-6-server-namecallback-with-did">
+<section id="section-4.6">
+        <h3 id="name-step-6-server-namecallback-">
+<a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-step-6-server-namecallback-" class="section-name selfRef">Step 6: Server NameCallback with DID</a>
+        </h3>
+<p id="section-4.6-1">The server obtains the DID from the client's response.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.6-2">
+<pre>
+-- SERVER CALLBACK: NameCallback
+
+&gt;S DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: null
+checkName(did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D) --&gt; did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+S&gt; DID:  --- defaultName: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+</pre><a href="#section-4.6-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="step-7-server-verification">
+<section id="section-4.7">
+        <h3 id="name-step-7-server-verification">
+<a href="#section-4.7" class="section-number selfRef">4.7. </a><a href="#name-step-7-server-verification" class="section-name selfRef">Step 7: Server Verification</a>
+        </h3>
+<p id="section-4.7-1">The server verifies the signature in the client's response by resolving the client's DID to a DID document, which
+contains public keys need for the verification.<a href="#section-4.7-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.7-2">
+<pre>
+-- SERVER
+Verified signature 4oxnhDjB6cZNKYbLbPcmpaKgimdN88bK45EvMizM6t1XEJ8MBYnymMiCpiu3qVEjQG2atVrbaARcKpHRiMrvDAeK for challenge &lt;4513455346757278126.1757192932938@java-sasl-xmpp-server&gt;: true
+</pre><a href="#section-4.7-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="step-8-server-authorizecallback-with-authorization-id">
+<section id="section-4.8">
+        <h3 id="name-step-8-server-authorizecall">
+<a href="#section-4.8" class="section-number selfRef">4.8. </a><a href="#name-step-8-server-authorizecall" class="section-name selfRef">Step 8: Server AuthorizeCallback with authorization ID</a>
+        </h3>
+<p id="section-4.8-1">The server determines the DID as the "authorized ID", concluding the authentication flow.<a href="#section-4.8-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.8-2">
+<pre>
+-- SERVER CALLBACK: AuthorizeCallback
+
+&gt;S --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: null, isAuthorized: false
+S&gt; --- authenticationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizationID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, authorizedID: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D, isAuthorized: true
+
+authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
+</pre><a href="#section-4.8-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="implementations">
+<section id="section-5">
+      <h2 id="name-implementations">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-implementations" class="section-name selfRef">Implementations</a>
+      </h2>
+<p id="section-5-1">The following repositories contain various parts of an example implementation:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5-2.1">
+          <p id="section-5-2.1.1">SASL client demonstration components: <a href="https://github.com/peacekeeper/java-sasl-client-demo">https://github.com/peacekeeper/java-sasl-client-demo</a><a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.2">
+          <p id="section-5-2.2.1">SASL server demonstration components: <a href="https://github.com/peacekeeper/java-sasl-server-demo">https://github.com/peacekeeper/java-sasl-server-demo</a><a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.3">
+          <p id="section-5-2.3.1">SASL local "Hello World" demonstration: <a href="https://github.com/peacekeeper/java-sasl-local-demo">https://github.com/peacekeeper/java-sasl-local-demo</a><a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.4">
+          <p id="section-5-2.4.1">Implementation of a DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-did-mechanism">https://github.com/peacekeeper/java-sasl-did-mechanism</a><a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.5">
+          <p id="section-5-2.5.1">XMPP server (based on Tigase) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-server">https://github.com/peacekeeper/java-sasl-xmpp-server</a><a href="#section-5-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.6">
+          <p id="section-5-2.6.1">XMPP client demo (based on Tigase) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-tigase">https://github.com/peacekeeper/java-sasl-xmpp-client-tigase</a><a href="#section-5-2.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.7">
+          <p id="section-5-2.7.1">XMPP client demo (based on Smack) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-smack">https://github.com/peacekeeper/java-sasl-xmpp-client-smack</a><a href="#section-5-2.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.8">
+          <p id="section-5-2.8.1">XMPP client plugin (based on Spark) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-spark">https://github.com/peacekeeper/java-sasl-xmpp-client-spark</a><a href="#section-5-2.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.9">
+          <p id="section-5-2.9.1">XMPP client application (based on Spark) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-spark">https://github.com/peacekeeper/java-sasl-xmpp-client-spark</a><a href="#section-5-2.9.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-A">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Markus Sabadello</span></div>
+<div dir="auto" class="left"><span class="org">Danube Tech GmbH</span></div>
+<div dir="auto" class="left"><span class="street-address">Margaretenstraße 70/1/7</span></div>
+<div dir="auto" class="left">
+<span class="postal-code">A-1050</span> <span class="locality">Wien</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Austria</span></div>
+<div class="tel">
+<span>Phone:</span>
+<a href="tel:+43-664-3154848" class="tel">+43-664-3154848</a>
+</div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:markus@danubetech.com" class="email">markus@danubetech.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
