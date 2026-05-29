@@ -803,6 +803,56 @@ being made, to minimise unnecessary disclosure of personal
 information, particularly given that VPs are transmitted in the
 clear at the SASL layer (see [](#requirement-for-a-confidential-channel)).
 
+## Denial of Service
+
+The DID-CHALLENGE mechanism introduces potential denial-of-service
+vectors that do not arise in password-based SASL mechanisms.
+Implementers SHOULD consider each of the following.
+
+Challenge generation and nonce tracking. Each mechanism-selection
+message causes the server to generate a nonce and allocate an
+entry in its nonce-tracking table. An attacker who sends many
+such messages can exhaust server
+memory and CPU. Servers MUST enforce a short timeout on
+incomplete exchanges (RECOMMENDED: 30 seconds from challenge
+issuance), after which the nonce is discarded and any subsequent
+messages referencing it rejected. Servers SHOULD rate-limit
+challenge issuance per source address and SHOULD bound the size
+of the nonce table.
+
+DID resolution amplification. Every authentication attempt
+requires an outbound DID resolution request. An attacker who
+sends many requests using different DIDs forces a corresponding
+number of outbound network requests, potentially stressing both
+the server and DID method infrastructure. Servers SHOULD
+cache recently resolved DID Documents for a short period (subject
+to the constraints in
+[](#key-revocation-rotation-and-did-method-properties)),
+rate-limit outbound resolution
+requests, and impose a resolution timeout.
+
+Cryptographic verification cost. Signature verification is
+computationally expensive, and the server may need to try multiple
+candidate keys if the DID Document contains more than one
+"authentication" verification method. The ordering of steps in
+[](#server-verification)) is therefore deliberate: the cheap,
+non-cryptographic
+checks (format, nonce, timestamp) are placed first so that most
+malformed or replayed requests are rejected before any signature
+verification is attempted. Servers MAY additionally impose per-
+source-address limits on signature verification attempts.
+
+VC/VP extension. The optional VC/VP extension adds VP proof
+verification, per-credential issuer signature verification, and
+credential status checking to each exchange, all of which may
+involve further outbound network requests. The same rate-limiting
+measures above apply. Servers SHOULD additionally cap the number
+of credentials permitted in a single Verifiable Presentation and
+reject oversized presentations before performing any cryptographic
+work. Servers SHOULD cache credential status information briefly
+to avoid redundant outbound requests during bursts of
+authentication attempts.
+
 # Implementations
 
 The following repositories contain various parts of an example implementation:
