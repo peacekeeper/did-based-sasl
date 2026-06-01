@@ -4,8 +4,8 @@
 
 Common Authentication Technology Next Generation            M. Sabadello
 Internet-Draft                                          Danube Tech GmbH
-Intended status: Standards Track                             29 May 2026
-Expires: 30 November 2026
+Intended status: Standards Track                             31 May 2026
+Expires: 2 December 2026
 
 
                     The DID-CHALLENGE SASL Mechanism
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 November 2026.
+   This Internet-Draft will expire on 2 December 2026.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Sabadello               Expires 30 November 2026                [Page 1]
+Sabadello                Expires 2 December 2026                [Page 1]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Sabadello               Expires 30 November 2026                [Page 2]
+Sabadello                Expires 2 December 2026                [Page 2]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -165,7 +165,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026                [Page 3]
+Sabadello                Expires 2 December 2026                [Page 3]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -221,7 +221,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026                [Page 4]
+Sabadello                Expires 2 December 2026                [Page 4]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -277,7 +277,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026                [Page 5]
+Sabadello                Expires 2 December 2026                [Page 5]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -333,7 +333,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026                [Page 6]
+Sabadello                Expires 2 December 2026                [Page 6]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -389,7 +389,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D frEko8nWU-rfArpMZsM
 
 
 
-Sabadello               Expires 30 November 2026                [Page 7]
+Sabadello                Expires 2 December 2026                [Page 7]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -445,7 +445,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026                [Page 8]
+Sabadello                Expires 2 December 2026                [Page 8]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -501,7 +501,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026                [Page 9]
+Sabadello                Expires 2 December 2026                [Page 9]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -557,7 +557,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 10]
+Sabadello                Expires 2 December 2026               [Page 10]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -613,7 +613,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 11]
+Sabadello                Expires 2 December 2026               [Page 11]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -669,7 +669,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 12]
+Sabadello                Expires 2 December 2026               [Page 12]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -725,7 +725,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 13]
+Sabadello                Expires 2 December 2026               [Page 13]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -781,7 +781,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 14]
+Sabadello                Expires 2 December 2026               [Page 14]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -837,7 +837,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 15]
+Sabadello                Expires 2 December 2026               [Page 15]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -893,7 +893,7 @@ C> DID:  --- defaultName: null, name: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm
 
 
 
-Sabadello               Expires 30 November 2026               [Page 16]
+Sabadello                Expires 2 December 2026               [Page 16]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -949,7 +949,7 @@ did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D frEko8nWU-rfArpMZsM
 
 
 
-Sabadello               Expires 30 November 2026               [Page 17]
+Sabadello                Expires 2 December 2026               [Page 17]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -1005,7 +1005,7 @@ authorizationId: did%3Akey%3Az6MkfePUhxLV6cM54cgZ4bGmnEdTNm3WDf4arwh5kR3dH51D
 
 
 
-Sabadello               Expires 30 November 2026               [Page 18]
+Sabadello                Expires 2 December 2026               [Page 18]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -1061,7 +1061,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 19]
+Sabadello                Expires 2 December 2026               [Page 19]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -1117,7 +1117,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 20]
+Sabadello                Expires 2 December 2026               [Page 20]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -1173,7 +1173,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 21]
+Sabadello                Expires 2 December 2026               [Page 21]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -1229,7 +1229,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 22]
+Sabadello                Expires 2 December 2026               [Page 22]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -1285,7 +1285,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 23]
+Sabadello                Expires 2 December 2026               [Page 23]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -1341,7 +1341,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 
 
-Sabadello               Expires 30 November 2026               [Page 24]
+Sabadello                Expires 2 December 2026               [Page 24]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
@@ -1397,4 +1397,4 @@ Author's Address
 
 
 
-Sabadello               Expires 30 November 2026               [Page 25]
+Sabadello                Expires 2 December 2026               [Page 25]

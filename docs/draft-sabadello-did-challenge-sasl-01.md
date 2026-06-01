@@ -7,7 +7,7 @@ docname: draft-sabadello-did-challenge-sasl-01
 category: std
 submissionType: IETF
 ipr: trust200902
-date: 2026-05-29
+date: 2026-05-31
 
 area: Security
 wg: Common Authentication Technology Next Generation
