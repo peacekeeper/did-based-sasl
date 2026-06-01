@@ -866,3 +866,15 @@ The following repositories contain various parts of an example implementation:
 * XMPP client demo (based on Smack) using the DID-based SASL authentication mechanism: [https://github.com/peacekeeper/java-sasl-xmpp-client-smack](https://github.com/peacekeeper/java-sasl-xmpp-client-smack)
 * XMPP client plugin (based on Spark) using the DID-based SASL authentication mechanism: [https://github.com/peacekeeper/java-sasl-xmpp-client-spark](https://github.com/peacekeeper/java-sasl-xmpp-client-spark)
 * XMPP client application (based on Spark) using the DID-based SASL authentication mechanism: [https://github.com/peacekeeper/java-sasl-xmpp-client-spark](https://github.com/peacekeeper/java-sasl-xmpp-client-spark)
+
+# Acknowledgements
+
+The author would like to thank the members of the KITTEN
+working group for their review and feedback on earlier
+versions of this specification.
+
+This work was funded through [NGI0 Commons Fund](https://nlnet.nl/commonsfund),
+a fund established by [NLnet](https://nlnet.nl) with financial support from
+the European Commission's [Next Generation Internet](https://ngi.eu) program.
+
+Learn more at the [NLnet project page](https://nlnet.nl/project/DID-SASL).

@@ -116,6 +116,7 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
      8.12. Denial of Service . . . . . . . . . . . . . . . . . . . .  23
    9.  Implementations . . . . . . . . . . . . . . . . . . . . . . .  24
+   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  25
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  25
 
 1.  Introduction
@@ -160,7 +161,6 @@ Internet-Draft             did-challenge-sasl                   May 2026
    rather than a shared secret, a compromise of the server's credential
    store does not yield material that could be used to impersonate
    clients.
-
 
 
 
@@ -1256,32 +1256,32 @@ Internet-Draft             did-challenge-sasl                   May 2026
 
 8.12.  Denial of Service
 
-   The DID-CHALLENGE mechanism introduces several denial-of-service
+   The DID-CHALLENGE mechanism introduces potential denial-of-service
    vectors that do not arise in password-based SASL mechanisms.
    Implementers SHOULD consider each of the following.
 
    Challenge generation and nonce tracking.  Each mechanism-selection
    message causes the server to generate a nonce and allocate an entry
    in its nonce-tracking table.  An attacker who sends many such
-   messages without completing the exchange can exhaust server memory
-   and CPU.  Servers MUST enforce a short timeout on incomplete
-   exchanges (RECOMMENDED: 30 seconds from challenge issuance), after
-   which the nonce is discarded and any subsequent DID Response
-   referencing it rejected.  Servers SHOULD rate-limit challenge
-   issuance per source address and SHOULD bound the size of the nonce
-   table, rejecting new challenge requests if the limit is reached.
+   messages can exhaust server memory and CPU.  Servers MUST enforce a
+   short timeout on incomplete exchanges (RECOMMENDED: 30 seconds from
+   challenge issuance), after which the nonce is discarded and any
+   subsequent messages referencing it rejected.  Servers SHOULD rate-
+   limit challenge issuance per source address and SHOULD bound the size
+   of the nonce table.
 
    DID resolution amplification.  Every authentication attempt requires
    an outbound DID resolution request.  An attacker who sends many
    requests using different DIDs forces a corresponding number of
    outbound network requests, potentially stressing both the server and
-   shared registry infrastructure.  Servers SHOULD cache recently
-   resolved DID Documents for a short period (subject to the constraints
-   in Section 8.7), rate-limit outbound resolution requests, and impose
-   a resolution timeout; a resolution attempt that does not complete
-   within the timeout MUST be treated as an authentication failure.
+   DID method infrastructure.  Servers SHOULD cache recently resolved
+   DID Documents for a short period (subject to the constraints in
+   Section 8.7), rate-limit outbound resolution requests, and impose a
+   resolution timeout.
 
-
+   Cryptographic verification cost.  Signature verification is
+   computationally expensive, and the server may need to try multiple
+   candidate keys if the DID Document contains more than one
 
 
 
@@ -1290,9 +1290,6 @@ Sabadello               Expires 30 November 2026               [Page 23]
 Internet-Draft             did-challenge-sasl                   May 2026
 
 
-   Cryptographic verification cost.  Signature verification is
-   computationally expensive, and the server may need to try multiple
-   candidate keys if the DID Document contains more than one
    "authentication" verification method.  The ordering of steps in
    Section 3.6) is therefore deliberate: the cheap, non-cryptographic
    checks (format, nonce, timestamp) are placed first so that most
@@ -1336,7 +1333,10 @@ Internet-Draft             did-challenge-sasl                   May 2026
       sasl-xmpp-server (https://github.com/peacekeeper/java-sasl-xmpp-
       server)
 
-
+   *  XMPP client demo (based on Tigase) using the DID-based SASL
+      authentication mechanism: https://github.com/peacekeeper/java-
+      sasl-xmpp-client-tigase (https://github.com/peacekeeper/java-sasl-
+      xmpp-client-tigase)
 
 
 
@@ -1345,11 +1345,6 @@ Sabadello               Expires 30 November 2026               [Page 24]
 
 Internet-Draft             did-challenge-sasl                   May 2026
 
-
-   *  XMPP client demo (based on Tigase) using the DID-based SASL
-      authentication mechanism: https://github.com/peacekeeper/java-
-      sasl-xmpp-client-tigase (https://github.com/peacekeeper/java-sasl-
-      xmpp-client-tigase)
 
    *  XMPP client demo (based on Smack) using the DID-based SASL
       authentication mechanism: https://github.com/peacekeeper/java-
@@ -1366,6 +1361,20 @@ Internet-Draft             did-challenge-sasl                   May 2026
       sasl-xmpp-client-spark (https://github.com/peacekeeper/java-sasl-
       xmpp-client-spark)
 
+10.  Acknowledgements
+
+   The author would like to thank the members of the KITTEN working
+   group for their review and feedback on earlier versions of this
+   specification.
+
+   This work was funded through NGI0 Commons Fund (https://nlnet.nl/
+   commonsfund), a fund established by NLnet (https://nlnet.nl) with
+   financial support from the European Commission's Next Generation
+   Internet (https://ngi.eu) program.
+
+   Learn more at the NLnet project page (https://nlnet.nl/project/DID-
+   SASL).
+
 Author's Address
 
    Markus Sabadello
@@ -1375,15 +1384,6 @@ Author's Address
    Austria
    Phone: +43-664-3154848
    Email: markus@danubetech.com
-
-
-
-
-
-
-
-
-
 
 
 

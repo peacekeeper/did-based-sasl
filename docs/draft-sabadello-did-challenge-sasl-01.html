@@ -1445,7 +1445,10 @@ authentication.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-implementations" class="internal xref">Implementations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1772,6 +1775,7 @@ AuthorizeCallback in the SASL framework) before granting access.<a href="#sectio
 <div id="section-4-3">
         <div class="alignLeft art-svg artwork" id="section-4-3.1">
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1097px" preserveAspectRatio="none" version="1.1" viewBox="0 0 1016 1097" width="1016px">
+            <defs></defs>
             <g>
               <text fill="black" font-family="sans-serif" font-size="18" x="339" y="29.2419">"The DID-CHALLENGE SASL mechanism"</text>
               <line x1="104" x2="104" y1="79.5838" y2="1054.6462" stroke="black" stroke-width="1.0"></line>
@@ -1906,7 +1910,7 @@ AuthorizeCallback in the SASL framework) before granting access.<a href="#sectio
               <line x1="315.5" x2="325.5" y1="1036.6462" y2="1040.6462" stroke="black" stroke-width="1.0"></line>
               <line x1="315.5" x2="611.5" y1="1036.6462" y2="1036.6462" stroke="black" stroke-width="1.0"></line>
               <text fill="black" font-family="sans-serif" font-size="13" x="332.5" y="1030.8372">Completed SASL authentication</text>
-              <!--MD5=[d18b21519ac2fb216e7f08606e870090]
+              <!--MD5=[16b252dc259b9200fff1f3f79f19c19e]
 @startuml
 
 title "The DID-CHALLENGE SASL mechanism"
@@ -1949,7 +1953,7 @@ PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
 (GPL source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 21.0.11+10-1-Debian
+Java Version: 25.0.3+9-2-Debian
 Operating System: Linux
 Default Encoding: UTF-8
 Language: en
@@ -2119,6 +2123,7 @@ VC/VP Challenge (see <a href="#vc-vp-challenge" class="auto internal xref">Secti
 <div id="section-6-3">
         <div class="alignLeft art-svg artwork" id="section-6-3.1">
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="1634px" preserveAspectRatio="none" version="1.1" viewBox="0 0 1052 1634" width="1052px">
+            <defs></defs>
             <g>
               <text fill="black" font-family="sans-serif" font-size="18" x="318" y="29.2419">"The DID-CHALLENGE SASL mechanism with VCs"</text>
               <rect fill="white" height="124.8241" width="361" x="13" y="370.2319" stroke="#000000" stroke-width="2.0"></rect>
@@ -2312,7 +2317,7 @@ VC/VP Challenge (see <a href="#vc-vp-challenge" class="auto internal xref">Secti
               <line x1="317.5" x2="327.5" y1="1573.5304" y2="1577.5304" stroke="black" stroke-width="1.0"></line>
               <line x1="317.5" x2="647.5" y1="1573.5304" y2="1573.5304" stroke="black" stroke-width="1.0"></line>
               <text fill="black" font-family="sans-serif" font-size="13" x="334.5" y="1567.7214">Completed SASL authentication</text>
-              <!--MD5=[e78365afa662ee87726e42dc9a1dc262]
+              <!--MD5=[d19c09701f285ad2a95d855816a547ee]
 @startuml
 
 title "The DID-CHALLENGE SASL mechanism with VCs"
@@ -2371,7 +2376,7 @@ PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
 (GPL source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 21.0.11+10-1-Debian
+Java Version: 25.0.3+9-2-Debian
 Operating System: Linux
 Default Encoding: UTF-8
 Language: en
@@ -2787,50 +2792,47 @@ clear at the SASL layer (see <a href="#requirement-for-a-confidential-channel" c
         <h3 id="name-denial-of-service">
 <a href="#section-8.12" class="section-number selfRef">8.12. </a><a href="#name-denial-of-service" class="section-name selfRef">Denial of Service</a>
         </h3>
-<p id="section-8.12-1">The DID-CHALLENGE mechanism introduces several denial-of-service
+<p id="section-8.12-1">The DID-CHALLENGE mechanism introduces potential denial-of-service
 vectors that do not arise in password-based SASL mechanisms.
 Implementers SHOULD consider each of the following.<a href="#section-8.12-1" class="pilcrow">¶</a></p>
-<p id="section-8.12-2">Challenge generation and nonce tracking.  Each mechanism-selection
+<p id="section-8.12-2">Challenge generation and nonce tracking. Each mechanism-selection
 message causes the server to generate a nonce and allocate an
-entry in its nonce-tracking table.  An attacker who sends many
-such messages without completing the exchange can exhaust server
-memory and CPU.  Servers MUST enforce a short timeout on
+entry in its nonce-tracking table. An attacker who sends many
+such messages can exhaust server
+memory and CPU. Servers MUST enforce a short timeout on
 incomplete exchanges (RECOMMENDED: 30 seconds from challenge
 issuance), after which the nonce is discarded and any subsequent
-DID Response referencing it rejected.  Servers SHOULD rate-limit
+messages referencing it rejected. Servers SHOULD rate-limit
 challenge issuance per source address and SHOULD bound the size
-of the nonce table, rejecting new challenge requests if the limit
-is reached.<a href="#section-8.12-2" class="pilcrow">¶</a></p>
-<p id="section-8.12-3">DID resolution amplification.  Every authentication attempt
-requires an outbound DID resolution request.  An attacker who
+of the nonce table.<a href="#section-8.12-2" class="pilcrow">¶</a></p>
+<p id="section-8.12-3">DID resolution amplification. Every authentication attempt
+requires an outbound DID resolution request. An attacker who
 sends many requests using different DIDs forces a corresponding
 number of outbound network requests, potentially stressing both
-the server and shared registry infrastructure.  Servers SHOULD
+the server and DID method infrastructure. Servers SHOULD
 cache recently resolved DID Documents for a short period (subject
 to the constraints in
 <a href="#key-revocation-rotation-and-did-method-properties" class="auto internal xref">Section 8.7</a>),
 rate-limit outbound resolution
-requests, and impose a resolution timeout; a resolution attempt
-that does not complete within the timeout MUST be treated as an
-authentication failure.<a href="#section-8.12-3" class="pilcrow">¶</a></p>
-<p id="section-8.12-4">Cryptographic verification cost.  Signature verification is
+requests, and impose a resolution timeout.<a href="#section-8.12-3" class="pilcrow">¶</a></p>
+<p id="section-8.12-4">Cryptographic verification cost. Signature verification is
 computationally expensive, and the server may need to try multiple
 candidate keys if the DID Document contains more than one
-"authentication" verification method.  The ordering of steps in
+"authentication" verification method. The ordering of steps in
 <a href="#server-verification" class="auto internal xref">Section 3.6</a>) is therefore deliberate: the cheap,
 non-cryptographic
 checks (format, nonce, timestamp) are placed first so that most
 malformed or replayed requests are rejected before any signature
-verification is attempted.  Servers MAY additionally impose per-
+verification is attempted. Servers MAY additionally impose per-
 source-address limits on signature verification attempts.<a href="#section-8.12-4" class="pilcrow">¶</a></p>
-<p id="section-8.12-5">VC/VP extension.  The optional VC/VP extension adds VP proof
+<p id="section-8.12-5">VC/VP extension. The optional VC/VP extension adds VP proof
 verification, per-credential issuer signature verification, and
 credential status checking to each exchange, all of which may
-involve further outbound network requests.  The same rate-limiting
-measures above apply.  Servers SHOULD additionally cap the number
+involve further outbound network requests. The same rate-limiting
+measures above apply. Servers SHOULD additionally cap the number
 of credentials permitted in a single Verifiable Presentation and
 reject oversized presentations before performing any cryptographic
-work.  Servers SHOULD cache credential status information briefly
+work. Servers SHOULD cache credential status information briefly
 to avoid redundant outbound requests during bursts of
 authentication attempts.<a href="#section-8.12-5" class="pilcrow">¶</a></p>
 </section>
@@ -2872,6 +2874,20 @@ authentication attempts.<a href="#section-8.12-5" class="pilcrow">¶</a></p>
           <p id="section-9-2.9.1">XMPP client application (based on Spark) using the DID-based SASL authentication mechanism: <a href="https://github.com/peacekeeper/java-sasl-xmpp-client-spark">https://github.com/peacekeeper/java-sasl-xmpp-client-spark</a><a href="#section-9-2.9.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
+</section>
+</div>
+<div id="acknowledgements">
+<section id="section-10">
+      <h2 id="name-acknowledgements">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+      </h2>
+<p id="section-10-1">The author would like to thank the members of the KITTEN
+working group for their review and feedback on earlier
+versions of this specification.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-2">This work was funded through <a href="https://nlnet.nl/commonsfund">NGI0 Commons Fund</a>,
+a fund established by <a href="https://nlnet.nl">NLnet</a> with financial support from
+the European Commission's <a href="https://ngi.eu">Next Generation Internet</a> program.<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-10-3">Learn more at the <a href="https://nlnet.nl/project/DID-SASL">NLnet project page</a>.<a href="#section-10-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
