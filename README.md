@@ -114,8 +114,11 @@ This project has received financial support from NLnet and the NGI Assure fund. 
 financial support from the European Commission's Next Generation Internet programme, under the aegis of DG
 Communications Networks, Content and Technology.
 
-<img align="left" height="40" src="https://github.com/peacekeeper/did-based-sasl/blob/main/docs/logo-ngi-zero.png?raw=true">
+This project is funded through [NGI0 Commons Fund](https://nlnet.nl/commonsfund), a fund established by
+[NLnet](https://nlnet.nl) with financial support from the European Commission's
+[Next Generation Internet](https://ngi.eu) program. Learn more at the
+[NLnet project page](https://nlnet.nl/project/DID-SASL).
 
-This project has received financial support from NLnet and the NGI0 Commons fund. NGI0 Commons was established with
-financial support from the European Commission's Next Generation Internet programme, under the aegis of DG
-Communications Networks, Content and Technology.
+[<img src="https://github.com/peacekeeper/did-based-sasl/blob/main/docs/logo-nlnet.png?raw=true" alt="NLnet foundation logo" width="20%" />](https://nlnet.nl)
+[<img src="https://github.com/peacekeeper/did-based-sasl/blob/main/docs/logo-ngi-zero.svg?raw=true" alt="NGI Zero Logo" width="20%" />](https://nlnet.nl/commonsfund)
+
