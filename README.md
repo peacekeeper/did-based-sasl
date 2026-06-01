@@ -39,12 +39,12 @@ pipx ensurepath
 ```
 
 ```shell
-kramdown-rfc2629 ./docs/draft-sabadello-did-challenge-sasl-00.md >./docs/draft-sabadello-did-challenge-sasl-00.xml
-xml2rfc ./docs/draft-sabadello-did-challenge-sasl-00.xml
+kramdown-rfc2629 ./docs/draft-sabadello-did-challenge-sasl-01.md >./docs/draft-sabadello-did-challenge-sasl-01.xml
+xml2rfc ./docs/draft-sabadello-did-challenge-sasl-01.xml
 ```
 
 ```shell
-kdrfc -ht ./docs/draft-sabadello-did-challenge-sasl-00.md
+kdrfc -ht ./docs/draft-sabadello-did-challenge-sasl-01.md
 ```
 
 ## End-to-end demonstration
